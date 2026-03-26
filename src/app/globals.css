@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* Twilight indigo marketing — dark base, light type, lifted showcase panel */
+:root {
+  --ob-primary: #032761;
+  --ob-hero-deep: #060d18;
+  --ob-hero-mid: #0f1c34;
+  --ob-text: #f4f6fb;
+  --ob-text-soft: rgba(244, 246, 251, 0.78);
+  --ob-text-faint: rgba(244, 246, 251, 0.4);
+  --ob-glow-lavender: rgba(186, 170, 255, 0.22);
+  --ob-glow-violet: rgba(124, 92, 255, 0.14);
+  --ob-glow-cyan: rgba(56, 213, 232, 0.09);
+  --ob-glass-border: rgba(255, 255, 255, 0.12);
+  --ob-glass-bg: rgba(255, 255, 255, 0.06);
+  /* Sticky scrolled header — dark glass to match dark hero */
+  --ob-header-float-bg: rgba(6, 18, 36, 0.72);
+  --ob-header-float-border: rgba(255, 255, 255, 0.14);
+  --ob-logo-tile-bg: #f4f6fb;
+  --ob-cta-bg: #f4f6fb;
+  --ob-cta-text: #032761;
+  /* Expanding frame — warm beige panel on dark page */
+  --ob-showcase-surface: #f5f0e8;
+  --ob-showcase-cream: var(--ob-showcase-surface);
+  --ob-showcase-ink: #1a1a1a;
+  --ob-showcase-muted: rgba(26, 26, 26, 0.62);
+  --ob-success: #2e7d32;
+  --background: var(--ob-hero-deep);
+  --foreground: var(--ob-text);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-instrument-serif);
+  --font-mono: var(--font-geist-mono);
+  --color-ob-text: #f4f6fb;
+  --color-ob-primary: #032761;
+  --color-ob-hero-deep: #060d18;
+  --color-ob-hero-mid: #0f1c34;
+  --color-ob-cta-bg: #f4f6fb;
+  --color-ob-success: #2e7d32;
+}
+
+body {
+  background: var(--ob-hero-deep);
+  color: var(--ob-text);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* App showcase: skip scroll-scrubbed scale when user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-app-showcase-panel] {
+    transform: none !important;
+  }
+
+  [data-app-showcase-content] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-showcase-card-body-wrap] {
+    grid-template-rows: 1fr !important;
+  }
+
+  [data-showcase-card-body] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
