@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
-import { ConvexDevBadge } from "../components/landing/ConvexDevBadge";
-import { LandingPage } from "../components/landing/LandingPage";
+import { ConvexDevBadge } from "@/components/landing/ConvexDevBadge";
+import { LandingPage } from "@/components/landing/LandingPage";
 
 export default function Home(): ReactElement {
   const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
@@ -13,3 +13,4 @@ export default function Home(): ReactElement {
     </>
   );
 }
+

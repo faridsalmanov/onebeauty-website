@@ -3,8 +3,9 @@
 /* Twilight indigo marketing — dark base, light type, lifted showcase panel */
 :root {
   --ob-primary: #032761;
-  --ob-hero-deep: #060d18;
-  --ob-hero-mid: #0f1c34;
+  /* Slightly lifted navy — reads a touch lighter / bluer than before */
+  --ob-hero-deep: #0a1528;
+  --ob-hero-mid: #13243e;
   --ob-text: #f4f6fb;
   --ob-text-soft: rgba(244, 246, 251, 0.78);
   --ob-text-faint: rgba(244, 246, 251, 0.4);
@@ -14,14 +15,53 @@
   --ob-glass-border: rgba(255, 255, 255, 0.12);
   --ob-glass-bg: rgba(255, 255, 255, 0.06);
   /* Sticky scrolled header — dark glass to match dark hero */
-  --ob-header-float-bg: rgba(6, 18, 36, 0.72);
+  --ob-header-float-bg: rgba(10, 21, 40, 0.72);
   --ob-header-float-border: rgba(255, 255, 255, 0.14);
   --ob-logo-tile-bg: #f4f6fb;
   --ob-cta-bg: #f4f6fb;
   --ob-cta-text: #032761;
-  /* Expanding frame — warm beige panel on dark page */
-  --ob-showcase-surface: #f5f0e8;
+  /* Expanding frame — warm ivory cream (slightly buttered vs cool greige) */
+  --ob-showcase-surface: #f7f1e6;
   --ob-showcase-cream: var(--ob-showcase-surface);
+  /*
+   * Seam ramps: perceptual ease — small opacity steps, long low-alpha tails, mid stops
+   * nudged a hair warmer so it reads “cream” not “grey beige”.
+   */
+  /* Card-adjacent zone: slightly dustier + lower alpha so it doesn’t read chalk-white */
+  --ob-seam-hero-to-showcase: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgb(245 238 227 / 0.02) 6%,
+    rgb(246 239 228 / 0.046) 12%,
+    rgb(246 240 228 / 0.078) 18%,
+    rgb(247 240 229 / 0.115) 24%,
+    rgb(247 241 229 / 0.17) 31%,
+    rgb(248 241 230 / 0.26) 39%,
+    rgb(248 241 230 / 0.38) 47%,
+    rgb(247 240 229 / 0.52) 55%,
+    rgb(247 240 229 / 0.64) 63%,
+    rgb(247 240 229 / 0.74) 71%,
+    rgb(247 241 230 / 0.82) 79%,
+    rgb(247 241 230 / 0.9) 87%,
+    rgb(247 241 230 / 0.952) 94%,
+    var(--ob-showcase-surface) 100%
+  );
+  /* Pinned top: same dustier palette + opacity curve as --ob-seam-hero-to-showcase */
+  --ob-seam-showcase-from-hero: linear-gradient(
+    180deg,
+    var(--ob-showcase-surface) 0%,
+    rgb(247 240 229 / 0.84) 7%,
+    rgb(247 241 230 / 0.66) 14%,
+    rgb(248 241 230 / 0.46) 23%,
+    rgb(247 240 229 / 0.3) 34%,
+    rgb(247 240 229 / 0.175) 46%,
+    rgb(246 239 228 / 0.098) 58%,
+    rgb(246 239 228 / 0.054) 70%,
+    rgb(245 238 227 / 0.028) 81%,
+    rgb(245 238 227 / 0.012) 90%,
+    rgb(245 238 227 / 0.0035) 96%,
+    transparent 100%
+  );
   --ob-showcase-ink: #1a1a1a;
   --ob-showcase-muted: rgba(26, 26, 26, 0.62);
   --ob-success: #2e7d32;
@@ -37,8 +77,8 @@
   --font-mono: var(--font-geist-mono);
   --color-ob-text: #f4f6fb;
   --color-ob-primary: #032761;
-  --color-ob-hero-deep: #060d18;
-  --color-ob-hero-mid: #0f1c34;
+  --color-ob-hero-deep: #0a1528;
+  --color-ob-hero-mid: #13243e;
   --color-ob-cta-bg: #f4f6fb;
   --color-ob-success: #2e7d32;
 }
@@ -47,6 +87,17 @@ body {
   background: var(--ob-hero-deep);
   color: var(--ob-text);
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* FAQ accordion (Framer Motion) — avoid selecting question row; answers stay copyable. */
+.ob-faq-item {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.ob-faq-answer-selectable {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 /* App showcase: skip scroll-scrubbed scale when user prefers reduced motion */

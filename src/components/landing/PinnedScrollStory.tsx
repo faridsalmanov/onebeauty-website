@@ -371,6 +371,11 @@ export function PinnedScrollStory(): ReactElement {
         ref={panelRef}
         className="relative z-0 flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-transparent px-4 md:px-8"
       >
+        {/* Top wash — paired with hero seam; keep behind content (-z-10) */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-12 [background-image:var(--ob-seam-showcase-from-hero)] md:h-14 lg:h-16"
+          aria-hidden
+        />
         <div className="relative mx-auto h-full min-h-[100dvh] w-full max-w-6xl">
           <div
             ref={meetRef}
@@ -413,15 +418,15 @@ export function PinnedScrollStory(): ReactElement {
             className="absolute inset-0 z-20 flex flex-col items-center justify-center px-2 text-center md:px-8"
           >
             <p className="font-sans text-xs font-medium tracking-[0.3em] text-[var(--ob-text-faint)] uppercase">
-              The reality
+              The problem
             </p>
             <h2 className="mt-4 max-w-[20ch] font-serif text-[clamp(1.75rem,4.2vw,3rem)] leading-[1.12] font-semibold tracking-tight text-[var(--ob-text)] md:max-w-3xl">
               Your salon day lives across too many tools
             </h2>
             <p className="mt-5 max-w-xl font-sans text-sm leading-relaxed text-[var(--ob-text-soft)] md:text-base">
-              DMs for consults, spreadsheets for color formulas, a calendar app
-              for staff, paper cards for loyalty, and a POS that doesn&apos;t
-              talk to any of them.
+              Bookings in one tool, client chats in another, staff schedules in
+              a third — each part of your day lives in a different app, and
+              nothing connects them for you.
             </p>
           </div>
 

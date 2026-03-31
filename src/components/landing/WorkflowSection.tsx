@@ -1,14 +1,13 @@
 "use client";
 
-import { Calendar, Inbox, MessageCircle, Repeat2, Sparkles } from "lucide-react";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "framer-motion";
-import type { LucideIcon } from "lucide-react";
 import Image from "next/image";
-import type { ReactElement, ReactNode } from "react";
+import type { ReactElement } from "react";
 import { useState } from "react";
 
-/** PNG in `public/images/iphone-15.png` (1335×2775). Inset fine-tunes screen vs bezel. */
-const WORKFLOW_IPHONE_FRAME = "/images/iphone-15.png";
+/** Native pixel size of `public/images/steps/step*.png` (full device mockup artwork). */
+const WORKFLOW_SCREENSHOT_WIDTH = 1335;
+const WORKFLOW_SCREENSHOT_HEIGHT = 2775;
 
 /** Fixed open-step + glass height (body scrolls if needed). */
 const WORKFLOW_STEP_PANEL_H =
@@ -18,129 +17,48 @@ const WORKFLOW_STEP_PANEL_H =
 const WORKFLOW_STEP_PANEL_MAX_W =
   "max-w-[24rem] sm:max-w-[26rem] md:max-w-[27.5rem]";
 
-type PhoneRow = {
-  label: string;
-  value?: string;
-};
-
 type WorkflowStep = {
   id: string;
   number: string;
   title: string;
   body: string;
-  phoneIcon: LucideIcon;
-  phoneTitle: string;
-  phoneHint: string;
-  phoneRows: readonly PhoneRow[];
+  phoneScreenshotSrc: string;
 };
 
 const WORKFLOW_STEPS: readonly WorkflowStep[] = [
   {
     id: "01",
     number: "01",
-    title: "Capture booking requests",
+    title: "Choose service and stylist",
     body:
-      "Collect service, date, and stylist preference from Instagram, WhatsApp, and web forms in one shared inbox.",
-    phoneIcon: Inbox,
-    phoneTitle: "Inbox",
-    phoneHint: "All channels in one place",
-    phoneRows: [
-      { label: "Instagram DM", value: "Balayage + toner — Sat 2pm?" },
-      { label: "WhatsApp", value: "Cut & blowdry for next week" },
-      { label: "Web form", value: "First visit — color consult" },
-    ],
+      "Start on the salon screen: browse services and prices, meet the team, pick the treatment you want, and choose your stylist.",
+    phoneScreenshotSrc: "/images/steps/step1.png",
   },
   {
     id: "02",
     number: "02",
-    title: "Confirm & schedule",
+    title: "Choose date and time",
     body:
-      "Assign staff, lock timeslots, and send confirmations so your calendar stays accurate across the team.",
-    phoneIcon: Calendar,
-    phoneTitle: "Schedule",
-    phoneHint: "Confirm before you commit",
-    phoneRows: [
-      { label: "Slot", value: "Sat 14:00 · 90 min" },
-      { label: "Stylist", value: "Maya K." },
-      { label: "Status", value: "Awaiting client confirm" },
-    ],
+      "When you’re ready, flip through the calendar and tap a time that works for you. Slots are shown live for your stylist, so booking feels quick and straightforward.",
+    phoneScreenshotSrc: "/images/steps/step2.png",
   },
   {
     id: "03",
     number: "03",
-    title: "Run service with notes",
+    title: "Manage booking",
     body:
-      "Save formulas, preferences, and before/after media per client profile for better repeat visits.",
-    phoneIcon: Sparkles,
-    phoneTitle: "Client profile",
-    phoneHint: "Notes follow every visit",
-    phoneRows: [
-      { label: "Last formula", value: "7N + 8G gloss" },
-      { label: "Preference", value: "Cool tone, low heat" },
-      { label: "Photos", value: "Before / after attached" },
-    ],
+      "Once you’re booked, you’ll land on a helpful summary: change details if you need to, add the visit to your calendar, and so much more.",
+    phoneScreenshotSrc: "/images/steps/step3.png",
   },
   {
     id: "04",
     number: "04",
-    title: "Checkout & rebook",
+    title: "Your bookings",
     body:
-      "Complete payment, apply loyalty points, and secure the next appointment before the client leaves.",
-    phoneIcon: Repeat2,
-    phoneTitle: "Checkout",
-    phoneHint: "Pay & book the next visit",
-    phoneRows: [
-      { label: "Total", value: "€142.00" },
-      { label: "Loyalty", value: "+28 pts · redeem €10" },
-      { label: "Next visit", value: "6 weeks — color refresh" },
-    ],
-  },
-  {
-    id: "05",
-    number: "05",
-    title: "Follow-up automation",
-    body:
-      "Send reminders and aftercare follow-ups automatically to improve retention and keep chairs full.",
-    phoneIcon: MessageCircle,
-    phoneTitle: "Automations",
-    phoneHint: "Stay in touch without the busywork",
-    phoneRows: [
-      { label: "Tomorrow", value: "Reminder · 10:00 appointment" },
-      { label: "Day 3", value: "Aftercare tips for color care" },
-      { label: "Week 6", value: "Rebook nudge — same stylist" },
-    ],
+      "Anytime, open Bookings to see what’s ahead or rate your past bookings. One simple list keeps what’s next and what you’ve done easy to find whenever you need it.",
+    phoneScreenshotSrc: "/images/steps/step4.png",
   },
 ];
-
-/** Device frame from `public/images/iphone-15.png`; app UI is inset into the screen area. */
-function IphoneMockup({ children }: { children: ReactNode }): ReactElement {
-  return (
-    <div className="relative mx-auto w-full max-w-[min(88vw,258px)] select-none sm:max-w-[276px]">
-      <Image
-        src={WORKFLOW_IPHONE_FRAME}
-        alt=""
-        width={1335}
-        height={2775}
-        className="pointer-events-none block h-auto w-full object-contain drop-shadow-[0_22px_48px_-18px_rgba(0,0,0,0.48)]"
-        sizes="(max-width: 640px) 88vw, 276px"
-        priority
-        aria-hidden
-      />
-      <div
-        className="absolute z-[1] flex min-h-0 flex-col overflow-hidden bg-[#f5f2ed] pt-1"
-        style={{
-          top: "9.2%",
-          right: "6.7%",
-          bottom: "9.9%",
-          left: "6.7%",
-          borderRadius: "2.1rem",
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
 
 export function WorkflowSection(): ReactElement {
   const [activeId, setActiveId] = useState<string>("01");
@@ -148,7 +66,6 @@ export function WorkflowSection(): ReactElement {
 
   const activeStep =
     WORKFLOW_STEPS.find((s): boolean => s.id === activeId) ?? WORKFLOW_STEPS[0];
-  const ActiveIcon = activeStep?.phoneIcon ?? Inbox;
 
   /** Shared layout tween: slightly longer + softer ease for stack + glass (less snappy). */
   const stackEase = [0.16, 1, 0.32, 1] as const;
@@ -171,10 +88,13 @@ export function WorkflowSection(): ReactElement {
         <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           <div className="max-w-2xl">
             <h2 className="font-sans text-[clamp(2.45rem,6vw,5rem)] leading-[0.95] font-medium tracking-tight text-[var(--ob-text)]">
-              Salon
+              Book in
               <br />
-              Workflow
+              4 steps
             </h2>
+            <p className="mt-4 max-w-sm font-sans text-base leading-relaxed text-[var(--ob-text-soft)] sm:text-[1.05rem]">
+              Here’s how it feels to book with OneBeauty — from choosing your stylist to seeing your visits in one place.
+            </p>
 
             <LayoutGroup id="workflow-steps">
               <div
@@ -270,109 +190,29 @@ export function WorkflowSection(): ReactElement {
             role="tabpanel"
             aria-labelledby={`workflow-tab-${activeStep?.id ?? "01"}`}
           >
-            <IphoneMockup>
-              <div className="relative flex min-h-[min(42vh,320px)] w-full flex-1 flex-col sm:min-h-[340px]">
-                <AnimatePresence initial={false} mode="wait">
-                  <motion.div
-                    key={activeStep.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={fadePhone}
-                    className="absolute inset-0 flex min-h-0 flex-col overflow-y-auto px-4 pb-2 pt-2"
-                  >
-                  <div className="mb-4 flex items-center gap-2.5 border-b border-black/[0.06] pb-3">
-                    <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[var(--ob-primary)] text-white shadow-sm">
-                      <ActiveIcon className="size-[18px]" strokeWidth={2} />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="truncate font-sans text-[0.95rem] font-semibold tracking-tight text-[var(--ob-primary)]">
-                        {activeStep.phoneTitle}
-                      </p>
-                      <p className="font-sans text-[0.7rem] text-[#6b6560]">
-                        {activeStep.phoneHint}
-                      </p>
-                    </div>
-                  </div>
-
-                  {reduceMotion ? (
-                    <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto">
-                      {activeStep.phoneRows.map(
-                        (row): ReactElement => (
-                          <div
-                            key={row.label}
-                            className="rounded-xl border border-black/[0.07] bg-white px-3 py-2.5 shadow-[0_1px_0_rgba(0,0,0,0.03)]"
-                          >
-                            <p className="font-sans text-[0.62rem] font-semibold tracking-[0.14em] text-[#56504a] uppercase">
-                              {row.label}
-                            </p>
-                            {row.value != null && row.value.length > 0 ? (
-                              <p className="mt-1 font-sans text-[0.82rem] leading-snug text-[#2a2826]">
-                                {row.value}
-                              </p>
-                            ) : (
-                              <div className="mt-2 h-2 rounded bg-black/[0.06]" />
-                            )}
-                          </div>
-                        ),
-                      )}
-                    </div>
-                  ) : (
-                    <motion.div
-                      className="flex flex-1 flex-col gap-2.5 overflow-y-auto"
-                      initial="hidden"
-                      animate="visible"
-                      variants={{
-                        hidden: { opacity: 0 },
-                        visible: {
-                          opacity: 1,
-                          transition: {
-                            staggerChildren: 0.05,
-                            delayChildren: 0.06,
-                          },
-                        },
-                      }}
-                    >
-                      {activeStep.phoneRows.map(
-                        (row): ReactElement => (
-                          <motion.div
-                            key={row.label}
-                            variants={{
-                              hidden: { opacity: 0, y: 6 },
-                              visible: {
-                                opacity: 1,
-                                y: 0,
-                                transition: {
-                                  duration: 0.22,
-                                  ease: [0.22, 1, 0.36, 1],
-                                },
-                              },
-                            }}
-                            className="rounded-xl border border-black/[0.07] bg-white px-3 py-2.5 shadow-[0_1px_0_rgba(0,0,0,0.03)]"
-                          >
-                            <p className="font-sans text-[0.62rem] font-semibold tracking-[0.14em] text-[#56504a] uppercase">
-                              {row.label}
-                            </p>
-                            {row.value != null && row.value.length > 0 ? (
-                              <p className="mt-1 font-sans text-[0.82rem] leading-snug text-[#2a2826]">
-                                {row.value}
-                              </p>
-                            ) : (
-                              <div className="mt-2 h-2 rounded bg-black/[0.06]" />
-                            )}
-                          </motion.div>
-                        ),
-                      )}
-                    </motion.div>
-                  )}
-
-                  <p className="mt-auto pt-2 text-center font-sans text-[0.65rem] text-[#9a948c]">
-                    Placeholder UI — swap for product shots when ready.
-                  </p>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </IphoneMockup>
+            <div className="relative mx-auto w-full max-w-[min(90vw,264px)] select-none sm:max-w-[280px] lg:max-w-[296px]">
+              <AnimatePresence initial={false} mode="wait">
+                <motion.div
+                  key={activeStep.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={fadePhone}
+                  className="relative w-full"
+                >
+                  <Image
+                    src={activeStep.phoneScreenshotSrc}
+                    alt={`OneBeauty app — step ${activeStep.number}: ${activeStep.title}`}
+                    width={WORKFLOW_SCREENSHOT_WIDTH}
+                    height={WORKFLOW_SCREENSHOT_HEIGHT}
+                    className="pointer-events-none block h-auto w-full object-contain drop-shadow-[0_22px_48px_-18px_rgba(0,0,0,0.48)]"
+                    sizes="(max-width: 640px) 90vw, 296px"
+                    priority={activeStep.id === "01"}
+                    draggable={false}
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>

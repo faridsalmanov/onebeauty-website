@@ -8,7 +8,7 @@ export function SiteAtmosphere(): ReactElement {
   return (
     <>
       <div
-        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_100%_68%_at_50%_-18%,var(--ob-glow-lavender),transparent_52%),radial-gradient(ellipse_82%_48%_at_100%_28%,var(--ob-glow-violet),transparent_48%),radial-gradient(ellipse_55%_42%_at_8%_92%,var(--ob-glow-cyan),transparent_55%),radial-gradient(ellipse_50%_40%_at_92%_88%,rgba(3,39,97,0.45),transparent_50%),linear-gradient(180deg,var(--ob-hero-mid)_0%,var(--ob-hero-deep)_48%,#030810_100%)]"
+        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_100%_68%_at_50%_-18%,var(--ob-glow-lavender),transparent_52%),radial-gradient(ellipse_82%_48%_at_100%_28%,var(--ob-glow-violet),transparent_48%),radial-gradient(ellipse_55%_42%_at_8%_92%,var(--ob-glow-cyan),transparent_55%),radial-gradient(ellipse_50%_40%_at_92%_88%,rgba(3,39,97,0.45),transparent_50%),linear-gradient(180deg,var(--ob-hero-mid)_0%,var(--ob-hero-deep)_48%,#070f1a_100%)]"
         aria-hidden
       />
       <div

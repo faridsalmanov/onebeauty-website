@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { headers } from "next/headers";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { FloatingParticlesBackground } from "../components/FloatingParticlesBackground";
 import { SiteAtmosphere } from "../components/SiteAtmosphere";
@@ -7,36 +7,40 @@ import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
 });
 
 const instrumentSerif = Instrument_Serif({
   weight: "400",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-instrument-serif",
   style: ["normal", "italic"],
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "OneBeauty | Salons, simplified",
-  description:
-    "Bookings, staff, and client history in one workspace for modern salons.",
-};
+function normalizeLocaleHeader(value: string | null): string {
+  if (value === "az" || value === "en" || value === "ru") {
+    return value;
+  }
+  return "az";
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const h = await headers();
+  const locale = normalizeLocaleHeader(h.get("x-next-intl-locale"));
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} min-h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full bg-[var(--ob-hero-deep)] text-[var(--ob-text)]">

@@ -1,13 +1,15 @@
 "use client";
 
+import { useReducedMotion } from "framer-motion";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import type { ReactElement } from "react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { LogoMark } from "./LogoMark";
+import { scrollToRegisterForm } from "./scrollToRegisterForm";
 
 const NAV_LINKS: { label: string; href: string }[] = [
-  { label: "FAQs", href: "#" },
+  { label: "FAQs", href: "/faqs" },
   { label: "For salons", href: "#" },
   { label: "Pricing", href: "#" },
 ];
@@ -40,6 +42,8 @@ export function SiteHeader(): ReactElement {
   const [scrolled, setScrolled] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number>(0);
+  const reduceMotionPref = useReducedMotion();
+  const reduceMotion = reduceMotionPref === true;
 
   const scheduleScrollSync = useCallback((): void => {
     cancelAnimationFrame(rafRef.current);
@@ -136,7 +140,7 @@ export function SiteHeader(): ReactElement {
             >
               <LogoMark compact={scrolled} />
               <span
-                className={`font-medium lowercase transition-[font-size] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${scrolled ? "text-base" : "text-lg"}`}
+                className={`font-medium lowercase text-[var(--ob-text)] transition-[font-size,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${scrolled ? "text-base" : "text-lg"}`}
               >
                 onebeauty
               </span>
@@ -159,8 +163,12 @@ export function SiteHeader(): ReactElement {
 
             <div className="relative z-20 flex items-center">
               <Link
-                href="#waitlist"
+                href="#register-form"
                 className={`inline-block cursor-pointer rounded-md bg-[var(--ob-cta-bg)] text-center font-semibold text-[var(--ob-cta-text)] shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none hover:bg-[var(--ob-cta-bg)]/90 ${scrolled ? "px-3 py-1.5 text-sm" : "px-4 py-2 text-sm"}`}
+                onClick={(e): void => {
+                  e.preventDefault();
+                  scrollToRegisterForm(reduceMotion);
+                }}
               >
                 Join waitlist
               </Link>
@@ -176,7 +184,7 @@ export function SiteHeader(): ReactElement {
               >
                 <LogoMark compact={scrolled} />
                 <span
-                  className={`font-medium lowercase transition-[font-size] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${scrolled ? "text-base" : "text-lg"}`}
+                  className={`font-medium lowercase text-[var(--ob-text)] transition-[font-size,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${scrolled ? "text-base" : "text-lg"}`}
                 >
                   onebeauty
                 </span>
