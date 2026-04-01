@@ -153,7 +153,7 @@ function BookingCard({
 }): ReactElement {
   return (
     <WorkflowCardPanel
-      className="w-[228px] sm:w-[240px]"
+      className="w-[min(84vw,18rem)] sm:w-[18rem] md:w-[16.25rem] lg:w-[16.5rem] xl:w-[228px] xl:max-w-none"
       delay={delay}
       heightTier={heightTier}
     >
@@ -189,7 +189,7 @@ function RevenueCard({
 }): ReactElement {
   return (
     <WorkflowCardPanel
-      className="w-[200px] sm:w-[214px]"
+      className="w-[min(78vw,17rem)] sm:w-[17rem] md:w-[15.5rem] lg:w-[15.75rem] xl:w-[200px] xl:max-w-none"
       delay={delay}
       heightTier={heightTier}
     >
@@ -225,7 +225,7 @@ function StylistCard({
 }): ReactElement {
   return (
     <WorkflowCardPanel
-      className="w-[228px] sm:w-[240px]"
+      className="w-[min(84vw,18rem)] sm:w-[18rem] md:w-[16.25rem] lg:w-[16.5rem] xl:w-[228px] xl:max-w-none"
       delay={delay}
       heightTier={heightTier}
     >
@@ -277,7 +277,7 @@ function ScheduleCard({
 
   return (
     <WorkflowCardPanel
-      className="w-[248px] sm:w-[264px]"
+      className="w-[min(88vw,19rem)] sm:w-[19rem] md:w-[17.25rem] lg:w-[17.5rem] xl:w-[248px] xl:max-w-none"
       delay={delay}
       heightTier={heightTier}
     >
@@ -330,7 +330,7 @@ function ReviewCard({
 }): ReactElement {
   return (
     <WorkflowCardPanel
-      className="w-[248px] sm:w-[264px]"
+      className="w-[min(88vw,19rem)] sm:w-[19rem] md:w-[17.25rem] lg:w-[17.5rem] xl:w-[248px] xl:max-w-none"
       delay={delay}
       heightTier={heightTier}
     >
@@ -525,25 +525,46 @@ export function HeroSection(): ReactElement {
         </div>
       </div>
 
-      <div
-        className="relative z-20 -mt-8 hidden w-full shrink-0 md:-mt-12 md:block lg:-mt-14"
-        aria-hidden
-      >
-        <div className="mx-auto flex max-w-[90rem] items-end justify-center gap-3 px-4 pb-2 md:gap-4 md:px-6 lg:gap-5 xl:gap-6">
-          <div className="shrink-0">
-            <ScheduleCard delay={0} heightTier="tall" />
+      {/* Cards rail (responsive) */}
+      <div className="relative z-20 -mt-8 w-full shrink-0 md:-mt-12 lg:-mt-14">
+        {/* Mobile: swipeable preview rail */}
+        <div className="md:hidden">
+          <div
+            className="mx-auto flex max-w-[90rem] snap-x snap-mandatory items-stretch gap-3 overflow-x-auto px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            aria-hidden
+          >
+            <div className="snap-center flex-none">
+              <ScheduleCard delay={0} heightTier="tall" />
+            </div>
+            <div className="snap-center flex-none">
+              <BookingCard delay={0.08} heightTier="mid" />
+            </div>
+            <div className="snap-center flex-none">
+              <ReviewCard delay={0.16} heightTier="tall" />
+            </div>
           </div>
-          <div className="shrink-0">
-            <BookingCard delay={0.08} heightTier="mid" />
-          </div>
-          <div className="shrink-0">
-            <RevenueCard delay={0.16} heightTier="short" />
-          </div>
-          <div className="shrink-0">
-            <StylistCard delay={0.24} heightTier="mid" />
-          </div>
-          <div className="shrink-0">
-            <ReviewCard delay={0.32} heightTier="tall" />
+        </div>
+
+        {/* md+: scrollable rail until xl, then centered non-scroll */}
+        <div className="hidden md:block" aria-hidden>
+          <div className="mx-auto max-w-[90rem] px-4 pb-2 md:px-6">
+            <div className="flex snap-x snap-mandatory items-end justify-start gap-4 overflow-x-auto overscroll-x-contain xl:justify-center xl:overflow-visible xl:overscroll-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div className="snap-center flex-none">
+                <ScheduleCard delay={0} heightTier="tall" />
+              </div>
+              <div className="snap-center flex-none">
+                <BookingCard delay={0.08} heightTier="mid" />
+              </div>
+              <div className="snap-center flex-none">
+                <RevenueCard delay={0.16} heightTier="short" />
+              </div>
+              <div className="snap-center flex-none">
+                <StylistCard delay={0.24} heightTier="mid" />
+              </div>
+              <div className="snap-center flex-none">
+                <ReviewCard delay={0.32} heightTier="tall" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
