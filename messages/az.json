@@ -1,2 +1,265 @@
-{}
+{
+  "home": {
+    "common": {
+      "brand": "onebeauty",
+      "locales": {
+        "az": "Azərbaycanca",
+        "en": "English",
+        "ru": "Русский"
+      }
+    },
+    "header": {
+      "nav": {
+        "faqs": "FAQ",
+        "forSalons": "Salonlar üçün",
+        "pricing": "Qiymətlər"
+      },
+      "cta": "Gözləmə siyahısına qoşul",
+      "mobile": {
+        "openMenu": "Menyunu aç",
+        "closeMenu": "Menyunu bağla"
+      },
+      "language": {
+        "label": "Dil",
+        "srLabel": "Dili dəyiş"
+      }
+    },
+    "hero": {
+      "headline": {
+        "line1": {
+          "the": "Salonunuzu",
+          "allInOne": "bir tətbiqdən",
+          "app": "idarə",
+          "for": "edin"
+        },
+        "line2": ""
+      },
+      "subline": "Rezervasiyalar, işçilər və gəlir — hamısı bir yerdə, aydın və tam nəzarət altında.",
+      "email": {
+        "label": "Email ünvanınızı daxil edin",
+        "placeholder": "Email ünvanınızı daxil edin",
+        "hint": "İlk salonlar üçün məhdud erkən endirim • 10 saniyə çəkir"
+      },
+      "cta": "Erkən giriş əldə et",
+      "scrollHint": "baxmaq üçün sürüşdür",
+      "cards": {
+        "nextBookingLabel": "Növbəti rezervasiya",
+        "nextBookingService": "Balayaj və kəsim",
+        "nextBookingTime": "Bu gün, 14:30",
+        "nextBookingClient": "Aysel M.",
+        "thisWeekLabel": "Bu həftə",
+        "revenueDelta": "keçən həftə ilə müqayisədə +18%",
+        "topStylistLabel": "Ən yaxşı ustad",
+        "reviewsMeta": "· 127 rəy",
+        "todayScheduleLabel": "Bugünkü cədvəl",
+        "scheduleMeta": "8-dən 3-ü",
+        "reviewQuote": "“Nəhayət hər şeyi idarə edən bir tətbiq. Komandamız 3 fərqli alətdən keçid etdi.”",
+        "reviewName": "Kamila S.",
+        "reviewRole": "Salon sahibi",
+        "tags": {
+          "color": "Rəng",
+          "bridal": "Gəlin",
+          "keratin": "Keratin"
+        },
+        "slots": {
+          "slot1": { "time": "10:00", "client": "Leyla K.", "service": "Fen və stil" },
+          "slot2": { "time": "11:30", "client": "Günel R.", "service": "Melir" },
+          "slot3": { "time": "13:00", "client": "Səbinə T.", "service": "Manikür" }
+        }
+      }
+    },
+    "pinned": {
+      "ariaLabel": "Məhsul hekayəsi",
+      "meetEyebrow": "Tanış olun",
+      "meetBody": "Salonunuz üçün lazım olan hər şey — rezervasiyalar, komanda və müştərilər — artıq bir sadə sistemdə birlikdə işləyir.",
+      "problemEyebrow": "Problem",
+      "problemTitle": "Salonunuz çoxlu əlaqəsiz alətlərlə işləyir",
+      "problemBody": "Rezervasiyalar bir tətbiqdə, müştəri mesajları başqa yerdə, iş qrafiki isə başqa sistemdə — heç biri bir-biri ilə işləmir və bu sizi ləngidir."
+    },
+    "showcase": {
+      "eyebrow": "Salonlar üçün",
+      "title": "Salonunuzdakı hər şey, nəhayət nəzarət altında",
+      "body": "Rezervasiyaları, komandanızı və gəlirinizi bir yerdən idarə edin — sadə, aydın və daim nəzarət altında.",
+      "cards": {
+        "smartBooking": {
+          "title": "Ağıllı rezervasiya xətti",
+          "description": "Canlı rezervasiyalar, gəlməmə işarələri və heyət yüklənməsi — günü daha tez planlamaq üçün bir görünüşdə."
+        },
+        "teamServices": {
+          "title": "Komanda və xidmət menyusu",
+          "description": "Ustaları əlavə edin, xidmətləri qiymət və müddətlə bağlayın, həftəlik saatları qurun — müştərilərin bron etdiyi hər şey real komandanıza uyğun qalsın."
+        },
+        "staffPerformance": {
+          "title": "Heyət performansı",
+          "description": "Xidmət gəliri, təkrar bron faizi və məhsuldarlığı usta üzrə izləyin — üstəlik əməkdaş reytinqlərini eyni yerdə görün."
+        },
+        "salonAnalytics": {
+          "title": "Analitika və insightlar",
+          "description": "Reytinqləri izləyin, sadiq müştəriləri müəyyən edin və hansı xidmətlərin təkrar bron gətirdiyini bir paneldə görün."
+        }
+      }
+    },
+    "workflow": {
+      "titleLine1": "4 addımda",
+      "titleLine2": "rezervasiya edin",
+      "body": "OneBeauty ilə rezervasiya etmək necə hiss olunur — ustad seçməkdən tutmuş ziyarətləri bir yerdə görməyə qədər.",
+      "aria": {
+        "tablist": "Rezervasiya addımları",
+        "phoneAlt": "OneBeauty tətbiqi — addım {stepNumber}: {stepTitle}"
+      },
+      "steps": {
+        "01": {
+          "title": "Xidməti və ustadı seçin",
+          "body": "Salon ekranından başlayın: xidmət və qiymətlərə baxın, komanda ilə tanış olun, istədiyiniz proseduru seçin və ustadınızı müəyyən edin."
+        },
+        "02": {
+          "title": "Tarix və saat seçin",
+          "body": "Hazır olanda təqvimi vərəqləyin və sizə uyğun vaxtı seçin. Slotlar ustadınız üçün canlı göstərilir, buna görə bron tez və rahat olur."
+        },
+        "03": {
+          "title": "Rezervasiyanı idarə edin",
+          "body": "Bron etdikdən sonra faydalı xülasəyə düşəcəksiniz: ehtiyac olsa detalları dəyişin, ziyarəti təqviminizə əlavə edin və daha çoxunu edin."
+        },
+        "04": {
+          "title": "Rezervasiyalarınız",
+          "body": "İstənilən vaxt Rezervasiyalar bölməsini açın: qarşıdakı görüşləri görün və ya keçmiş bronları qiymətləndirin. Sadə siyahı həm növbətini, həm də keçmişi tapmağı asan edir."
+        }
+      }
+    },
+    "register": {
+      "success": {
+        "title": "Siyahıdasınız!",
+        "body": "Salonunuz üçün yer hazır olanda əlaqə saxlayacağıq. E-poçtunuzu yoxlayın."
+      },
+      "badge": "İndi qeydiyyatdan keçin",
+      "title": "Erkən qeydiyyat üstünlüyü",
+      "body": "Bu erkən giriş dövründə qeydiyyatdan keçin və salonunuz üçün ömürlük eksklüziv üstünlükləri təmin edin.",
+      "countdown": {
+        "label": "Təklifin bitməsinə qalıb",
+        "digits": {
+          "days": "Gün",
+          "hours": "Saat",
+          "minutes": "Dəq",
+          "seconds": "San"
+        }
+      },
+      "form": {
+        "salonName": { "label": "Salonun adı", "placeholder": "məs. Luxe Hair Studio" },
+        "ownerName": { "label": "Sahibin adı" },
+        "phone": { "label": "Telefon", "placeholder": "+994 XX XXX XX XX" },
+        "email": { "label": "E-poçt", "placeholder": "you@salon.com" },
+        "city": { "label": "Şəhər" },
+        "employees": {
+          "label": "Əməkdaş sayı",
+          "placeholder": "Aralığı seçin",
+          "options": {
+            "1-3": "1 – 3",
+            "4-10": "4 – 10",
+            "11-25": "11 – 25",
+            "25+": "25+"
+          }
+        },
+        "agree": "Təsisçi salon üstünlükləri və erkən giriş haqqında yenilikləri almağa razıyam.",
+        "submit": "Yerinizi təmin edin",
+        "finePrint": "Ödəniş tələb olunmur. Onboarding başlayanda sizinlə əlaqə saxlayacağıq."
+      }
+    },
+    "footer": {
+      "columns": {
+        "product": {
+          "title": "Məhsul",
+          "items": {
+            "pricing": "Qiymətlər",
+            "features": "Xüsusiyyətlər",
+            "changelog": "Yeniliklər"
+          }
+        },
+        "useCases": {
+          "title": "İstifadə",
+          "items": {
+            "forSalons": "Salonlar üçün",
+            "forTeams": "Komandalar üçün",
+            "forIndependents": "Fərdi ustalar üçün"
+          }
+        },
+        "compare": {
+          "title": "Müqayisə",
+          "items": {
+            "vsSpreadsheets": "OneBeauty vs cədvəllər",
+            "vsPaper": "OneBeauty vs kağız"
+          }
+        },
+        "resources": {
+          "title": "Resurslar",
+          "items": {
+            "faqs": "FAQ",
+            "updates": "Yeniliklər",
+            "support": "Dəstək"
+          }
+        },
+        "legal": {
+          "title": "Hüquqi",
+          "items": {
+            "terms": "Şərtlər",
+            "privacy": "Məxfilik"
+          }
+        }
+      },
+      "socialAria": "Sosial profillər (linklər tezliklə)",
+      "copyright": "© {year} OneBeauty. Bütün hüquqlar qorunur."
+    }
+  }
+  ,
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "OneBeauty, gözləmə siyahısı və salonlar/komandalar üçün nə qurduğumuz barədə aydın cavablar.",
+    "aria": {
+      "list": "Tez-tez verilən suallar"
+    },
+    "cta": {
+      "prefix": "Hələ də əmin deyilsiniz?",
+      "link": "Gözləmə siyahısına qoşulun",
+      "suffix": "— biz də sizinlə əlaqə saxlayacağıq.",
+      "backHome": "← Ana səhifəyə qayıt"
+    },
+    "items": {
+      "what": {
+        "q": "OneBeauty nədir?",
+        "a": "OneBeauty müasir salonlar üçün iş məkanıdır: rezervasiya, heyət cədvəlləri, müştəri tarixçəsi və gündəlik əməliyyatlar bir yerdə — cədvəl və kağızdan böyüyən komandalar üçün."
+      },
+      "waitlist": {
+        "q": "Kimlər gözləmə siyahısına qoşulmalıdır?",
+        "a": "Erkən giriş, yeniliklər və funksiyaların formalaşmasında söz sahibi olmaq istəyən salon sahibləri və menecerlər. Stilistlər və fərdi ustalar da xoş gəlmisiniz — onboarding-i sizin quruluşunuza uyğunlaşdıracağıq."
+      },
+      "launch": {
+        "q": "Nə vaxt istifadəyə verəcəksiniz?",
+        "a": "Keyfiyyəti yüksək saxlamaq üçün mərhələli şəkildə təqdim edirik. Beta, pilot və region üzrə əlçatanlıq barədə ilk olaraq gözləmə siyahısındakılar xəbər alır."
+      },
+      "locations": {
+        "q": "Tək məkanlı salonlar üçün uyğundurmu?",
+        "a": "Bəli. OneBeauty bir kreslodan/studiodan başlayıb çoxməkanlı şəbəkələrə qədər böyüyə biləcək şəkildə hazırlanıb — komandanın gündəlik işi dəyişmədən."
+      },
+      "mobile": {
+        "q": "Heyət telefondan istifadə edə biləcəkmi?",
+        "a": "Məhsul vacib hissələrdə mobile-first qurulur — ustalar ön masaya bağlı qalmadan cədvəli, qeydləri və rezervasiyaları yoxlaya bilsin."
+      },
+      "pricing": {
+        "q": "Qiymətlər necə olacaq?",
+        "a": "Fərqli ölçülü salonlar üçün sadə və proqnozlaşdırılan planları yekunlaşdırırıq. Gözləmə siyahısındakılar ödəniş açılarkən erkən qiymət və təsisçi təşviqləri əldə edəcək."
+      },
+      "data": {
+        "q": "Müştəri və biznes məlumatları təhlükəsizdirmi?",
+        "a": "Salon və müştəri məlumatlarını həssas hesab edirik: müasir infrastruktur, giriş nəzarətləri və tənzimlənən sahələrin gözləntilərinə uyğun praktikalar. Təfərrüatlar təhlükəsizlik və məxfilik səhifələrində paylaşılacaq."
+      },
+      "migrate": {
+        "q": "Mövcud alətimizdən köçürə biləcəyikmi?",
+        "a": "Yayğın təqvimlər və müştəri siyahıları üçün yönləndirilmiş import yolları planlaşdırırıq. Gözləmə siyahısına qoşularkən bu gün nə istifadə etdiyinizi yazın ki, prioritetləşdirək."
+      },
+      "support": {
+        "q": "Hansı dəstəyi təqdim edəcəksiniz?",
+        "a": "Faydalı sənədlər, məhsuldaxili yönləndirmə və ödənişli planlarda birbaşa dəstək. Erkən tərəfdaşlar təcrübəni təkmilləşdirərkən daha yaxın əlaqə əldə edəcək."
+      }
+    }
+  }
+}
 

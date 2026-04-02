@@ -2,10 +2,11 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, CheckCircle2, Users } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import type { ChangeEvent, FormEvent, ReactElement } from "react";
 import { useEffect, useState } from "react";
 import { REGISTER_EMAIL_PREFILL_EVENT } from "./registerPrefillEvent";
-import { CountdownDigit, DIGIT_LABELS, useCountdown, useDeadline } from "./useCountdown";
+import { CountdownDigit, useCountdown, useDeadline } from "./useCountdown";
 
 interface FormData {
   salonName: string;
@@ -70,6 +71,7 @@ function InputField({
 }
 
 function SuccessState(): ReactElement {
+  const t = useTranslations("home.register.success");
   const reduceMotion = useReducedMotion();
 
   return (
@@ -90,11 +92,10 @@ function SuccessState(): ReactElement {
             />
           </div>
           <h2 className="font-sans text-2xl font-semibold tracking-tight text-[var(--ob-text)] md:text-3xl">
-            You&rsquo;re on the list!
+            {t("title")}
           </h2>
           <p className="mt-3 font-sans text-base leading-relaxed text-[var(--ob-text-soft)]">
-            We&rsquo;ll reach out when your salon&rsquo;s spot is ready. Keep
-            an eye on your inbox.
+            {t("body")}
           </p>
         </motion.div>
       </div>
@@ -103,6 +104,8 @@ function SuccessState(): ReactElement {
 }
 
 export function RegistrationSection(): ReactElement {
+  const locale = useLocale();
+  const t = useTranslations("home.register");
   const reduceMotion = useReducedMotion();
   const [form, setForm] = useState<FormData>(INITIAL_FORM);
   const [submitted, setSubmitted] = useState<boolean>(false);
@@ -132,6 +135,12 @@ export function RegistrationSection(): ReactElement {
     timeLeft.hours,
     timeLeft.minutes,
     timeLeft.seconds,
+  ];
+  const countdownLabels = [
+    t("countdown.digits.days"),
+    t("countdown.digits.hours"),
+    t("countdown.digits.minutes"),
+    t("countdown.digits.seconds"),
   ];
 
   function handleChange(
@@ -165,10 +174,10 @@ export function RegistrationSection(): ReactElement {
         className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2"
         aria-hidden
       >
-        <div className="h-[500px] w-[900px] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(186,170,255,0.06)_0%,transparent_70%)] blur-3xl" />
+        <div className="w-[min(92vw,56rem)] aspect-[9/5] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(186,170,255,0.06)_0%,transparent_70%)] blur-3xl" />
       </div>
 
-      <div className="relative z-[1] mx-auto max-w-3xl px-4 md:px-8">
+      <div className="relative z-[1] mx-auto max-w-3xl px-4 sm:px-6 md:px-8">
         {/* Badge */}
         <motion.div
           className="flex justify-center"
@@ -179,19 +188,24 @@ export function RegistrationSection(): ReactElement {
         >
           <span className="inline-flex items-center gap-2 rounded-full border border-[var(--ob-glass-border)] bg-[var(--ob-glass-bg)] px-4 py-1.5 font-sans text-xs font-semibold tracking-[0.18em] text-[var(--ob-text-soft)] uppercase backdrop-blur-md">
             <Users className="size-3.5" strokeWidth={2.2} />
-            Register now
+            {t("badge")}
           </span>
         </motion.div>
 
         {/* Headline */}
         <motion.h2
-          className="mx-auto mt-6 max-w-xl text-center font-serif text-[clamp(1.75rem,4.5vw,3rem)] font-medium italic leading-[1.1] tracking-tight text-[#e8ecff] drop-shadow-[0_0_28px_rgba(186,170,255,0.35)]"
+          {...(locale === "az" ? { "data-register-az-title": "" } : {})}
+          className={
+            locale === "az"
+              ? "mx-auto mt-6 max-w-xl text-center font-serif text-fluid-serif-lg font-semibold italic leading-tight tracking-tighter text-[#e8ecff]"
+              : "mx-auto mt-6 max-w-xl text-center font-serif text-fluid-serif-xl font-medium italic leading-[1.1] tracking-tight text-[#e8ecff] drop-shadow-[0_0_28px_rgba(186,170,255,0.35)]"
+          }
           initial={reduceMotion ? {} : { opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.55, delay: 0.08, ease: STAGGER_EASE }}
         >
-          Early Registration Benefit
+          {t("title")}
         </motion.h2>
 
         {/* Description */}
@@ -202,8 +216,7 @@ export function RegistrationSection(): ReactElement {
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5, delay: 0.15, ease: STAGGER_EASE }}
         >
-          Register during this early access window and lock in exclusive
-          lifetime benefits for your salon.
+          {t("body")}
         </motion.p>
 
         {/* Compact countdown timer */}
@@ -215,14 +228,14 @@ export function RegistrationSection(): ReactElement {
           transition={{ duration: 0.5, delay: 0.2, ease: STAGGER_EASE }}
         >
           <p className="mb-4 text-center font-sans text-xs font-semibold tracking-[0.2em] text-[var(--ob-text-faint)] uppercase">
-            Offer expires in
+            {t("countdown.label")}
           </p>
-          <div className="flex items-center justify-center gap-3 md:gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 md:gap-4">
             {countdownValues.map((v, i) => (
               <CountdownDigit
-                key={DIGIT_LABELS[i]}
+                key={countdownLabels[i]}
                 value={v}
-                label={DIGIT_LABELS[i]}
+                label={countdownLabels[i] ?? ""}
                 reduceMotion={reduceMotion}
                 compact
               />
@@ -243,36 +256,36 @@ export function RegistrationSection(): ReactElement {
           <div className="grid gap-5 sm:grid-cols-2">
             <InputField
               id="salonName"
-              label="Salon Name"
+              label={t("form.salonName.label")}
               value={form.salonName}
               onChange={handleChange}
-              placeholder="e.g. Luxe Hair Studio"
+              placeholder={t("form.salonName.placeholder")}
             />
             <InputField
               id="ownerName"
-              label="Owner Name"
+              label={t("form.ownerName.label")}
               value={form.ownerName}
               onChange={handleChange}
             />
             <InputField
               id="phone"
-              label="Phone"
+              label={t("form.phone.label")}
               type="tel"
               value={form.phone}
               onChange={handleChange}
-              placeholder="+994 XX XXX XX XX"
+              placeholder={t("form.phone.placeholder")}
             />
             <InputField
               id="email"
-              label="Email"
+              label={t("form.email.label")}
               type="email"
               value={form.email}
               onChange={handleChange}
-              placeholder="you@salon.com"
+              placeholder={t("form.email.placeholder")}
             />
             <InputField
               id="city"
-              label="City"
+              label={t("form.city.label")}
               value={form.city}
               onChange={handleChange}
             />
@@ -281,7 +294,7 @@ export function RegistrationSection(): ReactElement {
                 htmlFor="employees"
                 className="mb-1.5 block font-sans text-xs font-semibold tracking-[0.12em] text-[var(--ob-text-soft)] uppercase"
               >
-                Number of Employees
+                {t("form.employees.label")}
                 <span className="ml-0.5 text-[#e8ecff]">*</span>
               </label>
               <select
@@ -293,12 +306,20 @@ export function RegistrationSection(): ReactElement {
                 className="w-full appearance-none rounded-xl border border-[var(--ob-glass-border)] bg-[rgba(255,255,255,0.04)] px-4 py-3 font-sans text-sm text-[var(--ob-text)] outline-none transition-all duration-300 hover:border-[rgba(255,255,255,0.2)] focus:border-[rgba(186,170,255,0.5)] focus:bg-[rgba(255,255,255,0.06)] focus:shadow-[0_0_0_3px_rgba(186,170,255,0.12)] focus:ring-0"
               >
                 <option value="" className="bg-[var(--ob-hero-mid)] text-[var(--ob-text-faint)]">
-                  Select range
+                  {t("form.employees.placeholder")}
                 </option>
-                <option value="1-3" className="bg-[var(--ob-hero-mid)]">1 – 3</option>
-                <option value="4-10" className="bg-[var(--ob-hero-mid)]">4 – 10</option>
-                <option value="11-25" className="bg-[var(--ob-hero-mid)]">11 – 25</option>
-                <option value="25+" className="bg-[var(--ob-hero-mid)]">25+</option>
+                <option value="1-3" className="bg-[var(--ob-hero-mid)]">
+                  {t("form.employees.options.1-3")}
+                </option>
+                <option value="4-10" className="bg-[var(--ob-hero-mid)]">
+                  {t("form.employees.options.4-10")}
+                </option>
+                <option value="11-25" className="bg-[var(--ob-hero-mid)]">
+                  {t("form.employees.options.11-25")}
+                </option>
+                <option value="25+" className="bg-[var(--ob-hero-mid)]">
+                  {t("form.employees.options.25+")}
+                </option>
               </select>
             </div>
           </div>
@@ -318,8 +339,7 @@ export function RegistrationSection(): ReactElement {
               htmlFor="agreeDiscount"
               className="font-sans text-sm leading-relaxed text-[var(--ob-text-soft)]"
             >
-              I agree to receive updates about my founding salon benefits and
-              early access.
+              {t("form.agree")}
             </label>
           </div>
 
@@ -330,13 +350,13 @@ export function RegistrationSection(): ReactElement {
             whileHover={reduceMotion ? {} : { scale: 1.01 }}
             whileTap={reduceMotion ? {} : { scale: 0.98 }}
           >
-            Secure your spot
+            {t("form.submit")}
             <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </motion.button>
 
           {/* Fine print */}
           <p className="mt-4 text-center font-sans text-xs text-[var(--ob-text-faint)]">
-            No payment required. We&rsquo;ll contact you when onboarding begins.
+            {t("form.finePrint")}
           </p>
         </motion.form>
       </div>

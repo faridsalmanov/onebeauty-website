@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { ReactElement } from "react";
-import { useMemo, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export interface TimeLeft {
   days: number;
@@ -29,29 +29,31 @@ function splitTotalSeconds(totalSeconds: number): TimeLeft {
 }
 
 /**
- * Uses `useSyncExternalStore` with a numeric snapshot so SSR/hydration match
- * (`getServerSnapshot` → 0) and `getSnapshot` stays referentially stable within
- * each second (avoids `Date.now()` / timezone mismatches vs plain `useState`).
+ * Client-only ticking after mount so the first paint matches SSR (zeros) and
+ * avoids hydration mismatches from `Date.now()` on the initial client render.
  */
 export function useCountdown(targetDate: Date): TimeLeft {
   const targetMs = targetDate.getTime();
-
-  const totalSecondsRemaining = useSyncExternalStore(
-    (onStoreChange) => {
-      const id = setInterval(onStoreChange, 1000);
-      return () => clearInterval(id);
-    },
-    () => {
-      const diff = targetMs - Date.now();
-      return diff <= 0 ? 0 : Math.floor(diff / 1000);
-    },
-    () => 0,
+  const [totalSecondsRemaining, setTotalSecondsRemaining] = useState<number | null>(
+    null,
   );
+
+  useEffect(() => {
+    const tick = (): void => {
+      const diff = targetMs - Date.now();
+      setTotalSecondsRemaining(diff <= 0 ? 0 : Math.floor(diff / 1000));
+    };
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return (): void => window.clearInterval(id);
+  }, [targetMs]);
+
+  if (totalSecondsRemaining === null) {
+    return ZERO_TIME_LEFT;
+  }
 
   return splitTotalSeconds(totalSecondsRemaining);
 }
-
-export const DIGIT_LABELS = ["Days", "Hours", "Min", "Sec"] as const;
 
 export function useDeadline(daysFromNow: number): Date {
   return useMemo(() => {

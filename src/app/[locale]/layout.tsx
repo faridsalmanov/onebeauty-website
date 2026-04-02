@@ -1,13 +1,26 @@
 import type { ReactElement, ReactNode } from "react";
+import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { getMessages } from "next-intl/server";
+import { routing, type AppLocale } from "@/i18n/routing";
+
+export function generateStaticParams(): { locale: string }[] {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export default async function LocaleLayout({
   children,
+  params,
 }: {
   children: ReactNode;
+  params: Promise<{ locale: string }>;
 }): Promise<ReactElement> {
-  const locale = await getLocale();
+  const { locale } = await params;
+
+  if (!routing.locales.includes(locale as AppLocale)) {
+    notFound();
+  }
+
   const messages = await getMessages();
 
   return (
@@ -16,4 +29,3 @@ export default async function LocaleLayout({
     </NextIntlClientProvider>
   );
 }
-

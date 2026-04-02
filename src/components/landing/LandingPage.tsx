@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import { AppShowcaseSection } from "./AppShowcaseSection";
+import { HeroPinnedSeamScroll } from "./HeroPinnedSeamScroll";
 import { HeroSection } from "./HeroSection";
 import { LandingShell } from "./LandingShell";
 import { PinnedScrollStory } from "./PinnedScrollStory";
@@ -12,6 +13,7 @@ export function LandingPage(): ReactElement {
   return (
     <LandingShell>
       <SiteHeader />
+      <HeroPinnedSeamScroll />
       <HeroSection />
       <PinnedScrollStory />
       <AppShowcaseSection />

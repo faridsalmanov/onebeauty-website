@@ -2,6 +2,7 @@
 
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { useState } from "react";
 
@@ -25,47 +26,44 @@ type WorkflowStep = {
   phoneScreenshotSrc: string;
 };
 
-const WORKFLOW_STEPS: readonly WorkflowStep[] = [
-  {
-    id: "01",
-    number: "01",
-    title: "Choose service and stylist",
-    body:
-      "Start on the salon screen: browse services and prices, meet the team, pick the treatment you want, and choose your stylist.",
-    phoneScreenshotSrc: "/images/steps/step1.png",
-  },
-  {
-    id: "02",
-    number: "02",
-    title: "Choose date and time",
-    body:
-      "When you’re ready, flip through the calendar and tap a time that works for you. Slots are shown live for your stylist, so booking feels quick and straightforward.",
-    phoneScreenshotSrc: "/images/steps/step2.png",
-  },
-  {
-    id: "03",
-    number: "03",
-    title: "Manage booking",
-    body:
-      "Once you’re booked, you’ll land on a helpful summary: change details if you need to, add the visit to your calendar, and so much more.",
-    phoneScreenshotSrc: "/images/steps/step3.png",
-  },
-  {
-    id: "04",
-    number: "04",
-    title: "Your bookings",
-    body:
-      "Anytime, open Bookings to see what’s ahead or rate your past bookings. One simple list keeps what’s next and what you’ve done easy to find whenever you need it.",
-    phoneScreenshotSrc: "/images/steps/step4.png",
-  },
-];
-
 export function WorkflowSection(): ReactElement {
+  const t = useTranslations("home.workflow");
   const [activeId, setActiveId] = useState<string>("01");
   const reduceMotion = useReducedMotion();
 
+  const steps: readonly WorkflowStep[] = [
+    {
+      id: "01",
+      number: "01",
+      title: t("steps.01.title"),
+      body: t("steps.01.body"),
+      phoneScreenshotSrc: "/images/steps/step1.png",
+    },
+    {
+      id: "02",
+      number: "02",
+      title: t("steps.02.title"),
+      body: t("steps.02.body"),
+      phoneScreenshotSrc: "/images/steps/step2.png",
+    },
+    {
+      id: "03",
+      number: "03",
+      title: t("steps.03.title"),
+      body: t("steps.03.body"),
+      phoneScreenshotSrc: "/images/steps/step3.png",
+    },
+    {
+      id: "04",
+      number: "04",
+      title: t("steps.04.title"),
+      body: t("steps.04.body"),
+      phoneScreenshotSrc: "/images/steps/step4.png",
+    },
+  ];
+
   const activeStep =
-    WORKFLOW_STEPS.find((s): boolean => s.id === activeId) ?? WORKFLOW_STEPS[0];
+    steps.find((s): boolean => s.id === activeId) ?? steps[0];
 
   /** Shared layout tween: slightly longer + softer ease for stack + glass (less snappy). */
   const stackEase = [0.16, 1, 0.32, 1] as const;
@@ -84,25 +82,25 @@ export function WorkflowSection(): ReactElement {
 
   return (
     <section className="relative overflow-hidden bg-transparent">
-      <div className="relative z-[1] mx-auto w-full max-w-[1920px] px-4 py-16 md:px-8 md:py-20 lg:px-10">
+      <div className="relative z-[1] mx-auto w-full max-w-[min(100%,120rem)] px-4 py-16 sm:px-6 md:px-8 md:py-20 lg:px-10">
         <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           <div className="max-w-2xl">
-            <h2 className="font-sans text-[clamp(2.45rem,6vw,5rem)] leading-[0.95] font-medium tracking-tight text-[var(--ob-text)]">
-              Book in
+            <h2 className="font-sans text-fluid-section leading-[0.95] font-medium tracking-tight text-[var(--ob-text)]">
+              {t("titleLine1")}
               <br />
-              4 steps
+              {t("titleLine2")}
             </h2>
             <p className="mt-4 max-w-sm font-sans text-base leading-relaxed text-[var(--ob-text-soft)] sm:text-[1.05rem]">
-              Here’s how it feels to book with OneBeauty — from choosing your stylist to seeing your visits in one place.
+              {t("body")}
             </p>
 
             <LayoutGroup id="workflow-steps">
               <div
                 className="mt-6 flex flex-col gap-2 sm:mt-8 sm:gap-2.5 md:mt-10 md:gap-3"
                 role="tablist"
-                aria-label="Workflow steps"
+                aria-label={t("aria.tablist")}
               >
-                {WORKFLOW_STEPS.map((step): ReactElement => {
+                {steps.map((step): ReactElement => {
                   const selected = step.id === activeId;
                   return (
                     <motion.button
@@ -190,7 +188,7 @@ export function WorkflowSection(): ReactElement {
             role="tabpanel"
             aria-labelledby={`workflow-tab-${activeStep?.id ?? "01"}`}
           >
-            <div className="relative mx-auto w-full max-w-[min(90vw,264px)] select-none sm:max-w-[280px] lg:max-w-[296px]">
+            <div className="relative mx-auto w-full max-w-[min(92vw,18.5rem)] select-none sm:max-w-[18.5rem] lg:max-w-[19rem]">
               <AnimatePresence initial={false} mode="wait">
                 <motion.div
                   key={activeStep.id}
@@ -200,16 +198,27 @@ export function WorkflowSection(): ReactElement {
                   transition={fadePhone}
                   className="relative w-full"
                 >
+                  <div
+                    className="relative w-full"
+                    style={{
+                      aspectRatio: `${WORKFLOW_SCREENSHOT_WIDTH} / ${WORKFLOW_SCREENSHOT_HEIGHT}`,
+                    }}
+                  >
                   <Image
                     src={activeStep.phoneScreenshotSrc}
-                    alt={`OneBeauty app — step ${activeStep.number}: ${activeStep.title}`}
+                    alt={t("aria.phoneAlt", {
+                      stepNumber: activeStep.number,
+                      stepTitle: activeStep.title,
+                    })}
                     width={WORKFLOW_SCREENSHOT_WIDTH}
                     height={WORKFLOW_SCREENSHOT_HEIGHT}
                     className="pointer-events-none block h-auto w-full object-contain drop-shadow-[0_22px_48px_-18px_rgba(0,0,0,0.48)]"
-                    sizes="(max-width: 640px) 90vw, 296px"
+                    sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 19rem"
                     priority={activeStep.id === "01"}
+                    loading={activeStep.id === "01" ? "eager" : "lazy"}
                     draggable={false}
                   />
+                  </div>
                 </motion.div>
               </AnimatePresence>
             </div>

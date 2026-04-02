@@ -12,6 +12,37 @@
   --ob-glow-lavender: rgba(186, 170, 255, 0.22);
   --ob-glow-violet: rgba(124, 92, 255, 0.14);
   --ob-glow-cyan: rgba(56, 213, 232, 0.09);
+  /*
+   * Full-page marketing backdrop (must match SiteAtmosphere).
+   * Used with background-attachment: fixed on the hero seam so the fold matches the next section.
+   */
+  --ob-site-atmosphere-bg:
+    radial-gradient(
+      ellipse 100% 68% at 50% -18%,
+      var(--ob-glow-lavender),
+      transparent 52%
+    ),
+    radial-gradient(
+      ellipse 82% 48% at 100% 28%,
+      var(--ob-glow-violet),
+      transparent 48%
+    ),
+    radial-gradient(
+      ellipse 55% 42% at 8% 92%,
+      var(--ob-glow-cyan),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 92% 88%,
+      rgba(3, 39, 97, 0.45),
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      var(--ob-hero-mid) 0%,
+      var(--ob-hero-deep) 48%,
+      #070f1a 100%
+    );
   --ob-glass-border: rgba(255, 255, 255, 0.12);
   --ob-glass-bg: rgba(255, 255, 255, 0.06);
   /* Sticky scrolled header — dark glass to match dark hero */
@@ -23,11 +54,13 @@
   /* Expanding frame — warm ivory cream (slightly buttered vs cool greige) */
   --ob-showcase-surface: #f7f1e6;
   --ob-showcase-cream: var(--ob-showcase-surface);
+  /* Fold handoff: warm greige — dusty but lifted so the bottom edge isn't too heavy */
+  --ob-seam-fold: rgb(202 190 172);
   /*
    * Seam ramps: perceptual ease — small opacity steps, long low-alpha tails, mid stops
-   * nudged a hair warmer so it reads “cream” not “grey beige”.
+   * nudged a hair warmer so it reads "cream" not "grey beige".
    */
-  /* Card-adjacent zone: slightly dustier + lower alpha so it doesn’t read chalk-white */
+  /* Card zone + long dusty tail: extra late stops break a straight horizontal "line" read */
   --ob-seam-hero-to-showcase: linear-gradient(
     to bottom,
     transparent 0%,
@@ -39,27 +72,35 @@
     rgb(248 241 230 / 0.26) 39%,
     rgb(248 241 230 / 0.38) 47%,
     rgb(247 240 229 / 0.52) 55%,
-    rgb(247 240 229 / 0.64) 63%,
-    rgb(247 240 229 / 0.74) 71%,
-    rgb(247 241 230 / 0.82) 79%,
-    rgb(247 241 230 / 0.9) 87%,
-    rgb(247 241 230 / 0.952) 94%,
-    var(--ob-showcase-surface) 100%
+    rgb(247 240 229 / 0.6) 60%,
+    rgb(244 234 218 / 0.66) 65%,
+    rgb(238 226 208 / 0.72) 70%,
+    rgb(232 218 198 / 0.77) 74%,
+    rgb(228 214 194 / 0.81) 78%,
+    rgb(222 208 186 / 0.85) 82%,
+    rgb(218 204 182 / 0.88) 85%,
+    rgb(214 200 178 / 0.91) 88%,
+    rgb(210 196 174 / 0.93) 91%,
+    rgb(206 192 172 / 0.955) 94%,
+    rgb(204 190 172 / 0.975) 97%,
+    var(--ob-seam-fold) 100%
   );
-  /* Pinned top: same dustier palette + opacity curve as --ob-seam-hero-to-showcase */
+  /* Pinned top: matched fold + softer, longer falloff into dark */
   --ob-seam-showcase-from-hero: linear-gradient(
     180deg,
-    var(--ob-showcase-surface) 0%,
-    rgb(247 240 229 / 0.84) 7%,
-    rgb(247 241 230 / 0.66) 14%,
-    rgb(248 241 230 / 0.46) 23%,
-    rgb(247 240 229 / 0.3) 34%,
-    rgb(247 240 229 / 0.175) 46%,
-    rgb(246 239 228 / 0.098) 58%,
-    rgb(246 239 228 / 0.054) 70%,
-    rgb(245 238 227 / 0.028) 81%,
-    rgb(245 238 227 / 0.012) 90%,
-    rgb(245 238 227 / 0.0035) 96%,
+    var(--ob-seam-fold) 0%,
+    rgb(206 192 172 / 0.95) 5%,
+    rgb(214 200 180 / 0.82) 11%,
+    rgb(222 208 188 / 0.68) 18%,
+    rgb(230 216 196 / 0.54) 26%,
+    rgb(236 222 202 / 0.42) 34%,
+    rgb(240 226 206 / 0.32) 42%,
+    rgb(243 229 209 / 0.22) 52%,
+    rgb(245 231 211 / 0.14) 62%,
+    rgb(246 233 213 / 0.085) 72%,
+    rgb(246 234 214 / 0.048) 82%,
+    rgb(245 236 216 / 0.022) 90%,
+    rgb(245 237 218 / 0.008) 96%,
     transparent 100%
   );
   --ob-showcase-ink: #1a1a1a;
@@ -81,12 +122,63 @@
   --color-ob-hero-mid: #13243e;
   --color-ob-cta-bg: #f4f6fb;
   --color-ob-success: #2e7d32;
+  /*
+   * Fluid type scale — registered in @theme inline so Tailwind v4 generates
+   * proper font-size utilities (text-fluid-hero, etc.) with the clamp() value
+   * inlined directly into the CSS. Using text-[var(--...)] is ambiguous in
+   * Tailwind v4 and silently falls back to `color`, not `font-size`.
+   */
+  --text-fluid-hero: clamp(1.875rem, calc(1.25rem + 4.25vw), 5.75rem);
+  --text-fluid-section: clamp(2.45rem, 6vw, 5rem);
+  --text-fluid-serif-xl: clamp(1.75rem, 4.5vw, 3rem);
+  --text-fluid-serif-lg: clamp(1.75rem, 4vw, 2.75rem);
+  --text-fluid-faq: clamp(2.5rem, 8vw, 4.5rem);
+}
+
+/* Azerbaijani: all `font-serif` (Instrument elsewhere) → Cormorant Garamond + latin-ext. */
+html.locale-az {
+  --font-serif: var(--font-cormorant-garamond-az-latin);
+}
+
+/*
+ * Hero (az): Inter for column + most headline words (ə). “bir tətbiqdən” — Cormorant italic (latin-ext).
+ */
+[data-hero-az-typography] {
+  font-family: var(--font-inter-az-latin), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+[data-hero-az-headline] [data-hero-az-emphasis-serif] {
+  font-family: var(--font-cormorant-garamond-az-latin), ui-serif, Georgia, serif;
+}
+
+/*
+ * AZ display serif — showcase headline, registration title, pinned problem `<h2>`
+ * (full line): Cormorant + smoothing + soft lift shadow.
+ */
+[data-showcase-az-heading],
+html.locale-az [data-register-az-title],
+[data-pinned-problem-az-display] {
+  font-family: var(--font-cormorant-garamond-az-latin), ui-serif, Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, 0.08),
+    0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
 body {
   background: var(--ob-hero-deep);
   color: var(--ob-text);
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * PinnedScrollStory — problem beat only, locale az: sans → Inter (serif headline uses global --font-serif).
+ */
+[data-pinned-problem-az-latin] {
+  font-family: var(--font-inter-az-latin), var(--font-geist-sans), ui-sans-serif,
+    system-ui, sans-serif;
 }
 
 /* FAQ accordion (Framer Motion) — avoid selecting question row; answers stay copyable. */

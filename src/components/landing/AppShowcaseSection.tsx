@@ -3,7 +3,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Sparkles } from "lucide-react";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
 
@@ -693,39 +693,37 @@ function AnalyticsLineChart(): ReactElement {
 const SHOWCASE_CARDS: readonly ShowcaseCard[] = [
   {
     id: "smart-booking",
-    title: "Smart Booking Timeline",
-    description:
-      "Live bookings, no-show flags, and staff load in one view so you can plan the day faster.",
+    title: "",
+    description: "",
     mediaOnSide: false,
     customMedia: BookingTimelineIllustration,
   },
   {
     id: "team-services",
-    title: "Team & salon menu",
-    description:
-      "Add stylists, attach services with price and duration, and set weekly hours — what clients book stays aligned with your real team.",
+    title: "",
+    description: "",
     mediaOnSide: false,
     customMedia: TeamAndServicesIllustration,
   },
   {
     id: "staff-performance",
-    title: "Staff Performance Snapshot",
-    description:
-      "Track service revenue, rebooking rate, and productivity by team member — and see employee ratings in the same view, without jumping across tools.",
+    title: "",
+    description: "",
     mediaOnSide: false,
     customMedia: StaffPerformanceIllustration,
   },
   {
     id: "salon-analytics",
-    title: "Salon Analytics & Insights",
-    description:
-      "Track ratings, identify loyal clients, and see which services drive repeat bookings — all in one dashboard.",
+    title: "",
+    description: "",
     mediaOnSide: false,
     customMedia: AnalyticsLineChart,
   },
 ];
 
 export function AppShowcaseSection(): ReactElement {
+  const locale = useLocale();
+  const t = useTranslations("home.showcase");
   const sectionRef = useRef<HTMLElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -757,9 +755,6 @@ export function AppShowcaseSection(): ReactElement {
       const cards = gsap.utils.toArray<HTMLElement>("[data-showcase-card]");
       const cardMedia = gsap.utils.toArray<HTMLElement>(
         "[data-showcase-card-media]",
-      );
-      const ctaWrap = section.querySelector<HTMLElement>(
-        "[data-showcase-cta]",
       );
 
       const endDistance = (): string =>
@@ -794,21 +789,6 @@ export function AppShowcaseSection(): ReactElement {
         },
         0.22,
       );
-
-      if (ctaWrap) {
-        tl.fromTo(
-          ctaWrap,
-          { opacity: 0, y: 18, scale: 0.98 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.28,
-            ease: "power2.out",
-          },
-          0.3,
-        );
-      }
 
       tl.fromTo(
         cardMedia,
@@ -860,7 +840,7 @@ export function AppShowcaseSection(): ReactElement {
       className="relative z-10 scroll-mt-24"
       aria-labelledby="app-showcase-heading"
     >
-      <div className="mx-auto flex w-full max-w-[1920px] flex-col items-stretch pl-0 pr-2.5 md:pr-4 lg:pr-5">
+      <div className="mx-auto flex w-full max-w-[min(100%,120rem)] flex-col items-stretch px-3 sm:px-4 md:pl-0 md:pr-4 lg:pr-5">
         <ShowcaseSpearOrnament />
         <div className="relative w-full overflow-visible rounded-[clamp(1.15rem,2.8vw,2rem)] shadow-[0_-28px_80px_-36px_rgba(0,0,0,0.5)]">
           <div
@@ -885,40 +865,30 @@ export function AppShowcaseSection(): ReactElement {
                     strokeWidth={1.75}
                     aria-hidden
                   />
-                  For salons
+                  {t("eyebrow")}
                 </p>
                 <h2
                   id="app-showcase-heading"
-                  className="mt-3 font-serif text-[clamp(1.75rem,4vw,2.75rem)] font-semibold leading-tight tracking-tight text-[var(--ob-primary)]"
+                  {...(locale === "az" ? { "data-showcase-az-heading": "" } : {})}
+                  className="mt-3 font-serif text-fluid-serif-lg font-semibold leading-tight tracking-tighter text-[var(--ob-primary)]"
                 >
-                  Everything your salon needs, nothing it doesn&apos;t
+                  {t("title")}
                 </h2>
                 <p className="mt-4 font-sans text-base leading-relaxed text-[var(--ob-showcase-muted)] md:text-lg">
-                  Manage bookings, your team, and revenue from a single
-                  screen. No spreadsheets, no missed appointments, no end-of-day
-                  guesswork — just a calmer, more profitable salon.
-                </p>
-              </div>
-
-              <div
-                data-showcase-cta
-                className="mt-10 flex flex-col items-center gap-4 md:mt-12"
-              >
-                <Link
-                  href="#waitlist"
-                  className="inline-flex h-12 items-center justify-center rounded-xl bg-[var(--ob-primary)] px-6 font-sans text-sm font-semibold tracking-tight text-white shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_3px_14px_-3px_rgba(3,39,97,0.38),0_0_22px_-4px_rgba(3,39,97,0.22)] transition-[background-color,box-shadow] duration-200 ease-out hover:bg-[#021a4a] hover:shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_4px_18px_-3px_rgba(2,26,74,0.42),0_0_28px_-4px_rgba(3,39,97,0.28)] active:bg-[#011632]"
-                >
-                  Join waitlist
-                </Link>
-                <p className="max-w-md text-center font-sans text-xs leading-relaxed text-[var(--ob-showcase-muted)]">
-                  Same waitlist as above — we&apos;ll email salons first when
-                  spots open. Early-bird pricing applies to waitlist signups
-                  before public launch.
+                  {t("body")}
                 </p>
               </div>
 
               <div className="mt-10 grid gap-4 md:mt-12 md:grid-cols-2 md:gap-5">
                 {SHOWCASE_CARDS.map((card): ReactElement => {
+                  const cardKey =
+                    card.id === "smart-booking"
+                      ? ("smartBooking" as const)
+                      : card.id === "team-services"
+                        ? ("teamServices" as const)
+                        : card.id === "staff-performance"
+                          ? ("staffPerformance" as const)
+                          : ("salonAnalytics" as const);
                   const bodyClass =
                     "font-sans text-[0.9375rem] leading-relaxed text-[var(--ob-primary)]/60";
 
@@ -936,10 +906,10 @@ export function AppShowcaseSection(): ReactElement {
                         data-showcase-card-body
                         className={`${bodyClass} absolute bottom-4 left-4 right-4 line-clamp-2 translate-y-[4.5rem] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:translate-y-0 group-hover:translate-y-0 group-focus-within:translate-y-0 md:bottom-5 md:left-6 md:right-6`}
                       >
-                        {card.description}
+                        {t(`cards.${cardKey}.description`)}
                       </p>
                       <h3 className="absolute bottom-4 left-4 right-4 font-sans text-[clamp(1.35rem,2.4vw,2.05rem)] font-semibold leading-[1.08] tracking-tight text-[var(--ob-primary)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:translate-y-0 group-hover:-translate-y-[3.75rem] group-focus-within:-translate-y-[3.75rem] md:bottom-5 md:left-6 md:right-6">
-                        {card.title}
+                        {t(`cards.${cardKey}.title`)}
                       </h3>
                     </div>
                   );
@@ -947,7 +917,7 @@ export function AppShowcaseSection(): ReactElement {
                   const textBlockSideImage = (
                     <div className="flex flex-col px-4 pb-3 pt-3 md:px-6 md:pb-4 md:pt-4">
                       <h3 className="font-sans text-[clamp(1.35rem,2.4vw,2.05rem)] font-semibold leading-[1.08] tracking-tight text-[var(--ob-primary)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform md:translate-y-0 md:group-hover:-translate-y-1.5 md:group-focus-within:-translate-y-1.5 motion-reduce:translate-y-0">
-                        {card.title}
+                        {t(`cards.${cardKey}.title`)}
                       </h3>
                       <div
                         data-showcase-card-body-wrap
@@ -958,7 +928,7 @@ export function AppShowcaseSection(): ReactElement {
                             data-showcase-card-body
                             className={`pt-3 ${bodyClass} opacity-100 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:translate-y-0 motion-reduce:opacity-100 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-focus-within:translate-y-0 md:group-focus-within:opacity-100`}
                           >
-                            {card.description}
+                            {t(`cards.${cardKey}.description`)}
                           </p>
                         </div>
                       </div>

@@ -14,6 +14,7 @@ import {
   Tag,
 } from "lucide-react";
 import type { ReactElement } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useLayoutEffect, useRef } from "react";
 import {
   PIN_MEET_IN_START,
@@ -119,6 +120,8 @@ const ICON_LAYOUT: {
 ];
 
 export function PinnedScrollStory(): ReactElement {
+  const locale = useLocale();
+  const t = useTranslations("home.pinned");
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const meetRef = useRef<HTMLDivElement>(null);
@@ -128,6 +131,10 @@ export function PinnedScrollStory(): ReactElement {
   const problemRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     gsap.registerPlugin(ScrollTrigger);
 
     const panel = panelRef.current;
@@ -162,6 +169,19 @@ export function PinnedScrollStory(): ReactElement {
     }
 
     const ctx = gsap.context(() => {
+      if (reduceMotion) {
+        gsap.set(problem, { autoAlpha: 0 });
+        gsap.set([meetEyebrow, meetBrand, meetBody], {
+          autoAlpha: 1,
+          y: 0,
+        });
+        gsap.set(meetBrand, { scale: 1 });
+        for (let i = 0; i < outerEls.length; i++) {
+          gsap.set(outerEls[i], { autoAlpha: 0 });
+        }
+        return;
+      }
+
       gsap.set(problem, { autoAlpha: 1, y: 10 });
 
       for (let i = 0; i < ICON_LAYOUT.length; i++) {
@@ -350,10 +370,12 @@ export function PinnedScrollStory(): ReactElement {
     const onResize = (): void => {
       ScrollTrigger.refresh();
     };
-    window.addEventListener("resize", onResize);
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-    });
+    if (!reduceMotion) {
+      window.addEventListener("resize", onResize);
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+    }
 
     return () => {
       window.removeEventListener("resize", onResize);
@@ -364,18 +386,15 @@ export function PinnedScrollStory(): ReactElement {
   return (
     <div
       ref={rootRef}
+      data-landing-pinned-root
       className="relative z-0 w-full"
-      aria-label="Product story"
+      aria-label={t("ariaLabel")}
     >
       <div
         ref={panelRef}
-        className="relative z-0 flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-transparent px-4 md:px-8"
+        className="relative z-0 flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-transparent px-4 sm:px-6 md:px-8"
       >
-        {/* Top wash — paired with hero seam; keep behind content (-z-10) */}
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-12 [background-image:var(--ob-seam-showcase-from-hero)] md:h-14 lg:h-16"
-          aria-hidden
-        />
+        {/* Top wash removed for test — restore cream + data-landing-pinned-seam-blue block to re-enable */}
         <div className="relative mx-auto h-full min-h-[100dvh] w-full max-w-6xl">
           <div
             ref={meetRef}
@@ -385,7 +404,7 @@ export function PinnedScrollStory(): ReactElement {
               ref={meetEyebrowRef}
               className="font-sans text-sm font-medium tracking-[0.25em] text-[var(--ob-text-faint)] uppercase"
             >
-              Meet
+              {t("meetEyebrow")}
             </p>
             <div
               ref={meetBrandRef}
@@ -408,25 +427,30 @@ export function PinnedScrollStory(): ReactElement {
               ref={meetBodyRef}
               className="mt-8 max-w-md font-sans text-base leading-relaxed text-[var(--ob-text-soft)] md:text-lg"
             >
-              One workspace for bookings, staff, and clients — built to work
-              together from day one.
+              {t("meetBody")}
             </p>
           </div>
 
           <div
             ref={problemRef}
+            {...(locale === "az" ? { "data-pinned-problem-az-latin": "" } : {})}
             className="absolute inset-0 z-20 flex flex-col items-center justify-center px-2 text-center md:px-8"
           >
-            <p className="font-sans text-xs font-medium tracking-[0.3em] text-[var(--ob-text-faint)] uppercase">
-              The problem
+            <p className="font-sans text-xs font-medium tracking-[0.3em] text-[var(--ob-text-faint)]">
+              {t("problemEyebrow")}
             </p>
-            <h2 className="mt-4 max-w-[20ch] font-serif text-[clamp(1.75rem,4.2vw,3rem)] leading-[1.12] font-semibold tracking-tight text-[var(--ob-text)] md:max-w-3xl">
-              Your salon day lives across too many tools
+            <h2
+              {...(locale === "az" ? { "data-pinned-problem-az-display": "" } : {})}
+              className={`mt-4 max-w-[20ch] text-[clamp(1.75rem,4.2vw,3rem)] font-semibold text-[var(--ob-text)] md:max-w-3xl ${
+                locale === "az"
+                  ? "leading-tight tracking-tighter"
+                  : "font-serif leading-[1.12] tracking-tight"
+              }`}
+            >
+              {t("problemTitle")}
             </h2>
             <p className="mt-5 max-w-xl font-sans text-sm leading-relaxed text-[var(--ob-text-soft)] md:text-base">
-              Bookings in one tool, client chats in another, staff schedules in
-              a third — each part of your day lives in a different app, and
-              nothing connects them for you.
+              {t("problemBody")}
             </p>
           </div>
 

@@ -9,6 +9,7 @@ import {
   TrendingUp,
   Trophy,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import type { FormEvent, ReactElement, ReactNode } from "react";
 import { useState } from "react";
 import { REGISTER_EMAIL_PREFILL_EVENT } from "./registerPrefillEvent";
@@ -26,12 +27,8 @@ function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t);
 }
 
-const HEADLINE_LINE1: { text: string; italic?: boolean }[] = [
-  { text: "The" },
-  { text: "all-in-one", italic: true },
-  { text: "app" },
-  { text: "for" },
-];
+type HeadlineKey = "the" | "allInOne" | "app" | "for";
+const HEADLINE_LINE1_KEYS = ["the", "allInOne", "app", "for"] as const;
 
 /** Top-down clip + fade + slight rise (staggered on headline words). */
 const HERO_REVEAL_INITIAL = {
@@ -151,9 +148,10 @@ function BookingCard({
   heightTier: WorkflowCardHeightTier;
   delay?: number;
 }): ReactElement {
+  const t = useTranslations("home.hero.cards");
   return (
     <WorkflowCardPanel
-      className="w-[min(84vw,18rem)] sm:w-[18rem] md:w-[16.25rem] lg:w-[16.5rem] xl:w-[228px] xl:max-w-none"
+      className="w-[min(88vw,18.5rem)] sm:w-[18.5rem] md:w-[17rem] lg:w-[17.5rem] xl:w-[18.5rem]"
       delay={delay}
       heightTier={heightTier}
     >
@@ -162,19 +160,21 @@ function BookingCard({
           <Calendar className="size-4 text-sky-300/90" strokeWidth={1.75} />
         </div>
         <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Next booking
+          {t("nextBookingLabel")}
         </span>
       </div>
       <p className="font-sans text-sm font-semibold tracking-tight text-slate-100">
-        Balayage & Trim
+        {t("nextBookingService")}
       </p>
       <div className="mt-2 flex items-center gap-1.5 text-xs font-medium text-slate-400">
         <Clock className="size-3.5 shrink-0 text-sky-400/75" />
-        <span>Today, 2:30 PM</span>
+        <span>{t("nextBookingTime")}</span>
       </div>
       <div className="mt-auto flex items-center gap-2.5 pt-4">
         <div className="size-7 rounded-full bg-gradient-to-br from-violet-500/80 to-indigo-700/90 ring-1 ring-white/15" />
-        <span className="text-xs font-medium text-slate-300">Aysel M.</span>
+        <span className="text-xs font-medium text-slate-300">
+          {t("nextBookingClient")}
+        </span>
       </div>
     </WorkflowCardPanel>
   );
@@ -187,21 +187,22 @@ function RevenueCard({
   heightTier: WorkflowCardHeightTier;
   delay?: number;
 }): ReactElement {
+  const t = useTranslations("home.hero.cards");
   return (
     <WorkflowCardPanel
-      className="w-[min(78vw,17rem)] sm:w-[17rem] md:w-[15.5rem] lg:w-[15.75rem] xl:w-[200px] xl:max-w-none"
+      className="w-[min(86vw,17.25rem)] sm:w-[17.25rem] md:w-[16rem] lg:w-[16.5rem] xl:w-[17.25rem]"
       delay={delay}
       heightTier={heightTier}
     >
       <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-        This week
+        {t("thisWeekLabel")}
       </span>
       <p className="mt-1 font-sans text-3xl font-semibold tracking-tight text-slate-50 tabular-nums">
         ₼2.4K
       </p>
       <div className="mt-2 flex items-center gap-1.5 rounded-lg border border-emerald-500/15 bg-emerald-500/[0.06] px-2.5 py-1.5 text-xs font-medium">
         <TrendingUp className="size-3.5 shrink-0 text-emerald-400/85" strokeWidth={2} />
-        <span className="text-emerald-200/85">+18% vs last week</span>
+        <span className="text-emerald-200/85">{t("revenueDelta")}</span>
       </div>
       <div className="mt-auto flex items-end gap-1.5 pt-4">
         {[40, 55, 35, 70, 60, 80, 65].map((h, i) => (
@@ -223,9 +224,10 @@ function StylistCard({
   heightTier: WorkflowCardHeightTier;
   delay?: number;
 }): ReactElement {
+  const t = useTranslations("home.hero.cards");
   return (
     <WorkflowCardPanel
-      className="w-[min(84vw,18rem)] sm:w-[18rem] md:w-[16.25rem] lg:w-[16.5rem] xl:w-[228px] xl:max-w-none"
+      className="w-[min(88vw,18.5rem)] sm:w-[18.5rem] md:w-[17rem] lg:w-[17.5rem] xl:w-[18.5rem]"
       delay={delay}
       heightTier={heightTier}
     >
@@ -234,7 +236,7 @@ function StylistCard({
           <Trophy className="size-4 text-slate-300" strokeWidth={1.75} />
         </div>
         <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Top stylist
+          {t("topStylistLabel")}
         </span>
       </div>
       <div className="flex items-center gap-3">
@@ -244,17 +246,17 @@ function StylistCard({
           <div className="mt-0.5 flex flex-wrap items-center gap-1 text-xs font-medium text-slate-500">
             <Star className="size-3.5 fill-slate-500 text-slate-500" />
             <span className="text-slate-400">4.9</span>
-            <span className="text-slate-600">· 127 reviews</span>
+            <span className="text-slate-600">{t("reviewsMeta")}</span>
           </div>
         </div>
       </div>
       <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
-        {(["Color", "Bridal", "Keratin"] as const).map((tag) => (
+        {(["color", "bridal", "keratin"] as const).map((tag) => (
           <span
             key={tag}
             className="rounded-full border border-white/[0.08] bg-white/[0.04] px-2.5 py-0.5 text-[10px] font-medium text-slate-500"
           >
-            {tag}
+            {t(`tags.${tag}`)}
           </span>
         ))}
       </div>
@@ -269,43 +271,44 @@ function ScheduleCard({
   heightTier: WorkflowCardHeightTier;
   delay?: number;
 }): ReactElement {
+  const t = useTranslations("home.hero.cards");
   const slots = [
-    { time: "10:00", client: "Leyla K.", service: "Blowout", active: false },
-    { time: "11:30", client: "Gunel R.", service: "Highlights", active: true },
-    { time: "13:00", client: "Sabina T.", service: "Manicure", active: false },
+    { key: "slot1", active: false },
+    { key: "slot2", active: true },
+    { key: "slot3", active: false },
   ];
 
   return (
     <WorkflowCardPanel
-      className="w-[min(88vw,19rem)] sm:w-[19rem] md:w-[17.25rem] lg:w-[17.5rem] xl:w-[248px] xl:max-w-none"
+      className="w-[min(92vw,19.5rem)] sm:w-[19.5rem] md:w-[18rem] lg:w-[18.5rem] xl:w-[19.5rem]"
       delay={delay}
       heightTier={heightTier}
     >
       <div className="mb-3 flex items-center justify-between gap-2">
         <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-          Today&apos;s schedule
+          {t("todayScheduleLabel")}
         </span>
         <span className="rounded-md border border-cyan-400/20 bg-cyan-500/[0.08] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-cyan-100/85">
-          3 of 8
+          {t("scheduleMeta")}
         </span>
       </div>
       <div className="flex flex-col gap-2">
         {slots.map((slot) => (
           <div
-            key={slot.time}
+            key={slot.key}
             className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 ${slot.active ? "bg-emerald-500/[0.07] ring-1 ring-emerald-400/25" : "bg-black/25 ring-1 ring-white/[0.05]"}`}
           >
             <span
               className={`w-10 shrink-0 font-mono text-[11px] font-medium ${slot.active ? "text-emerald-200/80" : "text-slate-500"}`}
             >
-              {slot.time}
+              {t(`slots.${slot.key}.time`)}
             </span>
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-semibold text-slate-100">
-                {slot.client}
+                {t(`slots.${slot.key}.client`)}
               </p>
               <p className="truncate text-[10px] font-medium text-slate-500">
-                {slot.service}
+                {t(`slots.${slot.key}.service`)}
               </p>
             </div>
             {slot.active && (
@@ -328,9 +331,10 @@ function ReviewCard({
   heightTier: WorkflowCardHeightTier;
   delay?: number;
 }): ReactElement {
+  const t = useTranslations("home.hero.cards");
   return (
     <WorkflowCardPanel
-      className="w-[min(88vw,19rem)] sm:w-[19rem] md:w-[17.25rem] lg:w-[17.5rem] xl:w-[248px] xl:max-w-none"
+      className="w-[min(92vw,19.5rem)] sm:w-[19.5rem] md:w-[18rem] lg:w-[18.5rem] xl:w-[19.5rem]"
       delay={delay}
       heightTier={heightTier}
     >
@@ -343,14 +347,13 @@ function ReviewCard({
         ))}
       </div>
       <p className="rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2.5 font-sans text-xs font-medium leading-relaxed text-slate-300">
-        &ldquo;Finally an app that handles everything. My team switched from 3
-        different tools.&rdquo;
+        {t("reviewQuote")}
       </p>
       <div className="mt-auto flex items-center gap-2.5 pt-4">
         <div className="size-8 rounded-full bg-gradient-to-br from-rose-500/85 to-pink-900/90 ring-1 ring-rose-300/20" />
         <div>
-          <p className="text-xs font-semibold text-slate-200">Kamila S.</p>
-          <p className="text-[10px] font-medium text-slate-500">Salon owner</p>
+          <p className="text-xs font-semibold text-slate-200">{t("reviewName")}</p>
+          <p className="text-[10px] font-medium text-slate-500">{t("reviewRole")}</p>
         </div>
       </div>
     </WorkflowCardPanel>
@@ -362,9 +365,11 @@ function ReviewCard({
 /* ------------------------------------------------------------------ */
 
 const HEADLINE_TEXT =
-  "text-4xl font-medium tracking-tighter text-[var(--ob-text)] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.35rem]";
+  "font-medium tracking-tighter text-[var(--ob-text)] text-fluid-hero";
 
 export function HeroSection(): ReactElement {
+  const locale = useLocale();
+  const t = useTranslations("home.hero");
   const [email, setEmail] = useState("");
   const reduceMotionPref = useReducedMotion();
   const reduceMotion = reduceMotionPref === true;
@@ -387,22 +392,36 @@ export function HeroSection(): ReactElement {
   }
 
   return (
-    <section className="relative z-30 flex min-h-[100dvh] flex-col overflow-hidden tracking-[-0.04em]">
+    <section
+      data-landing-hero
+      className="relative z-0 flex min-h-[100dvh] flex-col overflow-hidden tracking-[-0.04em]"
+    >
       {/* Headline + CTA — flex-1 keeps vertical balance; cards sit below in flow (no overlap) */}
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 pt-10 pb-4 md:px-10 md:pt-14 md:pb-5 lg:px-14 xl:px-16">
-        <div className="mb-5 w-full max-w-[min(100%,88rem)] text-center md:mb-6">
+      <div
+        {...(locale === "az" ? { "data-hero-az-typography": "" } : {})}
+        className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 pt-10 pb-4 md:px-10 md:pt-14 md:pb-5 lg:px-14 xl:px-16"
+      >
+        <div
+          {...(locale === "az" ? { "data-hero-az-headline": "" } : {})}
+          className="mb-5 w-full max-w-[min(100%,88rem)] text-center md:mb-6"
+        >
           <div className="flex flex-col items-center gap-0.5 sm:gap-1 md:gap-1.5">
             <div
               className={`flex flex-wrap justify-center gap-x-[0.25em] gap-y-1 ${HEADLINE_TEXT}`}
             >
-              {HEADLINE_LINE1.map((word, index) => {
-                const isItalic = word.italic === true;
+              {HEADLINE_LINE1_KEYS.map((key, index) => {
+                const isItalic = key === "allInOne";
                 return (
                   <motion.span
-                    key={word.text}
+                    key={key}
+                    {...(locale === "az" && isItalic
+                      ? { "data-hero-az-emphasis-serif": "" }
+                      : {})}
                     className={
                       isItalic
-                        ? "inline-block font-serif font-normal italic text-[#eceef8] [text-shadow:0_0_22px_rgba(186,170,255,0.09),0_0_44px_rgba(186,170,255,0.045)]"
+                        ? locale === "az"
+                          ? "inline-block text-[1.04em] sm:text-[1.05em] font-semibold italic text-[#eceef8] [text-shadow:0_0_8px_rgba(255,255,255,0.55),0_0_28px_rgba(255,255,255,0.35),0_0_52px_rgba(255,255,255,0.12),0_0_22px_rgba(186,170,255,0.09),0_0_44px_rgba(186,170,255,0.045)]"
+                          : "inline-block font-serif font-normal italic text-[#eceef8] [text-shadow:0_0_22px_rgba(186,170,255,0.09),0_0_44px_rgba(186,170,255,0.045)]"
                         : "inline-block"
                     }
                     initial={
@@ -422,24 +441,26 @@ export function HeroSection(): ReactElement {
                       HERO_HEADLINE_WORD_DURATION,
                     )}
                   >
-                    {word.text}
+                    {t(`headline.line1.${key as HeadlineKey}`)}
                   </motion.span>
                 );
               })}
             </div>
-            <motion.span
-              className={`block ${HEADLINE_TEXT}`}
-              initial={reduceMotion ? false : HERO_REVEAL_INITIAL}
-              animate={HERO_REVEAL_ANIMATE}
-              transition={heroRevealTransition(
-                reduceMotion,
-                HERO_HEADLINE_BASE_DELAY +
-                  HERO_HEADLINE_STAGGER * HEADLINE_LINE1.length,
-                HERO_HEADLINE_WORD_DURATION,
-              )}
-            >
-              salons
-            </motion.span>
+            {t("headline.line2").trim() !== "" ? (
+              <motion.span
+                className={`block ${HEADLINE_TEXT}`}
+                initial={reduceMotion ? false : HERO_REVEAL_INITIAL}
+                animate={HERO_REVEAL_ANIMATE}
+                transition={heroRevealTransition(
+                  reduceMotion,
+                  HERO_HEADLINE_BASE_DELAY +
+                    HERO_HEADLINE_STAGGER * HEADLINE_LINE1_KEYS.length,
+                  HERO_HEADLINE_WORD_DURATION,
+                )}
+              >
+                {t("headline.line2")}
+              </motion.span>
+            ) : null}
           </div>
         </div>
 
@@ -454,8 +475,7 @@ export function HeroSection(): ReactElement {
           )}
         >
           <p className="text-center font-sans text-base leading-relaxed text-[var(--ob-text-soft)] md:text-lg">
-            Bookings, staff, and client history in one workspace for modern
-            salons.
+            {t("subline")}
           </p>
         </motion.div>
 
@@ -475,24 +495,23 @@ export function HeroSection(): ReactElement {
               className="relative w-full scroll-mt-28"
               onSubmit={handleWaitlistSubmit}
             >
-              <div className="group relative min-h-[4.25rem] rounded-xl border-0 bg-[var(--ob-glass-bg)] py-3 pl-5 pr-[9.25rem] shadow-[0_24px_80px_-24px_rgba(0,0,0,0.55)] backdrop-blur-md transition-[background-color,box-shadow,backdrop-filter] duration-200 focus-within:bg-white/[0.32] focus-within:shadow-[0_20px_56px_-16px_rgba(0,0,0,0.4)] focus-within:backdrop-blur-2xl focus-within:outline-none">
+              <div className="group relative flex flex-col gap-2 rounded-xl border border-white/[0.14] bg-white/[0.11] p-3 shadow-[0_24px_80px_-24px_rgba(0,0,0,0.55)] backdrop-blur-md transition-[background-color,box-shadow,backdrop-filter,border-color] duration-200 focus-within:border-white/[0.22] focus-within:bg-white/[0.34] focus-within:shadow-[0_20px_56px_-16px_rgba(0,0,0,0.4)] focus-within:backdrop-blur-2xl focus-within:outline-none sm:min-h-[4.25rem] sm:flex-row sm:gap-0 sm:p-0 sm:py-3 sm:pl-5 sm:pr-[9.25rem]">
                 <label className="sr-only" htmlFor="hero-email">
-                  Enter email
+                  {t("email.label")}
                 </label>
-                {/* Absolute inset = only this rect receives clicks; avoids caret in padding / dead zones */}
                 <input
                   id="hero-email"
                   type="email"
                   name="email"
                   autoComplete="email"
-                  placeholder="Enter email"
+                  placeholder={t("email.placeholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="absolute inset-y-3 left-5 right-[9.25rem] z-[1] min-h-0 w-auto min-w-0 bg-transparent font-sans text-base leading-normal text-[var(--ob-text)] outline-none transition-colors duration-200 ease-out placeholder:text-[var(--ob-text-faint)] group-focus-within:text-[#0f172a] group-focus-within:placeholder:text-[#0f172a] group-focus-within:placeholder:opacity-100 md:text-[1.0625rem]"
+                  className="relative z-[1] min-h-11 w-full min-w-0 bg-transparent font-sans text-base font-medium leading-normal text-[var(--ob-text)] outline-none transition-colors duration-200 ease-out placeholder:font-normal placeholder:text-[rgba(244,246,251,0.58)] group-focus-within:text-[#0f172a] group-focus-within:placeholder:text-[#0f172a] group-focus-within:placeholder:opacity-100 sm:absolute sm:inset-y-3 sm:left-5 sm:right-[9.25rem] sm:min-h-0 sm:w-auto sm:px-0 md:text-[1.0625rem]"
                 />
                 <motion.button
                   type="submit"
-                  className="absolute right-1.5 top-1.5 bottom-1.5 z-[2] flex flex-row items-center justify-center gap-1 overflow-hidden rounded-xl bg-[#b8d9f5] px-5 font-sans text-sm font-semibold text-[#0c2a4a] shadow-sm transition-[opacity,transform,background-color] duration-200 hover:bg-[#5a92c4] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:bg-[#b8d9f5]"
+                  className="relative z-[2] flex min-h-11 w-full flex-row items-center justify-center gap-1 overflow-hidden rounded-xl border border-white/35 bg-[#d6ecff] px-5 font-sans text-sm font-semibold text-[#062a52] shadow-[0_0_36px_-4px_rgba(130,205,255,0.55),0_10px_28px_-14px_rgba(45,120,210,0.4)] transition-[opacity,transform,background-color,box-shadow,border-color] duration-200 hover:border-white/45 hover:bg-[#e8f4ff] hover:shadow-[0_0_42px_-2px_rgba(145,215,255,0.65),0_12px_32px_-12px_rgba(50,130,220,0.45)] disabled:cursor-not-allowed disabled:border-white/20 disabled:opacity-45 disabled:shadow-[0_0_20px_-6px_rgba(130,205,255,0.22)] disabled:hover:bg-[#d6ecff] sm:absolute sm:right-1.5 sm:top-1.5 sm:bottom-1.5 sm:min-h-0 sm:w-auto"
                   disabled={!isValidEmail(email)}
                   initial="initial"
                   whileHover="hover"
@@ -506,7 +525,7 @@ export function HeroSection(): ReactElement {
                     }}
                     transition={{ duration: 0.2 }}
                   >
-                    Join waitlist
+                    {t("cta")}
                   </motion.span>
                   <motion.span
                     className="inline-flex overflow-hidden"
@@ -520,6 +539,9 @@ export function HeroSection(): ReactElement {
                   </motion.span>
                 </motion.button>
               </div>
+              <p className="mt-3 max-w-md px-1 text-center font-sans text-[0.8125rem] leading-snug text-[var(--ob-text-soft)] sm:text-sm">
+                {t("email.hint")}
+              </p>
             </form>
           </motion.div>
         </div>
@@ -569,11 +591,19 @@ export function HeroSection(): ReactElement {
         </div>
       </div>
 
-      {/* Fade cards into next section — matches pinned top wash via --ob-seam-* */}
+      {/* Cream seam + navy scrub — inside hero so z-40 scroll hint stays above */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[min(52%,24rem)] [background-image:var(--ob-seam-hero-to-showcase)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[min(52%,24rem)]"
         aria-hidden
-      />
+      >
+        <div className="absolute inset-0 [background-image:var(--ob-seam-hero-to-showcase)]" />
+        {/* Same stack as SiteAtmosphere + fixed attachment = pixels align with next section backdrop */}
+        <div
+          data-landing-hero-seam-atmosphere
+          className="absolute inset-0 opacity-0 will-change-[opacity] [background-image:var(--ob-site-atmosphere-bg)] [background-attachment:fixed] [background-repeat:no-repeat]"
+          aria-hidden
+        />
+      </div>
 
       {/* Scroll hint — mobile only */}
       <motion.div
@@ -584,16 +614,36 @@ export function HeroSection(): ReactElement {
       >
         <div className="flex flex-col items-center gap-2">
           <span className="text-xs font-medium tracking-widest text-[var(--ob-text-faint)]">
-            scroll to explore
+            {t("scrollHint")}
           </span>
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
+          {reduceMotion ? (
+            <div>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                className="text-[var(--ob-text-faint)]"
+                aria-hidden
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          ) : (
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
             <svg
               width="20"
               height="20"
@@ -610,7 +660,8 @@ export function HeroSection(): ReactElement {
                 d="M19 9l-7 7-7-7"
               />
             </svg>
-          </motion.div>
+            </motion.div>
+          )}
         </div>
       </motion.div>
     </section>

@@ -1,2 +1,265 @@
-{}
+{
+  "home": {
+    "common": {
+      "brand": "onebeauty",
+      "locales": {
+        "az": "Azerbaijani",
+        "en": "English",
+        "ru": "Russian"
+      }
+    },
+    "header": {
+      "nav": {
+        "faqs": "FAQs",
+        "forSalons": "For salons",
+        "pricing": "Pricing"
+      },
+      "cta": "Join waitlist",
+      "mobile": {
+        "openMenu": "Open menu",
+        "closeMenu": "Close menu"
+      },
+      "language": {
+        "label": "Language",
+        "srLabel": "Change language"
+      }
+    },
+    "hero": {
+      "headline": {
+        "line1": {
+          "the": "Run",
+          "allInOne": "your entire",
+          "app": "salon",
+          "for": "from"
+        },
+        "line2": "one app"
+      },
+      "subline": "Bookings, staff, and revenue — all organized, no spreadsheets, no missed appointments.",
+      "email": {
+        "label": "Enter your email",
+        "placeholder": "Enter your email",
+        "hint": "Limited early-bird discount for first salons • Takes 10 seconds"
+      },
+      "cta": "Get early access",
+      "scrollHint": "scroll to explore",
+      "cards": {
+        "nextBookingLabel": "Next booking",
+        "nextBookingService": "Balayage & Trim",
+        "nextBookingTime": "Today, 2:30 PM",
+        "nextBookingClient": "Aysel M.",
+        "thisWeekLabel": "This week",
+        "revenueDelta": "+18% vs last week",
+        "topStylistLabel": "Top stylist",
+        "reviewsMeta": "· 127 reviews",
+        "todayScheduleLabel": "Today’s schedule",
+        "scheduleMeta": "3 of 8",
+        "reviewQuote": "“Finally an app that handles everything. My team switched from 3 different tools.”",
+        "reviewName": "Kamila S.",
+        "reviewRole": "Salon owner",
+        "tags": {
+          "color": "Color",
+          "bridal": "Bridal",
+          "keratin": "Keratin"
+        },
+        "slots": {
+          "slot1": { "time": "10:00", "client": "Leyla K.", "service": "Blowout" },
+          "slot2": { "time": "11:30", "client": "Gunel R.", "service": "Highlights" },
+          "slot3": { "time": "13:00", "client": "Sabina T.", "service": "Manicure" }
+        }
+      }
+    },
+    "pinned": {
+      "ariaLabel": "Product story",
+      "meetEyebrow": "Meet",
+      "meetBody": "Everything your salon needs — bookings, team, and clients — finally working together in one simple system.",
+      "problemEyebrow": "The problem",
+      "problemTitle": "Your salon runs on too many disconnected tools",
+      "problemBody": "Bookings in one app, client chats in another, staff schedules somewhere else — nothing works together, and it slows you down."
+    },
+    "showcase": {
+      "eyebrow": "For salons",
+      "title": "Everything in your salon, finally under control",
+      "body": "Manage bookings, your team, and revenue from one place — simple, clear, and always under control.",
+      "cards": {
+        "smartBooking": {
+          "title": "Smart Booking Timeline",
+          "description": "Live bookings, no-show flags, and staff load in one view so you can plan the day faster."
+        },
+        "teamServices": {
+          "title": "Team & salon menu",
+          "description": "Add stylists, attach services with price and duration, and set weekly hours — what clients book stays aligned with your real team."
+        },
+        "staffPerformance": {
+          "title": "Staff Performance Snapshot",
+          "description": "Track service revenue, rebooking rate, and productivity by team member — and see employee ratings in the same view, without jumping across tools."
+        },
+        "salonAnalytics": {
+          "title": "Salon Analytics & Insights",
+          "description": "Track ratings, identify loyal clients, and see which services drive repeat bookings — all in one dashboard."
+        }
+      }
+    },
+    "workflow": {
+      "titleLine1": "Book in",
+      "titleLine2": "4 steps",
+      "body": "Here’s how it feels to book with OneBeauty — from choosing your stylist to seeing your visits in one place.",
+      "aria": {
+        "tablist": "Workflow steps",
+        "phoneAlt": "OneBeauty app — step {stepNumber}: {stepTitle}"
+      },
+      "steps": {
+        "01": {
+          "title": "Choose service and stylist",
+          "body": "Start on the salon screen: browse services and prices, meet the team, pick the treatment you want, and choose your stylist."
+        },
+        "02": {
+          "title": "Choose date and time",
+          "body": "When you’re ready, flip through the calendar and tap a time that works for you. Slots are shown live for your stylist, so booking feels quick and straightforward."
+        },
+        "03": {
+          "title": "Manage booking",
+          "body": "Once you’re booked, you’ll land on a helpful summary: change details if you need to, add the visit to your calendar, and so much more."
+        },
+        "04": {
+          "title": "Your bookings",
+          "body": "Anytime, open Bookings to see what’s ahead or rate your past bookings. One simple list keeps what’s next and what you’ve done easy to find whenever you need it."
+        }
+      }
+    },
+    "register": {
+      "success": {
+        "title": "You’re on the list!",
+        "body": "We’ll reach out when your salon’s spot is ready. Keep an eye on your inbox."
+      },
+      "badge": "Register now",
+      "title": "Early Registration Benefit",
+      "body": "Register during this early access window and lock in exclusive lifetime benefits for your salon.",
+      "countdown": {
+        "label": "Offer expires in",
+        "digits": {
+          "days": "Days",
+          "hours": "Hours",
+          "minutes": "Min",
+          "seconds": "Sec"
+        }
+      },
+      "form": {
+        "salonName": { "label": "Salon Name", "placeholder": "e.g. Luxe Hair Studio" },
+        "ownerName": { "label": "Owner Name" },
+        "phone": { "label": "Phone", "placeholder": "+994 XX XXX XX XX" },
+        "email": { "label": "Email", "placeholder": "you@salon.com" },
+        "city": { "label": "City" },
+        "employees": {
+          "label": "Number of Employees",
+          "placeholder": "Select range",
+          "options": {
+            "1-3": "1 – 3",
+            "4-10": "4 – 10",
+            "11-25": "11 – 25",
+            "25+": "25+"
+          }
+        },
+        "agree": "I agree to receive updates about my founding salon benefits and early access.",
+        "submit": "Secure your spot",
+        "finePrint": "No payment required. We’ll contact you when onboarding begins."
+      }
+    },
+    "footer": {
+      "columns": {
+        "product": {
+          "title": "Product",
+          "items": {
+            "pricing": "Pricing",
+            "features": "Features",
+            "changelog": "Changelog"
+          }
+        },
+        "useCases": {
+          "title": "Use cases",
+          "items": {
+            "forSalons": "For salons",
+            "forTeams": "For teams",
+            "forIndependents": "For independents"
+          }
+        },
+        "compare": {
+          "title": "Compare",
+          "items": {
+            "vsSpreadsheets": "OneBeauty vs spreadsheets",
+            "vsPaper": "OneBeauty vs paper"
+          }
+        },
+        "resources": {
+          "title": "Resources",
+          "items": {
+            "faqs": "FAQs",
+            "updates": "Updates",
+            "support": "Support"
+          }
+        },
+        "legal": {
+          "title": "Legal",
+          "items": {
+            "terms": "Terms",
+            "privacy": "Privacy"
+          }
+        }
+      },
+      "socialAria": "Social profiles (links coming soon)",
+      "copyright": "© {year} OneBeauty. All rights reserved."
+    }
+  }
+  ,
+  "faq": {
+    "title": "FAQs",
+    "subtitle": "Straightforward answers about OneBeauty, the waitlist, and what we're building for salons and teams.",
+    "aria": {
+      "list": "Frequently asked questions"
+    },
+    "cta": {
+      "prefix": "Still unsure?",
+      "link": "Join the waitlist",
+      "suffix": "and we’ll follow up.",
+      "backHome": "← Back to home"
+    },
+    "items": {
+      "what": {
+        "q": "What is OneBeauty?",
+        "a": "OneBeauty is a workspace for modern salons: bookings, staff schedules, client history, and day-to-day operations in one place—built for teams that outgrew spreadsheets and paper."
+      },
+      "waitlist": {
+        "q": "Who should join the waitlist?",
+        "a": "Salon owners and managers who want early access, product updates, and a chance to shape features before public launch. Stylists and independents are welcome too—we’ll match onboarding to your setup."
+      },
+      "launch": {
+        "q": "When are you launching?",
+        "a": "We’re rolling out in stages to keep quality high. Waitlist members hear first about betas, pilot programs, and regional availability."
+      },
+      "locations": {
+        "q": "Does it work for single-location salons?",
+        "a": "Yes. OneBeauty is designed to scale from a single chair or studio to multi-location groups without changing how your team works day to day."
+      },
+      "mobile": {
+        "q": "Can staff use it on their phones?",
+        "a": "The product is being built mobile-first where it matters—so stylists can check schedules, notes, and bookings without being tied to the front desk."
+      },
+      "pricing": {
+        "q": "How will pricing work?",
+        "a": "We’re finalizing simple, predictable plans for salons of different sizes. Waitlist subscribers will get early pricing and founding incentives when we open billing."
+      },
+      "data": {
+        "q": "Is client and business data secure?",
+        "a": "We treat salon and client data as sensitive by default: modern infrastructure, access controls, and practices aligned with what regulated industries expect. Details will be published in our security and privacy pages."
+      },
+      "migrate": {
+        "q": "Can we migrate from our current tool?",
+        "a": "We plan guided import paths for common calendars and client lists. Tell us what you use today when you join the waitlist so we can prioritize it."
+      },
+      "support": {
+        "q": "What kind of support will you offer?",
+        "a": "Helpful documentation, in-product guidance, and direct support for teams on paid plans. Early partners get closer access while we refine the experience."
+      }
+    }
+  }
+}
 
