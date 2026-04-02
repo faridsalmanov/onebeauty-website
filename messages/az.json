@@ -12,9 +12,9 @@
       "nav": {
         "faqs": "FAQ",
         "forSalons": "Salonlar üçün",
-        "pricing": "Qiymətlər"
+        "workflow": "İş axını"
       },
-      "cta": "Gözləmə siyahısına qoşul",
+      "cta": "Qeydiyyat",
       "mobile": {
         "openMenu": "Menyunu aç",
         "closeMenu": "Menyunu bağla"
@@ -165,44 +165,17 @@
       }
     },
     "footer": {
-      "columns": {
-        "product": {
-          "title": "Məhsul",
-          "items": {
-            "pricing": "Qiymətlər",
-            "features": "Xüsusiyyətlər",
-            "changelog": "Yeniliklər"
-          }
-        },
-        "useCases": {
-          "title": "İstifadə",
-          "items": {
-            "forSalons": "Salonlar üçün",
-            "forTeams": "Komandalar üçün",
-            "forIndependents": "Fərdi ustalar üçün"
-          }
-        },
-        "compare": {
-          "title": "Müqayisə",
-          "items": {
-            "vsSpreadsheets": "OneBeauty vs cədvəllər",
-            "vsPaper": "OneBeauty vs kağız"
-          }
-        },
-        "resources": {
-          "title": "Resurslar",
-          "items": {
-            "faqs": "FAQ",
-            "updates": "Yeniliklər",
-            "support": "Dəstək"
-          }
-        },
-        "legal": {
-          "title": "Hüquqi",
-          "items": {
-            "terms": "Şərtlər",
-            "privacy": "Məxfilik"
-          }
+      "tagline": "Rezervasiya, komanda və salonun gündəlik işi bir sakit iş məkanında — səpələnmiş cədvəllər və alətlər olmadan.",
+      "explore": {
+        "title": "Kəşf et",
+        "ariaLabel": "Sayt keçidləri"
+      },
+      "faqs": "FAQ",
+      "legal": {
+        "title": "Hüquqi",
+        "items": {
+          "terms": "Şərtlər",
+          "privacy": "Məxfilik"
         }
       },
       "socialAria": "Sosial profillər (linklər tezliklə)",

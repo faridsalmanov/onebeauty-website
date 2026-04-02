@@ -81,7 +81,10 @@ export function WorkflowSection(): ReactElement {
     : { duration: 0.32, ease: stackEase };
 
   return (
-    <section className="relative overflow-hidden bg-transparent">
+    <section
+      id="workflow"
+      className="relative scroll-mt-28 overflow-hidden bg-transparent md:scroll-mt-32"
+    >
       <div className="relative z-[1] mx-auto w-full max-w-[min(100%,120rem)] px-4 py-16 sm:px-6 md:px-8 md:py-20 lg:px-10">
         <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
           <div className="max-w-2xl">

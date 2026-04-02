@@ -12,7 +12,7 @@
       "nav": {
         "faqs": "FAQ",
         "forSalons": "Для салонов",
-        "pricing": "Цены"
+        "workflow": "Процесс"
       },
       "cta": "В лист ожидания",
       "mobile": {
@@ -165,44 +165,17 @@
       }
     },
     "footer": {
-      "columns": {
-        "product": {
-          "title": "Продукт",
-          "items": {
-            "pricing": "Цены",
-            "features": "Возможности",
-            "changelog": "Изменения"
-          }
-        },
-        "useCases": {
-          "title": "Сценарии",
-          "items": {
-            "forSalons": "Для салонов",
-            "forTeams": "Для команд",
-            "forIndependents": "Для частных мастеров"
-          }
-        },
-        "compare": {
-          "title": "Сравнение",
-          "items": {
-            "vsSpreadsheets": "OneBeauty vs таблицы",
-            "vsPaper": "OneBeauty vs бумага"
-          }
-        },
-        "resources": {
-          "title": "Ресурсы",
-          "items": {
-            "faqs": "FAQ",
-            "updates": "Обновления",
-            "support": "Поддержка"
-          }
-        },
-        "legal": {
-          "title": "Юридическое",
-          "items": {
-            "terms": "Условия",
-            "privacy": "Конфиденциальность"
-          }
+      "tagline": "Записи, команда и повседневная работа салона в одном спокойном пространстве — без таблиц и разрозненных сервисов.",
+      "explore": {
+        "title": "Разделы",
+        "ariaLabel": "Ссылки по сайту"
+      },
+      "faqs": "FAQ",
+      "legal": {
+        "title": "Юридическое",
+        "items": {
+          "terms": "Условия",
+          "privacy": "Конфиденциальность"
         }
       },
       "socialAria": "Социальные профили (ссылки скоро появятся)",

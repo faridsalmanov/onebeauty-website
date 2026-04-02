@@ -30,6 +30,10 @@ function isValidEmail(value: string): boolean {
 type HeadlineKey = "the" | "allInOne" | "app" | "for";
 const HEADLINE_LINE1_KEYS = ["the", "allInOne", "app", "for"] as const;
 
+type HeadlineSegment =
+  | { type: "line1"; key: HeadlineKey }
+  | { type: "line2"; text: string };
+
 /** Top-down clip + fade + slight rise (staggered on headline words). */
 const HERO_REVEAL_INITIAL = {
   clipPath: "inset(0 0 100% 0)",
@@ -367,6 +371,36 @@ function ReviewCard({
 const HEADLINE_TEXT =
   "font-medium tracking-tighter text-[var(--ob-text)] text-fluid-hero";
 
+const HEADLINE_ROW_CLASS = `flex flex-nowrap items-baseline justify-center gap-x-[0.25em] ${HEADLINE_TEXT}`;
+
+/** Same multi-layer glow + scale as AZ hero emphasis (EN/RU use `font-serif`; AZ uses Cormorant via data attribute). */
+const HEADLINE_EMPHASIS_GLOW_CLASS =
+  "inline-block shrink-0 text-[1.04em] sm:text-[1.05em] font-semibold italic text-[#eceef8] [text-shadow:0_0_8px_rgba(255,255,255,0.55),0_0_28px_rgba(255,255,255,0.35),0_0_52px_rgba(255,255,255,0.12),0_0_22px_rgba(186,170,255,0.09),0_0_44px_rgba(186,170,255,0.045)]";
+
+function buildHeadlineSegments(
+  line2Trimmed: string,
+  locale: string,
+): readonly HeadlineSegment[] {
+  const line1: HeadlineSegment[] = HEADLINE_LINE1_KEYS.map((key) => ({
+    type: "line1",
+    key,
+  }));
+  if (line2Trimmed === "") {
+    return line1;
+  }
+  /* English: place emphasized line2 in the middle (after first two words). */
+  if (locale === "en") {
+    return [
+      line1[0]!,
+      line1[1]!,
+      { type: "line2", text: line2Trimmed },
+      line1[2]!,
+      line1[3]!,
+    ];
+  }
+  return [...line1, { type: "line2", text: line2Trimmed }];
+}
+
 export function HeroSection(): ReactElement {
   const locale = useLocale();
   const t = useTranslations("home.hero");
@@ -405,62 +439,55 @@ export function HeroSection(): ReactElement {
           {...(locale === "az" ? { "data-hero-az-headline": "" } : {})}
           className="mb-5 w-full max-w-[min(100%,88rem)] text-center md:mb-6"
         >
-          <div className="flex flex-col items-center gap-0.5 sm:gap-1 md:gap-1.5">
-            <div
-              className={`flex flex-wrap justify-center gap-x-[0.25em] gap-y-1 ${HEADLINE_TEXT}`}
-            >
-              {HEADLINE_LINE1_KEYS.map((key, index) => {
-                const isItalic = key === "allInOne";
-                return (
-                  <motion.span
-                    key={key}
-                    {...(locale === "az" && isItalic
-                      ? { "data-hero-az-emphasis-serif": "" }
-                      : {})}
-                    className={
-                      isItalic
-                        ? locale === "az"
-                          ? "inline-block text-[1.04em] sm:text-[1.05em] font-semibold italic text-[#eceef8] [text-shadow:0_0_8px_rgba(255,255,255,0.55),0_0_28px_rgba(255,255,255,0.35),0_0_52px_rgba(255,255,255,0.12),0_0_22px_rgba(186,170,255,0.09),0_0_44px_rgba(186,170,255,0.045)]"
-                          : "inline-block font-serif font-normal italic text-[#eceef8] [text-shadow:0_0_22px_rgba(186,170,255,0.09),0_0_44px_rgba(186,170,255,0.045)]"
-                        : "inline-block"
-                    }
-                    initial={
-                      reduceMotion
-                        ? false
-                        : isItalic
-                          ? HERO_REVEAL_INITIAL_FADE_UP
-                          : HERO_REVEAL_INITIAL
-                    }
-                    animate={
-                      isItalic ? HERO_REVEAL_ANIMATE_FADE_UP : HERO_REVEAL_ANIMATE
-                    }
-                    transition={heroRevealTransition(
-                      reduceMotion,
-                      HERO_HEADLINE_BASE_DELAY +
-                        HERO_HEADLINE_STAGGER * index,
-                      HERO_HEADLINE_WORD_DURATION,
-                    )}
-                  >
-                    {t(`headline.line1.${key as HeadlineKey}`)}
-                  </motion.span>
-                );
-              })}
+          <div className="flex min-w-0 justify-center">
+            <div className={HEADLINE_ROW_CLASS}>
+              {buildHeadlineSegments(t("headline.line2").trim(), locale).map(
+                (seg, index) => {
+                  const emphasized =
+                    seg.type === "line2" ||
+                    (locale === "az" &&
+                      seg.type === "line1" &&
+                      seg.key === "allInOne");
+                  const motionKey =
+                    seg.type === "line1" ? seg.key : `line2-${seg.text}`;
+                  return (
+                    <motion.span
+                      key={motionKey}
+                      {...(locale === "az" && emphasized
+                        ? { "data-hero-az-emphasis-serif": "" }
+                        : {})}
+                      className={
+                        emphasized
+                          ? `${HEADLINE_EMPHASIS_GLOW_CLASS}${locale === "az" ? "" : " font-serif"}`
+                          : "inline-block shrink-0"
+                      }
+                      initial={
+                        reduceMotion
+                          ? false
+                          : emphasized
+                            ? HERO_REVEAL_INITIAL_FADE_UP
+                            : HERO_REVEAL_INITIAL
+                      }
+                      animate={
+                        emphasized
+                          ? HERO_REVEAL_ANIMATE_FADE_UP
+                          : HERO_REVEAL_ANIMATE
+                      }
+                      transition={heroRevealTransition(
+                        reduceMotion,
+                        HERO_HEADLINE_BASE_DELAY +
+                          HERO_HEADLINE_STAGGER * index,
+                        HERO_HEADLINE_WORD_DURATION,
+                      )}
+                    >
+                      {seg.type === "line1"
+                        ? t(`headline.line1.${seg.key}`)
+                        : seg.text}
+                    </motion.span>
+                  );
+                },
+              )}
             </div>
-            {t("headline.line2").trim() !== "" ? (
-              <motion.span
-                className={`block ${HEADLINE_TEXT}`}
-                initial={reduceMotion ? false : HERO_REVEAL_INITIAL}
-                animate={HERO_REVEAL_ANIMATE}
-                transition={heroRevealTransition(
-                  reduceMotion,
-                  HERO_HEADLINE_BASE_DELAY +
-                    HERO_HEADLINE_STAGGER * HEADLINE_LINE1_KEYS.length,
-                  HERO_HEADLINE_WORD_DURATION,
-                )}
-              >
-                {t("headline.line2")}
-              </motion.span>
-            ) : null}
           </div>
         </div>
 

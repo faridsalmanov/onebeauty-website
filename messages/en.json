@@ -12,7 +12,7 @@
       "nav": {
         "faqs": "FAQs",
         "forSalons": "For salons",
-        "pricing": "Pricing"
+        "workflow": "Workflow"
       },
       "cta": "Join waitlist",
       "mobile": {
@@ -28,9 +28,9 @@
       "headline": {
         "line1": {
           "the": "Run",
-          "allInOne": "your entire",
-          "app": "salon",
-          "for": "from"
+          "allInOne": "your salon",
+          "app": "does it",
+          "for": "all"
         },
         "line2": "one app"
       },
@@ -165,44 +165,17 @@
       }
     },
     "footer": {
-      "columns": {
-        "product": {
-          "title": "Product",
-          "items": {
-            "pricing": "Pricing",
-            "features": "Features",
-            "changelog": "Changelog"
-          }
-        },
-        "useCases": {
-          "title": "Use cases",
-          "items": {
-            "forSalons": "For salons",
-            "forTeams": "For teams",
-            "forIndependents": "For independents"
-          }
-        },
-        "compare": {
-          "title": "Compare",
-          "items": {
-            "vsSpreadsheets": "OneBeauty vs spreadsheets",
-            "vsPaper": "OneBeauty vs paper"
-          }
-        },
-        "resources": {
-          "title": "Resources",
-          "items": {
-            "faqs": "FAQs",
-            "updates": "Updates",
-            "support": "Support"
-          }
-        },
-        "legal": {
-          "title": "Legal",
-          "items": {
-            "terms": "Terms",
-            "privacy": "Privacy"
-          }
+      "tagline": "Bookings, your team, and day-to-day salon ops in one calm workspace — without spreadsheets or scattered tools.",
+      "explore": {
+        "title": "Explore",
+        "ariaLabel": "Site links"
+      },
+      "faqs": "FAQs",
+      "legal": {
+        "title": "Legal",
+        "items": {
+          "terms": "Terms",
+          "privacy": "Privacy"
         }
       },
       "socialAria": "Social profiles (links coming soon)",

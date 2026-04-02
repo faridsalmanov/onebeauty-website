@@ -74,6 +74,7 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} ${interAzLatin.variable} ${cormorantGaramondAzLatin.variable} min-h-full scroll-smooth antialiased${locale === "az" ? " locale-az" : ""}`}
     >
       <body className="min-h-full bg-[var(--ob-hero-deep)] text-[var(--ob-text)]">

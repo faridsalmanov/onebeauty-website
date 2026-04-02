@@ -10,12 +10,12 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { LogoMark } from "./LogoMark";
 import { scrollToRegisterForm } from "./scrollToRegisterForm";
 
-type NavKey = "faqs" | "forSalons" | "pricing";
+type NavKey = "faqs" | "forSalons" | "workflow";
 
 const NAV_LINKS: { key: NavKey; href: string }[] = [
   { key: "faqs", href: "/faqs" },
   { key: "forSalons", href: "#" },
-  { key: "pricing", href: "#" },
+  { key: "workflow", href: "#workflow" },
 ];
 
 const SCROLL_SHRINK_PX = 56;
