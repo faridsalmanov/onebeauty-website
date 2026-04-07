@@ -3,6 +3,7 @@ import { AppShowcaseSection } from "./AppShowcaseSection";
 import { HeroPinnedSeamScroll } from "./HeroPinnedSeamScroll";
 import { HeroSection } from "./HeroSection";
 import { LandingShell } from "./LandingShell";
+import { MobileMeetOneBeautyReveal } from "./MobileMeetOneBeautyReveal";
 import { PinnedScrollStory } from "./PinnedScrollStory";
 import { RegistrationSection } from "./RegistrationSection";
 import { SiteFooter } from "./SiteFooter";
@@ -15,7 +16,12 @@ export function LandingPage(): ReactElement {
       <SiteHeader />
       <HeroPinnedSeamScroll />
       <HeroSection />
-      <PinnedScrollStory />
+      <div className="md:hidden">
+        <MobileMeetOneBeautyReveal />
+      </div>
+      <div className="hidden md:block">
+        <PinnedScrollStory />
+      </div>
       <AppShowcaseSection />
       <WorkflowSection />
       <RegistrationSection />
