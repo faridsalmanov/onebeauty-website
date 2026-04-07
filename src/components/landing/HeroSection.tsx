@@ -155,7 +155,7 @@ function BookingCard({
   const t = useTranslations("home.hero.cards");
   return (
     <WorkflowCardPanel
-      className="w-[min(88vw,18.5rem)] sm:w-[18.5rem] md:w-[17rem] lg:w-[17.5rem] xl:w-[18.5rem]"
+      className="w-full"
       delay={delay}
       heightTier={heightTier}
     >
@@ -194,7 +194,7 @@ function RevenueCard({
   const t = useTranslations("home.hero.cards");
   return (
     <WorkflowCardPanel
-      className="w-[min(86vw,17.25rem)] sm:w-[17.25rem] md:w-[16rem] lg:w-[16.5rem] xl:w-[17.25rem]"
+      className="w-full"
       delay={delay}
       heightTier={heightTier}
     >
@@ -231,7 +231,7 @@ function StylistCard({
   const t = useTranslations("home.hero.cards");
   return (
     <WorkflowCardPanel
-      className="w-[min(88vw,18.5rem)] sm:w-[18.5rem] md:w-[17rem] lg:w-[17.5rem] xl:w-[18.5rem]"
+      className="w-full"
       delay={delay}
       heightTier={heightTier}
     >
@@ -284,7 +284,7 @@ function ScheduleCard({
 
   return (
     <WorkflowCardPanel
-      className="w-[min(92vw,19.5rem)] sm:w-[19.5rem] md:w-[18rem] lg:w-[18.5rem] xl:w-[19.5rem]"
+      className="w-full"
       delay={delay}
       heightTier={heightTier}
     >
@@ -338,7 +338,7 @@ function ReviewCard({
   const t = useTranslations("home.hero.cards");
   return (
     <WorkflowCardPanel
-      className="w-[min(92vw,19.5rem)] sm:w-[19.5rem] md:w-[18rem] lg:w-[18.5rem] xl:w-[19.5rem]"
+      className="w-full"
       delay={delay}
       heightTier={heightTier}
     >
@@ -428,7 +428,7 @@ export function HeroSection(): ReactElement {
   return (
     <section
       data-landing-hero
-      className="relative z-0 flex min-h-[100dvh] flex-col overflow-hidden tracking-[-0.04em]"
+      className="relative z-0 flex min-h-[100dvh] flex-col overflow-visible tracking-[-0.04em]"
     >
       {/* Headline + CTA — flex-1 keeps vertical balance; cards sit below in flow (no overlap) */}
       <div
@@ -574,46 +574,30 @@ export function HeroSection(): ReactElement {
         </div>
       </div>
 
-      {/* Cards rail (responsive) */}
-      <div className="relative z-20 -mt-8 w-full shrink-0 md:-mt-12 lg:-mt-14">
-        {/* Mobile: swipeable preview rail */}
+      {/* Cards rail — all visible, shrink to fit, no scroll */}
+      <div className="relative z-20 -mt-8 w-full min-w-0 shrink-0 md:-mt-12 lg:-mt-14">
+        {/* Mobile: 3 cards, all visible */}
         <div className="md:hidden">
           <div
-            className="mx-auto flex max-w-[90rem] snap-x snap-mandatory items-stretch gap-3 overflow-x-auto px-4 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex w-full items-stretch gap-2 px-4 pb-4 sm:gap-3 sm:px-6"
             aria-hidden
           >
-            <div className="snap-center flex-none">
-              <ScheduleCard delay={0} heightTier="tall" />
-            </div>
-            <div className="snap-center flex-none">
-              <BookingCard delay={0.08} heightTier="mid" />
-            </div>
-            <div className="snap-center flex-none">
-              <ReviewCard delay={0.16} heightTier="tall" />
-            </div>
+            <div className="min-w-0 flex-1"><ScheduleCard delay={0} heightTier="tall" /></div>
+            <div className="min-w-0 flex-1"><BookingCard delay={0.08} heightTier="mid" /></div>
+            <div className="min-w-0 flex-1"><ReviewCard delay={0.16} heightTier="tall" /></div>
           </div>
         </div>
 
-        {/* md+: scrollable rail until xl, then centered non-scroll */}
+        {/* md+: 5 cards, all visible, no scroll */}
         <div className="hidden md:block" aria-hidden>
-          <div className="mx-auto max-w-[90rem] px-4 pb-2 md:px-6">
-            <div className="flex snap-x snap-mandatory items-end justify-start gap-4 overflow-x-auto overscroll-x-contain xl:justify-center xl:overflow-visible xl:overscroll-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="snap-center flex-none">
-                <ScheduleCard delay={0} heightTier="tall" />
-              </div>
-              <div className="snap-center flex-none">
-                <BookingCard delay={0.08} heightTier="mid" />
-              </div>
-              <div className="snap-center flex-none">
-                <RevenueCard delay={0.16} heightTier="short" />
-              </div>
-              <div className="snap-center flex-none">
-                <StylistCard delay={0.24} heightTier="mid" />
-              </div>
-              <div className="snap-center flex-none">
-                <ReviewCard delay={0.32} heightTier="tall" />
-              </div>
-            </div>
+          <div
+            className="flex w-full items-end gap-3 px-6 pb-4 md:gap-4 md:px-8 lg:px-10 xl:px-12"
+          >
+            <div className="min-w-0 flex-1"><ScheduleCard delay={0} heightTier="tall" /></div>
+            <div className="min-w-0 flex-1"><BookingCard delay={0.08} heightTier="mid" /></div>
+            <div className="min-w-0 flex-1"><RevenueCard delay={0.16} heightTier="short" /></div>
+            <div className="min-w-0 flex-1"><StylistCard delay={0.24} heightTier="mid" /></div>
+            <div className="min-w-0 flex-1"><ReviewCard delay={0.32} heightTier="tall" /></div>
           </div>
         </div>
       </div>

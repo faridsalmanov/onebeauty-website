@@ -100,29 +100,29 @@
       }
     },
     "workflow": {
-      "titleLine1": "4 addımda",
-      "titleLine2": "rezervasiya edin",
-      "body": "OneBeauty ilə rezervasiya etmək necə hiss olunur — ustad seçməkdən tutmuş ziyarətləri bir yerdə görməyə qədər.",
+      "titleLine1": "Saniyələr içində",
+      "titleLine2": "Rezervasiya edin",
+      "body": "Stilist seçməkdən rezervasiyanı idarə etməyə qədər - hər şey bir axıcı prosesdə baş verir.",
       "aria": {
         "tablist": "Rezervasiya addımları",
         "phoneAlt": "OneBeauty tətbiqi — addım {stepNumber}: {stepTitle}"
       },
       "steps": {
         "01": {
-          "title": "Xidməti və ustadı seçin",
-          "body": "Salon ekranından başlayın: xidmət və qiymətlərə baxın, komanda ilə tanış olun, istədiyiniz proseduru seçin və ustadınızı müəyyən edin."
+          "title": "Xidmət və stilist seçin",
+          "body": "Xidmətləri nəzərdən keçirin, qiymətləri görün və uyğun stilisti seçin."
         },
         "02": {
           "title": "Tarix və saat seçin",
-          "body": "Hazır olanda təqvimi vərəqləyin və sizə uyğun vaxtı seçin. Slotlar ustadınız üçün canlı göstərilir, buna görə bron tez və rahat olur."
+          "body": "Mövcud vaxtları görün və dərhal rezerv edin."
         },
         "03": {
           "title": "Rezervasiyanı idarə edin",
-          "body": "Bron etdikdən sonra faydalı xülasəyə düşəcəksiniz: ehtiyac olsa detalları dəyişin, ziyarəti təqviminizə əlavə edin və daha çoxunu edin."
+          "body": "İstədiyiniz vaxt dəyişin və ya yeniləyin."
         },
         "04": {
-          "title": "Rezervasiyalarınız",
-          "body": "İstənilən vaxt Rezervasiyalar bölməsini açın: qarşıdakı görüşləri görün və ya keçmiş bronları qiymətləndirin. Sadə siyahı həm növbətini, həm də keçmişi tapmağı asan edir."
+          "title": "Bütün rezervasiyalar bir yerdə",
+          "body": "Gələcək və keçmiş görüşləri istənilən vaxt görün."
         }
       }
     },

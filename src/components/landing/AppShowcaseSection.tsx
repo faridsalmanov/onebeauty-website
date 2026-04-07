@@ -17,42 +17,16 @@ type ShowcaseCard = {
   customMedia?: () => ReactElement;
 };
 
-/** Decorative spear + stem above the cream block (not part of the scroll mask). */
-function ShowcaseSpearOrnament(): ReactElement {
+/** Minimal line + dot ornament above the cream block (not part of the scroll mask). */
+function ShowcaseTopOrnament(): ReactElement {
   return (
     <div
       className="pointer-events-none -mb-px flex justify-center"
       aria-hidden
     >
-      <svg
-        width={22}
-        height={52}
-        viewBox="0 0 22 52"
-        aria-hidden
-        className="text-[var(--ob-showcase-surface)] drop-shadow-[0_0_14px_rgb(247_241_230_/_0.35)]"
-      >
-        {/* Thin stem */}
-        <line
-          x1="11"
-          y1="0"
-          x2="11"
-          y2="34"
-          stroke="currentColor"
-          strokeWidth={1.35}
-          strokeLinecap="round"
-          opacity={0.92}
-        />
-        {/* Spear head — tapered diamond pointing into the panel */}
-        <path
-          d="M11 32 L17.2 42 L11 50 L4.8 42 Z"
-          fill="currentColor"
-          fillOpacity={0.22}
-          stroke="currentColor"
-          strokeWidth={1.1}
-          strokeLinejoin="round"
-          opacity={0.95}
-        />
-      </svg>
+      <div className="relative h-[52px] w-[22px]">
+        <span className="absolute left-1/2 top-0 h-[44px] w-[3px] -translate-x-1/2 rounded-full bg-gradient-to-b from-transparent via-[var(--ob-showcase-surface)]/90 to-[var(--ob-showcase-surface)]/12 blur-[0.2px] shadow-[0_0_16px_rgb(247_241_230_/_0.28)]" />
+      </div>
     </div>
   );
 }
@@ -841,12 +815,12 @@ export function AppShowcaseSection(): ReactElement {
       aria-labelledby="app-showcase-heading"
     >
       <div className="mx-auto flex w-full max-w-[min(100%,120rem)] flex-col items-stretch px-3 sm:px-4 md:pl-0 md:pr-4 lg:pr-5">
-        <ShowcaseSpearOrnament />
+        <ShowcaseTopOrnament />
         <div className="relative w-full overflow-visible rounded-[clamp(1.15rem,2.8vw,2rem)] shadow-[0_-28px_80px_-36px_rgba(0,0,0,0.5)]">
           <div
             ref={panelRef}
             data-app-showcase-panel
-            className="w-full origin-top overflow-hidden rounded-[clamp(1.15rem,2.8vw,2rem)] border border-black/[0.08] bg-[var(--ob-showcase-surface)] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] will-change-transform"
+            className="w-full origin-top overflow-hidden rounded-[clamp(1.15rem,2.8vw,2rem)] border border-[color:var(--ob-showcase-frame-border)] bg-[var(--ob-showcase-surface)] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] will-change-transform"
             style={{
               transform: "scale3d(0.88, 0.78, 1)",
               transformOrigin: "50% 0%",
@@ -970,7 +944,7 @@ export function AppShowcaseSection(): ReactElement {
                       key={card.id}
                       data-showcase-card
                       tabIndex={0}
-                      className={`group flex min-h-0 overflow-hidden rounded-[1.5rem] border border-[var(--ob-primary)]/[0.09] bg-white outline-none focus-visible:ring-2 focus-visible:ring-[var(--ob-primary)]/35 ${
+                      className={`group flex min-h-0 overflow-hidden rounded-[1.5rem] border border-[color:var(--ob-showcase-card-border)] bg-white outline-none focus-visible:ring-2 focus-visible:ring-[var(--ob-primary)]/35 ${
                         card.mediaOnSide
                           ? "flex-col md:flex-row md:items-stretch"
                           : "flex-col"

@@ -3,6 +3,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { startTransition, useId } from "react";
+import { ChevronDown } from "lucide-react";
 import { routing, type AppLocale } from "@/i18n/routing";
 import { usePathname, useRouter } from "@/i18n/navigation";
 
@@ -28,28 +29,34 @@ export function LanguageSwitcher({
       <label htmlFor={id} className="sr-only">
         {t("srLabel")}
       </label>
-      <select
-        id={id}
-        name="language"
-        aria-label={t("label")}
-        value={locale}
-        onChange={(e): void => {
-          const next = e.target.value as AppLocale;
-          if (!routing.locales.includes(next)) {
-            return;
-          }
-          startTransition((): void => {
-            router.replace(pathname, { locale: next });
-          });
-        }}
-        className="h-9 rounded-lg border border-white/15 bg-white/[0.06] px-2.5 text-xs font-semibold tracking-[0.14em] text-[var(--ob-text)] uppercase outline-none backdrop-blur-md transition-colors hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-sky-300/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
-      >
-        {routing.locales.map((l) => (
-          <option key={l} value={l} className="bg-[var(--ob-hero-mid)]">
-            {LOCALE_LABEL[l]}
-          </option>
-        ))}
-      </select>
+      <div className="relative inline-flex items-center">
+        <select
+          id={id}
+          name="language"
+          aria-label={t("label")}
+          value={locale}
+          onChange={(e): void => {
+            const next = e.target.value as AppLocale;
+            if (!routing.locales.includes(next)) {
+              return;
+            }
+            startTransition((): void => {
+              router.replace(pathname, { locale: next });
+            });
+          }}
+          className="h-9 appearance-none rounded-lg border border-white/15 bg-white/[0.06] pl-2.5 pr-6 text-xs font-semibold tracking-[0.14em] text-[var(--ob-text)] uppercase outline-none backdrop-blur-md transition-colors hover:bg-white/[0.08] focus-visible:ring-2 focus-visible:ring-sky-300/30 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+        >
+          {routing.locales.map((l) => (
+            <option key={l} value={l} className="bg-[var(--ob-hero-mid)]">
+              {LOCALE_LABEL[l]}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none absolute right-1.5 size-3.5 opacity-80"
+        />
+      </div>
     </div>
   );
 }

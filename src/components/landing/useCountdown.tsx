@@ -98,9 +98,9 @@ export function CountdownDigit({
             <motion.div
               key={display}
               className="absolute inset-0 flex items-center justify-center"
-              initial={instant ? false : { y: "100%" }}
+              initial={instant ? undefined : { y: "100%" }}
               animate={{ y: 0 }}
-              exit={instant ? false : { y: "-100%" }}
+              exit={instant ? undefined : { y: "-100%" }}
               transition={transition}
             >
               {display}

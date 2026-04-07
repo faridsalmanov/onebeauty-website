@@ -105,6 +105,9 @@
   );
   --ob-showcase-ink: #1a1a1a;
   --ob-showcase-muted: rgba(26, 26, 26, 0.62);
+  /* Expanding frame + feature cards — greige/beige borders (warm, matches --ob-seam-fold) */
+  --ob-showcase-frame-border: rgb(202 190 172 / 0.4);
+  --ob-showcase-card-border: rgb(198 184 164 / 0.65);
   --ob-success: #2e7d32;
   --background: var(--ob-hero-deep);
   --foreground: var(--ob-text);
@@ -130,6 +133,8 @@
    */
   --text-fluid-hero: clamp(1.875rem, calc(1.25rem + 4.25vw), 5.75rem);
   --text-fluid-section: clamp(2.45rem, 6vw, 5rem);
+  /* Workflow / compact section headlines — smaller than text-fluid-section */
+  --text-fluid-section-sm: clamp(1.875rem, calc(0.95rem + 3.4vw), 3.35rem);
   --text-fluid-serif-xl: clamp(1.75rem, 4.5vw, 3rem);
   --text-fluid-serif-lg: clamp(1.75rem, 4vw, 2.75rem);
   --text-fluid-faq: clamp(2.5rem, 8vw, 4.5rem);

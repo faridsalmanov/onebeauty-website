@@ -100,29 +100,29 @@
       }
     },
     "workflow": {
-      "titleLine1": "Book in",
-      "titleLine2": "4 steps",
-      "body": "Here’s how it feels to book with OneBeauty — from choosing your stylist to seeing your visits in one place.",
+      "titleLine1": "Book appointments",
+      "titleLine2": "in seconds",
+      "body": "From choosing your stylist to managing your bookings - everything happens in one smooth flow.",
       "aria": {
         "tablist": "Workflow steps",
         "phoneAlt": "OneBeauty app — step {stepNumber}: {stepTitle}"
       },
       "steps": {
         "01": {
-          "title": "Choose service and stylist",
-          "body": "Start on the salon screen: browse services and prices, meet the team, pick the treatment you want, and choose your stylist."
+          "title": "Choose a service and stylist",
+          "body": "Browse services, see prices, and pick the right stylist in seconds."
         },
         "02": {
-          "title": "Choose date and time",
-          "body": "When you’re ready, flip through the calendar and tap a time that works for you. Slots are shown live for your stylist, so booking feels quick and straightforward."
+          "title": "Pick a date and time",
+          "body": "See available slots and book instantly."
         },
         "03": {
-          "title": "Manage booking",
-          "body": "Once you’re booked, you’ll land on a helpful summary: change details if you need to, add the visit to your calendar, and so much more."
+          "title": "Manage your booking",
+          "body": "Reschedule or update your appointment anytime."
         },
         "04": {
-          "title": "Your bookings",
-          "body": "Anytime, open Bookings to see what’s ahead or rate your past bookings. One simple list keeps what’s next and what you’ve done easy to find whenever you need it."
+          "title": "All your bookings in one place",
+          "body": "See upcoming and past visits anytime."
         }
       }
     },
