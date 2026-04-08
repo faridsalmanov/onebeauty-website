@@ -30,23 +30,31 @@ export function HeroPinnedSeamScroll(): ReactElement | null {
 
     gsap.registerPlugin(ScrollTrigger);
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: hero,
-          start: "top top",
-          /* Lower viewport % = hero bottom must travel farther → overlay / card fade completes after more scroll */
-          end: "bottom 12%",
-          scrub: 0.85,
-          invalidateOnRefresh: true,
-        },
+    /* Mobile: no scrubbed atmosphere fade — hero uses a static white wash on the cards block instead. */
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 768px)", () => {
+      const ctx = gsap.context(() => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: hero,
+            start: "top top",
+            /* Lower viewport % = hero bottom must travel farther → overlay / card fade completes after more scroll */
+            end: "bottom 12%",
+            scrub: 0.85,
+            invalidateOnRefresh: true,
+          },
+        });
+        tl.fromTo(
+          heroAtmo,
+          { opacity: 0 },
+          { opacity: 1, duration: 1, ease: "none" },
+          0,
+        );
       });
-      tl.fromTo(
-        heroAtmo,
-        { opacity: 0 },
-        { opacity: 1, duration: 1, ease: "none" },
-        0,
-      );
+      return (): void => {
+        ctx.revert();
+      };
     });
 
     const onResize = (): void => {
@@ -59,7 +67,7 @@ export function HeroPinnedSeamScroll(): ReactElement | null {
 
     return () => {
       window.removeEventListener("resize", onResize);
-      ctx.revert();
+      mm.revert();
     };
   }, [reduceMotion]);
 

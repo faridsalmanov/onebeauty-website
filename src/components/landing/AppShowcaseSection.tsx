@@ -7,6 +7,23 @@ import { useLocale, useTranslations } from "next-intl";
 import type { ReactElement } from "react";
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
 
+/** Match Tailwind `md:` — faux illustration hover / count-up runs on desktop only. */
+function useShowcaseMdUp(): boolean {
+  const [mdUp, setMdUp] = useState(false);
+  useLayoutEffect((): void => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const sync = (): void => {
+      setMdUp(mq.matches);
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return (): void => {
+      mq.removeEventListener("change", sync);
+    };
+  }, []);
+  return mdUp;
+}
+
 type ShowcaseCard = {
   id: string;
   title: string;
@@ -40,10 +57,12 @@ function BookingTimelineIllustration(): ReactElement {
     { time: "12:30", service: "Full Highlights", client: "D.B.", stylist: "Sara L.", accent: "#fde68a" },
   ];
 
+  const mdUp = useShowcaseMdUp();
   const [hovered, setHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!mdUp) return;
     const card = containerRef.current?.closest("[data-showcase-card]");
     if (!card) return;
     const onEnter = (): void => setHovered(true);
@@ -54,7 +73,9 @@ function BookingTimelineIllustration(): ReactElement {
       card.removeEventListener("mouseenter", onEnter);
       card.removeEventListener("mouseleave", onLeave);
     };
-  }, []);
+  }, [mdUp]);
+
+  const hoverActive = hovered && mdUp;
 
   return (
     <div ref={containerRef} className="relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-white">
@@ -72,11 +93,11 @@ function BookingTimelineIllustration(): ReactElement {
         {APPTS.map((a, i) => (
           <div
             key={a.time + a.client}
-            className="flex items-center gap-3 rounded-xl border bg-[#fafaf9] px-3 py-2 transition-all duration-500 ease-out"
+            className="flex items-center gap-3 rounded-xl border bg-[#fafaf9] px-3 py-2 md:transition-all md:duration-500 md:ease-out"
             style={{
-              transitionDelay: `${i * 70}ms`,
-              borderColor: hovered ? `${a.accent}88` : "#f0f0ee",
-              boxShadow: hovered
+              transitionDelay: mdUp ? `${i * 70}ms` : undefined,
+              borderColor: hoverActive ? `${a.accent}88` : "#f0f0ee",
+              boxShadow: hoverActive
                 ? `0 0 12px 1px ${a.accent}55, inset 0 0 8px ${a.accent}18`
                 : "none",
             }}
@@ -85,14 +106,14 @@ function BookingTimelineIllustration(): ReactElement {
               {a.time}
             </span>
             <div
-              className="h-7 w-1.5 shrink-0 rounded-full transition-all duration-500 ease-out"
+              className="h-7 w-1.5 shrink-0 rounded-full md:transition-all md:duration-500 md:ease-out"
               style={{
                 backgroundColor: a.accent,
-                transitionDelay: `${i * 70}ms`,
-                boxShadow: hovered
+                transitionDelay: mdUp ? `${i * 70}ms` : undefined,
+                boxShadow: hoverActive
                   ? `0 0 12px 3px ${a.accent}, 0 0 24px 6px ${a.accent}66`
                   : `0 0 0 0 ${a.accent}00`,
-                transform: hovered ? "scaleY(1.15)" : "scaleY(1)",
+                transform: hoverActive ? "scaleY(1.15)" : "scaleY(1)",
               }}
             />
             <div className="flex min-w-0 flex-1 flex-col">
@@ -156,10 +177,12 @@ function TeamAndServicesIllustration(): ReactElement {
     },
   ];
 
+  const mdUp = useShowcaseMdUp();
   const [hovered, setHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!mdUp) return;
     const card = containerRef.current?.closest("[data-showcase-card]");
     if (!card) return;
     const onEnter = (): void => setHovered(true);
@@ -170,7 +193,9 @@ function TeamAndServicesIllustration(): ReactElement {
       card.removeEventListener("mouseenter", onEnter);
       card.removeEventListener("mouseleave", onLeave);
     };
-  }, []);
+  }, [mdUp]);
+
+  const hoverActive = hovered && mdUp;
 
   return (
     <div
@@ -195,32 +220,32 @@ function TeamAndServicesIllustration(): ReactElement {
         {ROWS.map(({ name, initial, color, services, hours }, colIdx) => (
           <div
             key={name}
-            className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-xl border bg-white transition-all duration-500 ease-out"
+            className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-xl border bg-white md:transition-all md:duration-500 md:ease-out"
             style={{
-              transitionDelay: `${colIdx * 100}ms`,
-              borderColor: hovered ? `${color}44` : "rgba(255,255,255,0.8)",
-              boxShadow: hovered
+              transitionDelay: mdUp ? `${colIdx * 100}ms` : undefined,
+              borderColor: hoverActive ? `${color}44` : "rgba(255,255,255,0.8)",
+              boxShadow: hoverActive
                 ? `0 8px 24px -4px ${color}22, 0 0 0 1px ${color}18`
                 : "0 2px 8px rgba(0,0,0,0.04)",
               /* Subtle lift + padding above so overflow-hidden doesn&apos;t clip on hover */
-              transform: hovered ? "translateY(-2px) scale(1.02)" : "translateY(0) scale(1)",
+              transform: hoverActive ? "translateY(-2px) scale(1.02)" : "translateY(0) scale(1)",
             }}
           >
             <div
-              className="flex shrink-0 items-center gap-1.5 px-2 py-2 transition-all duration-500 ease-out"
+              className="flex shrink-0 items-center gap-1.5 px-2 py-2 md:transition-all md:duration-500 md:ease-out"
               style={{
-                transitionDelay: `${colIdx * 100}ms`,
-                background: hovered
+                transitionDelay: mdUp ? `${colIdx * 100}ms` : undefined,
+                background: hoverActive
                   ? `linear-gradient(135deg, ${color}22 0%, ${color}10 100%)`
                   : `linear-gradient(135deg, ${color}12 0%, ${color}06 100%)`,
               }}
             >
               <div
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-sans text-[0.58rem] font-bold text-white transition-[box-shadow] duration-500 ease-out"
+                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-sans text-[0.58rem] font-bold text-white md:transition-[box-shadow] md:duration-500 md:ease-out"
                 style={{
                   backgroundColor: color,
-                  transitionDelay: `${colIdx * 100}ms`,
-                  boxShadow: hovered
+                  transitionDelay: mdUp ? `${colIdx * 100}ms` : undefined,
+                  boxShadow: hoverActive
                     ? `0 0 14px 3px ${color}66`
                     : "0 1px 2px rgba(0,0,0,0.1)",
                 }}
@@ -241,12 +266,12 @@ function TeamAndServicesIllustration(): ReactElement {
               {services.map((s, sIdx) => (
                 <div
                   key={s.label}
-                  className="relative overflow-hidden rounded-lg border bg-gradient-to-br from-white to-[#fafafa] px-1.5 py-1 transition-all duration-500 ease-out"
+                  className="relative overflow-hidden rounded-lg border bg-gradient-to-br from-white to-[#fafafa] px-1.5 py-1 md:transition-all md:duration-500 md:ease-out"
                   style={{
-                    transitionDelay: `${colIdx * 100 + sIdx * 80}ms`,
-                    borderColor: hovered ? `${color}30` : "#e8e8e4",
-                    transform: hovered ? "translateY(-1px)" : "translateY(0)",
-                    boxShadow: hovered
+                    transitionDelay: mdUp ? `${colIdx * 100 + sIdx * 80}ms` : undefined,
+                    borderColor: hoverActive ? `${color}30` : "#e8e8e4",
+                    transform: hoverActive ? "translateY(-1px)" : "translateY(0)",
+                    boxShadow: hoverActive
                       ? `0 2px 8px ${color}15`
                       : "none",
                   }}
@@ -325,10 +350,12 @@ function StaffPerformanceIllustration(): ReactElement {
     { name: "Lena R.", initial: "L", revenue: 1870, pct: 37, bookings: 12 },
   ];
 
+  const mdUp = useShowcaseMdUp();
   const [hovered, setHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!mdUp) return;
     const card = containerRef.current?.closest("[data-showcase-card]");
     if (!card) return;
     const onEnter = (): void => setHovered(true);
@@ -339,7 +366,7 @@ function StaffPerformanceIllustration(): ReactElement {
       card.removeEventListener("mouseenter", onEnter);
       card.removeEventListener("mouseleave", onLeave);
     };
-  }, []);
+  }, [mdUp]);
 
   return (
     <div ref={containerRef} className="relative flex h-full min-h-0 w-full flex-col overflow-hidden bg-white p-5">
@@ -361,7 +388,13 @@ function StaffPerformanceIllustration(): ReactElement {
       </div>
       <div className="flex flex-col gap-4">
         {STYLISTS.map((s, i) => (
-          <StaffPerformanceRow key={s.name} stylist={s} index={i} hovered={hovered} />
+          <StaffPerformanceRow
+            key={s.name}
+            stylist={s}
+            index={i}
+            hovered={hovered}
+            visualMotion={mdUp}
+          />
         ))}
       </div>
     </div>
@@ -372,20 +405,30 @@ function StaffPerformanceRow({
   stylist,
   index,
   hovered,
+  visualMotion,
 }: {
   stylist: { name: string; initial: string; revenue: number; pct: number; bookings: number };
   index: number;
   hovered: boolean;
+  visualMotion: boolean;
 }): ReactElement {
   const delay = index * 120;
-  const animRevenue = useAnimatedNumber(stylist.revenue, hovered, 900, delay);
-  const animBookings = useAnimatedNumber(stylist.bookings, hovered, 700, delay);
+  const hoverActive = hovered && visualMotion;
+  const animRevenue = useAnimatedNumber(stylist.revenue, hoverActive, 900, delay);
+  const animBookings = useAnimatedNumber(stylist.bookings, hoverActive, 700, delay);
 
   // Bar starts full, resets to 0 on hover entry, then CSS-transitions to full
   const [barWidth, setBarWidth] = useState(stylist.pct);
   const [barGlow, setBarGlow] = useState(false);
 
   useEffect(() => {
+    if (!visualMotion) {
+      requestAnimationFrame(() => {
+        setBarWidth(stylist.pct);
+        setBarGlow(false);
+      });
+      return;
+    }
     if (hovered) {
       requestAnimationFrame(() => {
         setBarWidth(0);
@@ -398,13 +441,12 @@ function StaffPerformanceRow({
         });
       }, delay);
       return () => clearTimeout(t);
-    } else {
-      requestAnimationFrame(() => {
-        setBarWidth(stylist.pct);
-        setBarGlow(false);
-      });
     }
-  }, [hovered, delay, stylist.pct]);
+    requestAnimationFrame(() => {
+      setBarWidth(stylist.pct);
+      setBarGlow(false);
+    });
+  }, [hovered, delay, stylist.pct, visualMotion]);
 
   return (
     <div className="flex items-center gap-3">
@@ -427,7 +469,7 @@ function StaffPerformanceRow({
         </div>
         <div className="h-1.5 overflow-hidden rounded-full bg-[var(--ob-primary)]/[0.08]">
           <div
-            className="h-full rounded-full transition-[width,box-shadow,background] duration-700 ease-out"
+            className="h-full rounded-full md:transition-[width,box-shadow,background] md:duration-700 md:ease-out"
             style={{
               width: `${barWidth}%`,
               background: "linear-gradient(90deg, #032761, #0645a8)",
@@ -480,6 +522,7 @@ const ANALYTICS_REVENUE_TARGET = 12250;
 const ANALYTICS_REVENUE_ANIM_FROM = 10260;
 
 function AnalyticsLineChart(): ReactElement {
+  const mdUp = useShowcaseMdUp();
   const [hovered, setHovered] = useState(false);
   const [pathLength, setPathLength] = useState(0);
   // `chartDrawn` drives the dash-offset. Starts true so the line is
@@ -496,6 +539,7 @@ function AnalyticsLineChart(): ReactElement {
   }, []);
 
   useEffect(() => {
+    if (!mdUp) return;
     const card = containerRef.current?.closest("[data-showcase-card]");
     if (!card) return;
     const onEnter = (): void => {
@@ -517,16 +561,17 @@ function AnalyticsLineChart(): ReactElement {
       card.removeEventListener("mouseenter", onEnter);
       card.removeEventListener("mouseleave", onLeave);
     };
-  }, []);
+  }, [mdUp]);
 
   const animRevenue = useAnimatedNumber(
     ANALYTICS_REVENUE_TARGET,
-    hovered,
+    hovered && mdUp,
     1200,
     200,
     ANALYTICS_REVENUE_ANIM_FROM,
   );
   const dash = pathLength || 1400;
+  const strokeRevealed = !mdUp || chartDrawn;
 
   return (
     <div
@@ -600,9 +645,12 @@ function AnalyticsLineChart(): ReactElement {
             filter="url(#ob-line-glow)"
             style={{
               strokeDasharray: dash,
-              strokeDashoffset: chartDrawn ? 0 : dash,
-              // No transition when snapping back to drawn; animate only when drawing
-              transition: chartDrawn ? "stroke-dashoffset 1.8s cubic-bezier(0.4,0,0.2,1)" : "none",
+              strokeDashoffset: strokeRevealed ? 0 : dash,
+              // No transition when snapping back to drawn; animate only when drawing (desktop)
+              transition:
+                mdUp && chartDrawn
+                  ? "stroke-dashoffset 1.8s cubic-bezier(0.4,0,0.2,1)"
+                  : "none",
             }}
           />
 
@@ -617,15 +665,18 @@ function AnalyticsLineChart(): ReactElement {
             strokeLinejoin="round"
             style={{
               strokeDasharray: dash,
-              strokeDashoffset: chartDrawn ? 0 : dash,
-              transition: chartDrawn ? "stroke-dashoffset 1.6s cubic-bezier(0.4,0,0.2,1)" : "none",
+              strokeDashoffset: strokeRevealed ? 0 : dash,
+              transition:
+                mdUp && chartDrawn
+                  ? "stroke-dashoffset 1.6s cubic-bezier(0.4,0,0.2,1)"
+                  : "none",
             }}
           />
 
           {/* Data-point dots — always rendered; hoverKey remounts them to re-pop */}
           {CHART_PTS.map(([cx, cy], idx) => (
             <circle
-              key={`${idx}-${hoverKey}`}
+              key={mdUp ? `${idx}-${hoverKey}` : `${idx}-static`}
               cx={cx}
               cy={cy}
               r="4"
@@ -633,7 +684,7 @@ function AnalyticsLineChart(): ReactElement {
               stroke="#032761"
               strokeWidth="2"
               style={
-                hoverKey > 0
+                mdUp && hoverKey > 0
                   ? {
                       opacity: 0,
                       animation: `ob-dot-pop 0.35s ease-out ${0.3 + idx * 0.12}s forwards`,
@@ -716,82 +767,90 @@ export function AppShowcaseSection(): ReactElement {
       return;
     }
 
-    gsap.set(panel, {
-      scaleX: 0.88,
-      scaleY: 0.78,
-      transformOrigin: "50% 0%",
-      force3D: true,
-      willChange: "transform",
-    });
-    gsap.set(content, { opacity: 0.62, y: 12 });
+    /* Mobile: no expand/scrub — section stays full size with no scroll animation (desktop only). */
+    const mm = gsap.matchMedia();
 
-    const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray<HTMLElement>("[data-showcase-card]");
-      const cardMedia = gsap.utils.toArray<HTMLElement>(
-        "[data-showcase-card-media]",
-      );
-
-      const endDistance = (): string =>
-        `+=${window.innerHeight * (window.innerWidth < 768 ? 0.95 : 1.05)}`;
-
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: section,
-          start: "top 92%",
-          end: endDistance,
-          scrub: 0.85,
-          pin: false,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
+    mm.add("(min-width: 768px)", () => {
+      gsap.set(panel, {
+        scaleX: 0.88,
+        scaleY: 0.78,
+        transformOrigin: "50% 0%",
+        force3D: true,
+        willChange: "transform",
       });
+      gsap.set(content, { opacity: 0.62, y: 12 });
 
-      tl.to(
-        panel,
-        { scaleX: 1, scaleY: 1, duration: 1, ease: "none" },
-        0,
-      );
+      const ctx = gsap.context(() => {
+        const cards = gsap.utils.toArray<HTMLElement>("[data-showcase-card]");
+        const cardMedia = gsap.utils.toArray<HTMLElement>(
+          "[data-showcase-card-media]",
+        );
 
-      tl.to(
-        content,
-        {
-          opacity: 1,
-          y: 0,
-          ease: "power2.out",
-          duration: 0.55,
-        },
-        0.22,
-      );
+        const endDistance = (): string =>
+          `+=${window.innerHeight * 1.05}`;
 
-      tl.fromTo(
-        cardMedia,
-        { scale: 1.08, opacity: 0.84 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          ease: "power2.out",
-          stagger: 0.08,
-        },
-        0.36,
-      );
+        const tl = gsap.timeline({
+          defaults: { ease: "none" },
+          scrollTrigger: {
+            trigger: section,
+            start: "top 92%",
+            end: endDistance,
+            scrub: 0.85,
+            pin: false,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
 
-      tl.fromTo(
-        cards,
-        { opacity: 0, y: 28, scale: 0.982 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.36,
-          ease: "power2.out",
-          stagger: 0.1,
-        },
-        0.4,
-      );
+        tl.to(
+          panel,
+          { scaleX: 1, scaleY: 1, duration: 1, ease: "none" },
+          0,
+        );
 
-    }, section);
+        tl.to(
+          content,
+          {
+            opacity: 1,
+            y: 0,
+            ease: "power2.out",
+            duration: 0.55,
+          },
+          0.22,
+        );
+
+        tl.fromTo(
+          cardMedia,
+          { scale: 1.08, opacity: 0.84 },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            stagger: 0.08,
+          },
+          0.36,
+        );
+
+        tl.fromTo(
+          cards,
+          { opacity: 0, y: 28, scale: 0.982 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.36,
+            ease: "power2.out",
+            stagger: 0.1,
+          },
+          0.4,
+        );
+      }, section);
+
+      return (): void => {
+        ctx.revert();
+      };
+    });
 
     const onResize = (): void => {
       ScrollTrigger.refresh();
@@ -803,7 +862,7 @@ export function AppShowcaseSection(): ReactElement {
 
     return () => {
       window.removeEventListener("resize", onResize);
-      ctx.revert();
+      mm.revert();
     };
   }, []);
 
@@ -820,17 +879,12 @@ export function AppShowcaseSection(): ReactElement {
           <div
             ref={panelRef}
             data-app-showcase-panel
-            className="w-full origin-top overflow-hidden rounded-[clamp(1.15rem,2.8vw,2rem)] border border-[color:var(--ob-showcase-frame-border)] bg-[var(--ob-showcase-surface)] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] will-change-transform"
-            style={{
-              transform: "scale3d(0.88, 0.78, 1)",
-              transformOrigin: "50% 0%",
-            }}
+            className="w-full origin-top overflow-hidden rounded-[clamp(1.15rem,2.8vw,2rem)] border border-[color:var(--ob-showcase-frame-border)] bg-[var(--ob-showcase-surface)] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] md:will-change-transform"
           >
             <div
               ref={contentRef}
               data-app-showcase-content
               className="mx-auto max-w-7xl px-4 pb-24 pt-12 md:px-8 md:pb-28 md:pt-20 lg:px-10"
-              style={{ opacity: 0.62, transform: "translateY(12px)" }}
             >
               <div className="mx-auto max-w-2xl text-center md:max-w-3xl">
                 <p className="flex items-center justify-center gap-2 font-sans text-xs font-medium tracking-[0.2em] text-[var(--ob-showcase-muted)] uppercase">
@@ -869,21 +923,17 @@ export function AppShowcaseSection(): ReactElement {
 
                   const textBlockTopImage = (
                     /*
-                     * Clip-based slide — no opacity, pure transform.
-                     * H = 7rem (md 7.5rem).
-                     *
-                     * Body at rest: translate-y-[4.5rem] → top edge past container → clipped.
-                     * Body on hover: translate-y-0 → slides into view.
-                     * Title on hover: −translate-y-[3.75rem] → slides up to make room.
+                     * md+: Clip-based slide — body off-canvas, slides in on hover/focus.
+                     * <md: Static column — title + body always visible, no hover motion.
                      */
-                    <div className="relative h-[7rem] overflow-hidden px-4 pb-4 md:h-[7.5rem] md:px-6 md:pb-5">
+                    <div className="relative flex min-h-[7rem] flex-col justify-end gap-2 px-4 pb-4 md:block md:h-[7.5rem] md:overflow-hidden md:px-6 md:pb-5">
                       <p
                         data-showcase-card-body
-                        className={`${bodyClass} absolute bottom-4 left-4 right-4 line-clamp-2 translate-y-[4.5rem] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:translate-y-0 group-hover:translate-y-0 group-focus-within:translate-y-0 md:bottom-5 md:left-6 md:right-6`}
+                        className={`order-2 ${bodyClass} relative z-10 md:order-none md:absolute md:bottom-5 md:left-6 md:right-6 md:z-10 md:line-clamp-2 md:translate-y-[4.5rem] md:transition-transform md:duration-500 md:ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:md:translate-y-0 md:group-hover:translate-y-0 md:group-focus-within:translate-y-0`}
                       >
                         {t(`cards.${cardKey}.description`)}
                       </p>
-                      <h3 className="absolute bottom-4 left-4 right-4 font-sans text-[clamp(1.35rem,2.4vw,2.05rem)] font-semibold leading-[1.08] tracking-tight text-[var(--ob-primary)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:translate-y-0 group-hover:-translate-y-[3.75rem] group-focus-within:-translate-y-[3.75rem] md:bottom-5 md:left-6 md:right-6">
+                      <h3 className="order-1 relative z-20 font-sans text-[clamp(1.35rem,2.4vw,2.05rem)] font-semibold leading-[1.08] tracking-tight text-[var(--ob-primary)] md:order-none md:absolute md:bottom-5 md:left-6 md:right-6 md:transition-transform md:duration-500 md:ease-[cubic-bezier(0.22,1,0.36,1)] md:will-change-transform motion-reduce:md:translate-y-0 md:group-hover:-translate-y-[3.75rem] md:group-focus-within:-translate-y-[3.75rem]">
                         {t(`cards.${cardKey}.title`)}
                       </h3>
                     </div>
@@ -891,17 +941,17 @@ export function AppShowcaseSection(): ReactElement {
 
                   const textBlockSideImage = (
                     <div className="flex flex-col px-4 pb-3 pt-3 md:px-6 md:pb-4 md:pt-4">
-                      <h3 className="font-sans text-[clamp(1.35rem,2.4vw,2.05rem)] font-semibold leading-[1.08] tracking-tight text-[var(--ob-primary)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform md:translate-y-0 md:group-hover:-translate-y-1.5 md:group-focus-within:-translate-y-1.5 motion-reduce:translate-y-0">
+                      <h3 className="font-sans text-[clamp(1.35rem,2.4vw,2.05rem)] font-semibold leading-[1.08] tracking-tight text-[var(--ob-primary)] md:translate-y-0 md:transition-transform md:duration-500 md:ease-[cubic-bezier(0.22,1,0.36,1)] md:will-change-transform md:group-hover:-translate-y-1.5 md:group-focus-within:-translate-y-1.5 motion-reduce:translate-y-0">
                         {t(`cards.${cardKey}.title`)}
                       </h3>
                       <div
                         data-showcase-card-body-wrap
-                        className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:grid-rows-[1fr] md:grid-rows-[0fr] md:group-hover:grid-rows-[1fr] md:group-focus-within:grid-rows-[1fr]"
+                        className="grid grid-rows-[1fr] motion-reduce:grid-rows-[1fr] md:transition-[grid-template-rows] md:duration-500 md:ease-[cubic-bezier(0.22,1,0.36,1)] md:grid-rows-[0fr] md:group-hover:grid-rows-[1fr] md:group-focus-within:grid-rows-[1fr]"
                       >
                         <div className="min-h-0 overflow-hidden">
                           <p
                             data-showcase-card-body
-                            className={`pt-3 ${bodyClass} opacity-100 transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:translate-y-0 motion-reduce:opacity-100 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-focus-within:translate-y-0 md:group-focus-within:opacity-100`}
+                            className={`pt-3 ${bodyClass} opacity-100 motion-reduce:translate-y-0 motion-reduce:opacity-100 md:translate-y-2 md:opacity-0 md:transition-[opacity,transform] md:duration-500 md:ease-[cubic-bezier(0.22,1,0.36,1)] md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-focus-within:translate-y-0 md:group-focus-within:opacity-100`}
                           >
                             {t(`cards.${cardKey}.description`)}
                           </p>

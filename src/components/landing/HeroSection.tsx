@@ -437,12 +437,12 @@ export function HeroSection(): ReactElement {
   return (
     <section
       data-landing-hero
-      className="relative z-0 flex min-h-[100dvh] flex-col overflow-visible tracking-[-0.04em]"
+      className="relative z-0 flex min-h-[100svh] flex-col overflow-visible tracking-[-0.04em] md:min-h-[100dvh]"
     >
       {/* Headline + CTA — flex-1 keeps vertical balance; cards sit below in flow (no overlap) */}
       <div
         {...(locale === "az" ? { "data-hero-az-typography": "" } : {})}
-        className="relative z-10 flex flex-col items-center justify-start px-4 pt-10 pb-3 md:flex-1 md:justify-center md:px-10 md:pt-14 md:pb-5 lg:px-14 xl:px-16"
+        className="relative z-20 flex flex-col items-center justify-start px-4 pt-10 pb-3 md:z-10 md:flex-1 md:justify-center md:px-10 md:pt-14 md:pb-5 lg:px-14 xl:px-16"
       >
         <div
           {...(locale === "az" ? { "data-hero-az-headline": "" } : {})}
@@ -599,12 +599,16 @@ export function HeroSection(): ReactElement {
         </div>
       </div>
 
-      {/* Cards rail — all visible, shrink to fit, no scroll */}
-      <div className="relative z-20 mt-0 w-full min-w-0 shrink-0 md:-mt-12 lg:-mt-14">
+      {/* Cards rail — all visible, shrink to fit, no scroll (above seam on mobile so white wash shows) */}
+      <div className="relative z-30 mt-0 w-full min-w-0 shrink-0 md:z-20 md:-mt-12 lg:-mt-14">
         {/* Mobile: 3 cards, all visible */}
         <div className="md:hidden" aria-hidden>
           <div className="relative overflow-hidden px-3 pb-3 sm:px-5">
-            <div className="relative mx-auto h-[12.25rem] w-full max-w-[24.5rem] sm:h-[15.5rem] sm:max-w-[30.5rem]">
+            <div
+              className="pointer-events-none absolute inset-0 z-[1] rounded-t-[1.75rem] bg-white/90 sm:rounded-t-[2rem]"
+              aria-hidden
+            />
+            <div className="relative z-[2] mx-auto h-[12.25rem] w-full max-w-[24.5rem] sm:h-[15.5rem] sm:max-w-[30.5rem]">
               <div className="absolute left-1/2 top-0 flex w-[36.25rem] -translate-x-1/2 scale-[0.66] items-stretch gap-3 origin-top sm:w-[37.5rem] sm:scale-[0.82]">
                 <div className="w-[11.75rem] shrink-0"><ScheduleCard delay={0} heightTier="tall" /></div>
                 <div className="w-[11.75rem] shrink-0"><BookingCard delay={0.08} heightTier="mid" /></div>
@@ -628,79 +632,20 @@ export function HeroSection(): ReactElement {
         </div>
       </div>
 
-      {/* Cream seam + navy scrub — inside hero so z-40 scroll hint stays above */}
+      {/* Cream seam + navy scrub (below cards on mobile so card white panel reads) */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[min(52%,24rem)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[min(36%,12rem)] md:z-[25] md:h-[min(52%,24rem)]"
         aria-hidden
       >
         <div className="absolute inset-0 [background-image:var(--ob-seam-hero-to-showcase)]" />
         {/* Same stack as SiteAtmosphere + fixed attachment = pixels align with next section backdrop */}
         <div
           data-landing-hero-seam-atmosphere
-          className="absolute inset-0 opacity-0 will-change-[opacity] [background-image:var(--ob-site-atmosphere-bg)] [background-attachment:fixed] [background-repeat:no-repeat]"
+          className="absolute inset-0 hidden opacity-0 will-change-[opacity] [background-image:var(--ob-site-atmosphere-bg)] [background-attachment:fixed] [background-repeat:no-repeat] md:block"
           aria-hidden
         />
       </div>
 
-      {/* Scroll hint — mobile only */}
-      <motion.div
-        className="absolute inset-x-0 bottom-6 z-40 flex justify-center md:hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.35, duration: 0.4 }}
-      >
-        <div className="flex flex-col items-center gap-2">
-          <span className="text-xs font-medium tracking-widest text-[var(--ob-text-faint)]">
-            {t("scrollHint")}
-          </span>
-          {reduceMotion ? (
-            <div>
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                className="text-[var(--ob-text-faint)]"
-                aria-hidden
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-          ) : (
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              className="text-[var(--ob-text-faint)]"
-              aria-hidden
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-            </motion.div>
-          )}
-        </div>
-      </motion.div>
     </section>
   );
 }
