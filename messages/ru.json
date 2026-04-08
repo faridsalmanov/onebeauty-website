@@ -105,7 +105,11 @@
       "body": "От выбора мастера до управления записями - всё происходит в одном удобном процессе.",
       "aria": {
         "tablist": "Шаги записи",
-        "phoneAlt": "Приложение OneBeauty — шаг {stepNumber}: {stepTitle}"
+        "phoneAlt": "Приложение OneBeauty — шаг {stepNumber}: {stepTitle}",
+        "previousStep": "Предыдущий шаг",
+        "nextStep": "Следующий шаг",
+        "selectStep": "Перейти к шагу {stepNumber}: {stepTitle}",
+        "stepNavigation": "Навигация по шагам записи"
       },
       "steps": {
         "01": {

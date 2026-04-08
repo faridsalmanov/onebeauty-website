@@ -599,17 +599,13 @@ export function HeroSection(): ReactElement {
         </div>
       </div>
 
-      {/* Cards rail — all visible, shrink to fit, no scroll (above seam on mobile so white wash shows) */}
+      {/* Cards rail — all visible, shrink to fit, no scroll */}
       <div className="relative z-30 mt-0 w-full min-w-0 shrink-0 md:z-20 md:-mt-12 lg:-mt-14">
         {/* Mobile: 3 cards, all visible */}
         <div className="md:hidden" aria-hidden>
           <div className="relative overflow-hidden px-3 pb-3 sm:px-5">
-            <div
-              className="pointer-events-none absolute inset-0 z-[1] rounded-t-[1.75rem] bg-white/90 sm:rounded-t-[2rem]"
-              aria-hidden
-            />
-            <div className="relative z-[2] mx-auto h-[12.25rem] w-full max-w-[24.5rem] sm:h-[15.5rem] sm:max-w-[30.5rem]">
-              <div className="absolute left-1/2 top-0 flex w-[36.25rem] -translate-x-1/2 scale-[0.66] items-stretch gap-3 origin-top sm:w-[37.5rem] sm:scale-[0.82]">
+            <div className="relative mx-auto h-[12.25rem] w-full max-w-[24.5rem] sm:h-[15.5rem] sm:max-w-[30.5rem]">
+              <div className="absolute left-1/2 top-0 flex w-[36.25rem] -translate-x-1/2 scale-[0.66] origin-top items-stretch gap-3 sm:w-[37.5rem] sm:scale-[0.82]">
                 <div className="w-[11.75rem] shrink-0"><ScheduleCard delay={0} heightTier="tall" /></div>
                 <div className="w-[11.75rem] shrink-0"><BookingCard delay={0.08} heightTier="mid" /></div>
                 <div className="w-[11.75rem] shrink-0"><ReviewCard delay={0.16} heightTier="tall" /></div>
@@ -632,7 +628,7 @@ export function HeroSection(): ReactElement {
         </div>
       </div>
 
-      {/* Cream seam + navy scrub (below cards on mobile so card white panel reads) */}
+      {/* Cream seam + navy scrub (below cards on mobile) */}
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[min(36%,12rem)] md:z-[25] md:h-[min(52%,24rem)]"
         aria-hidden

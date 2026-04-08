@@ -154,7 +154,7 @@ export function SiteHeader(): ReactElement {
 
   return (
     <>
-      <header className="sticky inset-x-0 top-[max(1rem,env(safe-area-inset-top,0px))] z-[100] w-full max-w-full tracking-[-0.04em]">
+      <header className="static z-[100] w-full max-w-full tracking-[-0.04em] lg:sticky lg:inset-x-0 lg:top-[max(1rem,env(safe-area-inset-top,0px))]">
         <div className={`${shellClass} ${scrolled ? shellScrolled : shellTop} relative`}>
           {/* Desktop — logo | centered nav | Join waitlist */}
           <div className="relative z-[60] mx-auto hidden min-w-0 grid-cols-[auto_1fr_auto] items-center lg:grid">

@@ -105,7 +105,11 @@
       "body": "Stilist seçməkdən rezervasiyanı idarə etməyə qədər - hər şey bir axıcı prosesdə baş verir.",
       "aria": {
         "tablist": "Rezervasiya addımları",
-        "phoneAlt": "OneBeauty tətbiqi — addım {stepNumber}: {stepTitle}"
+        "phoneAlt": "OneBeauty tətbiqi — addım {stepNumber}: {stepTitle}",
+        "previousStep": "Əvvəlki addım",
+        "nextStep": "Növbəti addım",
+        "selectStep": "{stepNumber} addımına keç: {stepTitle}",
+        "stepNavigation": "Rezervasiya addımları naviqasiyası"
       },
       "steps": {
         "01": {

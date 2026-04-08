@@ -10,14 +10,14 @@ import { useLayoutEffect, useRef, useState, useEffect } from "react";
 /** Match Tailwind `md:` — faux illustration hover / count-up runs on desktop only. */
 function useShowcaseMdUp(): boolean {
   const [mdUp, setMdUp] = useState(false);
-  useLayoutEffect((): void => {
+  useLayoutEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
     const sync = (): void => {
       setMdUp(mq.matches);
     };
     sync();
     mq.addEventListener("change", sync);
-    return (): void => {
+    return () => {
       mq.removeEventListener("change", sync);
     };
   }, []);

@@ -105,7 +105,11 @@
       "body": "From choosing your stylist to managing your bookings - everything happens in one smooth flow.",
       "aria": {
         "tablist": "Workflow steps",
-        "phoneAlt": "OneBeauty app — step {stepNumber}: {stepTitle}"
+        "phoneAlt": "OneBeauty app — step {stepNumber}: {stepTitle}",
+        "previousStep": "Previous step",
+        "nextStep": "Next step",
+        "selectStep": "Go to step {stepNumber}: {stepTitle}",
+        "stepNavigation": "Booking steps navigation"
       },
       "steps": {
         "01": {

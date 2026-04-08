@@ -4,14 +4,13 @@ import {
   AnimatePresence,
   LayoutGroup,
   motion,
-  useMotionValueEvent,
   useReducedMotion,
-  useScroll,
 } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import type { ReactElement } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /** Delay phone screenshot swap so step highlight leads the transition (ms). */
 const WORKFLOW_PHONE_AFTER_STEP_MS = 150;
@@ -19,6 +18,14 @@ const WORKFLOW_PHONE_AFTER_STEP_MS = 150;
 /** Native pixel size of `public/images/steps/step*.png` (full device mockup artwork). */
 const WORKFLOW_SCREENSHOT_WIDTH = 1335;
 const WORKFLOW_SCREENSHOT_HEIGHT = 2775;
+
+/** Mobile workflow phone slot — matches `max-w-[min(vw,rem)]` classes + row layout (< lg). */
+const WORKFLOW_PHONE_SIZES_MOBILE =
+  "(max-width: 639px) min(46vw, 9.75rem), (max-width: 767px) min(44vw, 11rem), (max-width: 1023px) min(38vw, 12.75rem), 100vw";
+
+/** Desktop sticky phone — matches wrapper `max-w-[min(92vw,17.75rem)] sm:… lg:…`. */
+const WORKFLOW_PHONE_SIZES_DESKTOP =
+  "(min-width: 1024px) 18.25rem, (min-width: 640px) 17.75rem, min(92vw, 17.75rem)";
 
 /** Fixed active-step + glass height (body scrolls if needed). */
 const WORKFLOW_STEP_PANEL_H =
@@ -30,12 +37,6 @@ const WORKFLOW_ACTIVE_STEP_PANEL_MAX_W =
 
 /** Keep inactive hover state aligned to the active card width. */
 const WORKFLOW_STEP_PANEL_MAX_W = WORKFLOW_ACTIVE_STEP_PANEL_MAX_W;
-
-/**
- * Mobile scroll container height.
- * 4 steps × ~50 svh scroll travel each + 1 viewport of sticky room = ~300 svh.
- */
-const MOBILE_SCROLL_HEIGHT = "300svh";
 
 type WorkflowStep = {
   id: string;
@@ -50,8 +51,6 @@ export function WorkflowSection(): ReactElement {
   const [activeId, setActiveId] = useState<string>("01");
   const [phoneStepId, setPhoneStepId] = useState<string>("01");
   const reduceMotion = useReducedMotion();
-  const mobileScrollRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const steps: readonly WorkflowStep[] = [
     {
@@ -84,6 +83,21 @@ export function WorkflowSection(): ReactElement {
     },
   ];
 
+  const activeIndex = steps.findIndex((s): boolean => s.id === activeId);
+  const safeIndex = activeIndex < 0 ? 0 : activeIndex;
+  const canGoPrev = safeIndex > 0;
+  const canGoNext = safeIndex < steps.length - 1;
+
+  const goToPrev = (): void => {
+    if (!canGoPrev) return;
+    setActiveId(steps[safeIndex - 1].id);
+  };
+
+  const goToNext = (): void => {
+    if (!canGoNext) return;
+    setActiveId(steps[safeIndex + 1].id);
+  };
+
   const activeStep =
     steps.find((s): boolean => s.id === activeId) ?? steps[0];
   const phoneStep =
@@ -92,8 +106,12 @@ export function WorkflowSection(): ReactElement {
   /* ── Shared: phone follows activeId with a staggered delay ── */
   useEffect((): void | (() => void) => {
     if (reduceMotion) {
-      setPhoneStepId(activeId);
-      return;
+      const raf = requestAnimationFrame((): void => {
+        setPhoneStepId(activeId);
+      });
+      return (): void => {
+        cancelAnimationFrame(raf);
+      };
     }
     const id = window.setTimeout((): void => {
       setPhoneStepId(activeId);
@@ -102,38 +120,6 @@ export function WorkflowSection(): ReactElement {
       window.clearTimeout(id);
     };
   }, [activeId, reduceMotion]);
-
-  /* ── Mobile viewport detection ── */
-  useEffect((): (() => void) => {
-    /* Mobile/tablet: ≤1023px — matches Tailwind `max-lg:` / PinnedScrollStory `lg:hidden`. */
-    const mql = window.matchMedia("(max-width: 1023px)");
-    const handler = (e: MediaQueryListEvent | MediaQueryList): void => {
-      setIsMobile(e.matches);
-    };
-    handler(mql);
-    mql.addEventListener("change", handler as EventListener);
-    return (): void => {
-      mql.removeEventListener("change", handler as EventListener);
-    };
-  }, []);
-
-  /* ── Mobile: derive active step from scroll progress ── */
-  const { scrollYProgress } = useScroll({
-    target: mobileScrollRef,
-    offset: ["start start", "end end"],
-  });
-
-  useMotionValueEvent(
-    scrollYProgress,
-    "change",
-    (progress: number): void => {
-      if (!isMobile) return;
-      const count = steps.length;
-      const idx = Math.min(count - 1, Math.max(0, Math.floor(progress * count)));
-      const newId = steps[idx].id;
-      setActiveId((prev): string => (prev !== newId ? newId : prev));
-    },
-  );
 
   /* ── Animation config ── */
   const stackEase = [0.16, 1, 0.32, 1] as const;
@@ -300,7 +286,7 @@ export function WorkflowSection(): ReactElement {
                       width={WORKFLOW_SCREENSHOT_WIDTH}
                       height={WORKFLOW_SCREENSHOT_HEIGHT}
                       className="pointer-events-none block h-auto w-full object-contain drop-shadow-[0_22px_48px_-18px_rgba(0,0,0,0.48)]"
-                      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 19rem"
+                      sizes={WORKFLOW_PHONE_SIZES_DESKTOP}
                       priority={phoneStep.id === "01"}
                       loading={phoneStep.id === "01" ? "eager" : "lazy"}
                       draggable={false}
@@ -313,57 +299,83 @@ export function WorkflowSection(): ReactElement {
         </div>
 
         {/* ────────────────────────────────────────────────
-            Mobile: scroll-progress → content swap
-            One tall container, one sticky viewport.
-            Nothing moves — only content fades in/out.
+            Mobile: same stack as before (phone → text → dots), arrows only beside phone.
             ──────────────────────────────────────────────── */}
-        <div
-          ref={mobileScrollRef}
-          className="relative mt-10 lg:hidden"
-          style={{ height: MOBILE_SCROLL_HEIGHT }}
-        >
-          <div className="sticky top-0 flex h-svh flex-col items-center justify-center px-5">
-            {/* ── Phone (fixed container, content crossfades) ── */}
+        <div className="relative mt-10 lg:hidden">
+          <div className="flex flex-col items-center px-5">
             <div
-              className="relative w-full max-w-[min(42vw,10.5rem)] select-none"
-              style={{
-                aspectRatio: `${WORKFLOW_SCREENSHOT_WIDTH} / ${WORKFLOW_SCREENSHOT_HEIGHT}`,
-              }}
+              className="flex w-full max-w-[17.5rem] items-center justify-center gap-1.5 sm:max-w-[19.5rem] sm:gap-2 md:max-w-[21rem] md:gap-2.5"
+              role="group"
+              aria-label={t("aria.stepNavigation")}
             >
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={phoneStep.id}
-                  className="absolute inset-0"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1, transition: mobileFadeIn }}
-                  exit={{ opacity: 0, transition: mobileFadeOut }}
-                >
-                  <Image
-                    src={phoneStep.phoneScreenshotSrc}
-                    alt={t("aria.phoneAlt", {
-                      stepNumber: phoneStep.number,
-                      stepTitle: phoneStep.title,
-                    })}
-                    fill
-                    className="pointer-events-none object-contain drop-shadow-[0_16px_32px_-12px_rgba(0,0,0,0.45)]"
-                    sizes="42vw"
-                    priority={phoneStep.id === "01"}
-                    loading={phoneStep.id === "01" ? "eager" : "lazy"}
-                    draggable={false}
-                  />
-                </motion.div>
-              </AnimatePresence>
+              <button
+                type="button"
+                onClick={goToPrev}
+                disabled={!canGoPrev}
+                aria-label={t("aria.previousStep")}
+                className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-[var(--ob-text)]/90 transition-opacity active:opacity-80 disabled:pointer-events-none disabled:opacity-25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/40"
+              >
+                <ChevronLeft className="size-[1.15rem]" strokeWidth={2.25} aria-hidden />
+              </button>
+
+              <div
+                className="relative w-full min-w-0 max-w-[min(46vw,9.75rem)] select-none sm:max-w-[min(44vw,11rem)] md:max-w-[min(38vw,12.75rem)]"
+                style={{
+                  aspectRatio: `${WORKFLOW_SCREENSHOT_WIDTH} / ${WORKFLOW_SCREENSHOT_HEIGHT}`,
+                }}
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={phoneStep.id}
+                    className="absolute inset-0"
+                    initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+                    animate={{ opacity: 1, transition: mobileFadeIn }}
+                    exit={{ opacity: 0, transition: mobileFadeOut }}
+                  >
+                    <Image
+                      src={phoneStep.phoneScreenshotSrc}
+                      alt={t("aria.phoneAlt", {
+                        stepNumber: phoneStep.number,
+                        stepTitle: phoneStep.title,
+                      })}
+                      fill
+                      className="pointer-events-none object-contain drop-shadow-[0_16px_32px_-12px_rgba(0,0,0,0.45)]"
+                      sizes={WORKFLOW_PHONE_SIZES_MOBILE}
+                      priority={phoneStep.id === "01"}
+                      loading={phoneStep.id === "01" ? "eager" : "lazy"}
+                      draggable={false}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              <button
+                type="button"
+                onClick={goToNext}
+                disabled={!canGoNext}
+                aria-label={t("aria.nextStep")}
+                className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-[var(--ob-text)]/90 transition-opacity active:opacity-80 disabled:pointer-events-none disabled:opacity-25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/40"
+              >
+                <ChevronRight className="size-[1.15rem]" strokeWidth={2.25} aria-hidden />
+              </button>
             </div>
 
-            {/* ── Step text (fixed container, sequential swap) ── */}
             <div className="relative mt-5 h-[8rem] w-full max-w-[18rem] overflow-hidden">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={activeStep.id}
                   className="absolute inset-x-0 top-0 flex flex-col items-center text-center"
-                  initial={{ opacity: 0, y: 6 }}
+                  initial={
+                    reduceMotion
+                      ? { opacity: 1, y: 0 }
+                      : { opacity: 0, y: 6 }
+                  }
                   animate={{ opacity: 1, y: 0, transition: mobileFadeIn }}
-                  exit={{ opacity: 0, y: -6, transition: mobileFadeOut }}
+                  exit={
+                    reduceMotion
+                      ? { opacity: 1, y: 0, transition: { duration: 0 } }
+                      : { opacity: 0, y: -6, transition: mobileFadeOut }
+                  }
                 >
                   <span className="text-[0.7rem] font-semibold uppercase tabular-nums tracking-[0.18em] text-sky-300/80">
                     {activeStep.number}
@@ -378,7 +390,6 @@ export function WorkflowSection(): ReactElement {
               </AnimatePresence>
             </div>
 
-            {/* ── Progress dots ── */}
             <div className="mt-5 flex items-center justify-center gap-2">
               {steps.map(
                 (s): ReactElement => (
@@ -389,6 +400,7 @@ export function WorkflowSection(): ReactElement {
                         ? "w-5 scale-100 bg-sky-400 opacity-100"
                         : "w-[5px] scale-[0.8] bg-white/40 opacity-40"
                     }`}
+                    aria-hidden
                   />
                 ),
               )}
