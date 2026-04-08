@@ -2,7 +2,7 @@
   "name": "onebeauty-website",
   "version": "0.1.0",
   "private": true,
-  "description": "OneBeauty marketing website",
+  "description": "OneBeauty marketing site",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
