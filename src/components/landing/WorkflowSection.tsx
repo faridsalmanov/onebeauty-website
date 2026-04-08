@@ -152,9 +152,11 @@ export function WorkflowSection(): ReactElement {
     ? { duration: 0.01 }
     : { duration: 0.32, ease: stackEase };
 
+  const mobileFadeEase = [0.25, 0.1, 0.25, 1] as const;
+
   const mobileFadeIn = reduceMotion
     ? { duration: 0.01 }
-    : { duration: 0.28, ease: [0.25, 0.1, 0.25, 1] };
+    : { duration: 0.28, ease: mobileFadeEase };
 
   const mobileFadeOut = reduceMotion
     ? { duration: 0.01 }
