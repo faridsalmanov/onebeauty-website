@@ -149,16 +149,6 @@
         "phone": { "label": "Telefon", "placeholder": "+994 XX XXX XX XX" },
         "email": { "label": "E-poçt", "placeholder": "you@salon.com" },
         "city": { "label": "Şəhər" },
-        "employees": {
-          "label": "Əməkdaş sayı",
-          "placeholder": "Aralığı seçin",
-          "options": {
-            "1-3": "1 – 3",
-            "4-10": "4 – 10",
-            "11-25": "11 – 25",
-            "25+": "25+"
-          }
-        },
         "agree": "Təsisçi salon üstünlükləri və erkən giriş haqqında yenilikləri almağa razıyam.",
         "submit": "Yerinizi təmin edin",
         "finePrint": "Ödəniş tələb olunmur. Onboarding başlayanda sizinlə əlaqə saxlayacağıq."

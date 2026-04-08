@@ -13,7 +13,6 @@ interface FormData {
   ownerName: string;
   phone: string;
   email: string;
-  employees: string;
   agreeDiscount: boolean;
 }
 
@@ -22,7 +21,6 @@ const INITIAL_FORM: FormData = {
   ownerName: "",
   phone: "",
   email: "",
-  employees: "",
   agreeDiscount: false,
 };
 
@@ -141,9 +139,7 @@ export function RegistrationSection(): ReactElement {
     t("countdown.digits.seconds"),
   ];
 
-  function handleChange(
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ): void {
+  function handleChange(e: ChangeEvent<HTMLInputElement>): void {
     const { name, value, type } = e.target;
     const checked =
       type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
@@ -282,39 +278,6 @@ export function RegistrationSection(): ReactElement {
               onChange={handleChange}
               placeholder={t("form.email.placeholder")}
             />
-            <div>
-              <label
-                htmlFor="employees"
-                className="mb-1.5 block break-words font-sans text-[clamp(0.64rem,2.35vw,0.75rem)] font-semibold tracking-[0.11em] text-[var(--ob-text-soft)] uppercase sm:text-xs sm:tracking-[0.12em]"
-              >
-                {t("form.employees.label")}
-                <span className="ml-0.5 text-[#e8ecff]">*</span>
-              </label>
-              <select
-                id="employees"
-                name="employees"
-                required
-                value={form.employees}
-                onChange={handleChange}
-                className="min-h-11 w-full appearance-none rounded-[0.85rem] border border-[var(--ob-glass-border)] bg-[rgba(255,255,255,0.04)] px-3 py-2.5 font-sans text-[clamp(0.9rem,3.6vw,0.95rem)] leading-normal text-[var(--ob-text)] outline-none transition-all duration-300 hover:border-[rgba(255,255,255,0.2)] focus:border-[rgba(186,170,255,0.5)] focus:bg-[rgba(255,255,255,0.06)] focus:shadow-[0_0_0_3px_rgba(186,170,255,0.12)] focus:ring-0 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
-              >
-                <option value="" className="bg-[var(--ob-hero-mid)] text-[var(--ob-text-faint)]">
-                  {t("form.employees.placeholder")}
-                </option>
-                <option value="1-3" className="bg-[var(--ob-hero-mid)]">
-                  {t("form.employees.options.1-3")}
-                </option>
-                <option value="4-10" className="bg-[var(--ob-hero-mid)]">
-                  {t("form.employees.options.4-10")}
-                </option>
-                <option value="11-25" className="bg-[var(--ob-hero-mid)]">
-                  {t("form.employees.options.11-25")}
-                </option>
-                <option value="25+" className="bg-[var(--ob-hero-mid)]">
-                  {t("form.employees.options.25+")}
-                </option>
-              </select>
-            </div>
           </div>
 
           {/* Checkbox */}
