@@ -369,9 +369,9 @@ function ReviewCard({
 /* ------------------------------------------------------------------ */
 
 const HEADLINE_TEXT =
-  "font-medium tracking-tighter text-[var(--ob-text)] text-fluid-hero";
+  "font-medium tracking-tighter text-[var(--ob-text)] text-[clamp(0.95rem,5.9vw,2.35rem)] sm:text-fluid-hero";
 
-const HEADLINE_ROW_CLASS = `flex flex-nowrap items-baseline justify-center gap-x-[0.25em] ${HEADLINE_TEXT}`;
+const HEADLINE_ROW_CLASS = `flex flex-wrap items-baseline justify-center gap-x-[0.14em] gap-y-[0.08em] sm:flex-nowrap sm:gap-x-[0.25em] sm:gap-y-0 ${HEADLINE_TEXT}`;
 
 /** Same multi-layer glow + scale as AZ hero emphasis (EN/RU use `font-serif`; AZ uses Cormorant via data attribute). */
 const HEADLINE_EMPHASIS_GLOW_CLASS =
@@ -408,6 +408,12 @@ export function HeroSection(): ReactElement {
   const reduceMotionPref = useReducedMotion();
   const reduceMotion = reduceMotionPref === true;
 
+  function focusRegisterEmailField(): void {
+    window.setTimeout(() => {
+      document.getElementById("email")?.focus({ preventScroll: true });
+    }, reduceMotion ? 0 : 640);
+  }
+
   function handleWaitlistSubmit(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     const trimmed = email.trim();
@@ -420,9 +426,12 @@ export function HeroSection(): ReactElement {
       }),
     );
     scrollToRegisterForm(reduceMotion);
-    window.setTimeout(() => {
-      document.getElementById("email")?.focus({ preventScroll: true });
-    }, reduceMotion ? 0 : 640);
+    focusRegisterEmailField();
+  }
+
+  function handleQuickAccessClick(): void {
+    scrollToRegisterForm(reduceMotion);
+    focusRegisterEmailField();
   }
 
   return (
@@ -433,7 +442,7 @@ export function HeroSection(): ReactElement {
       {/* Headline + CTA — flex-1 keeps vertical balance; cards sit below in flow (no overlap) */}
       <div
         {...(locale === "az" ? { "data-hero-az-typography": "" } : {})}
-        className="relative z-10 flex flex-1 flex-col items-center justify-center px-4 pt-10 pb-4 md:px-10 md:pt-14 md:pb-5 lg:px-14 xl:px-16"
+        className="relative z-10 flex flex-col items-center justify-start px-4 pt-10 pb-3 md:flex-1 md:justify-center md:px-10 md:pt-14 md:pb-5 lg:px-14 xl:px-16"
       >
         <div
           {...(locale === "az" ? { "data-hero-az-headline": "" } : {})}
@@ -492,7 +501,7 @@ export function HeroSection(): ReactElement {
         </div>
 
         <motion.div
-          className="mx-auto mb-8 max-w-2xl md:mb-10 md:max-w-3xl"
+          className="mx-auto mb-7 max-w-[42rem] px-1 sm:mb-8 md:mb-10 md:max-w-3xl"
           initial={reduceMotion ? false : HERO_REVEAL_INITIAL}
           animate={HERO_REVEAL_ANIMATE}
           transition={heroRevealTransition(
@@ -501,7 +510,7 @@ export function HeroSection(): ReactElement {
             HERO_BODY_DURATION,
           )}
         >
-          <p className="text-center font-sans text-base leading-relaxed text-[var(--ob-text-soft)] md:text-lg">
+          <p className="text-center font-sans text-[clamp(0.95rem,3.7vw,1.125rem)] leading-relaxed text-[var(--ob-text-soft)] sm:text-base md:text-lg">
             {t("subline")}
           </p>
         </motion.div>
@@ -517,12 +526,25 @@ export function HeroSection(): ReactElement {
               HERO_WAITLIST_DURATION,
             )}
           >
+            <button
+              type="button"
+              onClick={handleQuickAccessClick}
+              className="group relative z-[2] flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-xl border border-white/35 bg-[#d6ecff] px-5 font-sans text-[clamp(0.92rem,3.8vw,1rem)] font-semibold text-[#062a52] shadow-[0_0_36px_-4px_rgba(130,205,255,0.55),0_10px_28px_-14px_rgba(45,120,210,0.4)] transition-[transform,background-color,box-shadow,border-color] duration-200 hover:border-white/45 hover:bg-[#e8f4ff] hover:shadow-[0_0_42px_-2px_rgba(145,215,255,0.65),0_12px_32px_-12px_rgba(50,130,220,0.45)] sm:hidden"
+              aria-controls="register-form"
+            >
+              <span>{t("cta")}</span>
+              <ArrowRight
+                className="size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden
+              />
+            </button>
+
             <form
               id="waitlist"
-              className="relative w-full scroll-mt-28"
+              className="relative hidden w-full scroll-mt-28 sm:block"
               onSubmit={handleWaitlistSubmit}
             >
-              <div className="group relative flex flex-col gap-2 rounded-xl border border-white/[0.14] bg-white/[0.11] p-3 shadow-[0_24px_80px_-24px_rgba(0,0,0,0.55)] backdrop-blur-md transition-[background-color,box-shadow,backdrop-filter,border-color] duration-200 focus-within:border-white/[0.22] focus-within:bg-white/[0.34] focus-within:shadow-[0_20px_56px_-16px_rgba(0,0,0,0.4)] focus-within:backdrop-blur-2xl focus-within:outline-none sm:min-h-[4.25rem] sm:flex-row sm:gap-0 sm:p-0 sm:py-3 sm:pl-5 sm:pr-[9.25rem]">
+              <div className="group relative flex min-h-[4.25rem] flex-row gap-0 rounded-xl border border-white/[0.14] bg-white/[0.11] p-0 py-3 pl-5 pr-[9.25rem] shadow-[0_24px_80px_-24px_rgba(0,0,0,0.55)] backdrop-blur-md transition-[background-color,box-shadow,backdrop-filter,border-color] duration-200 focus-within:border-white/[0.22] focus-within:bg-white/[0.34] focus-within:shadow-[0_20px_56px_-16px_rgba(0,0,0,0.4)] focus-within:backdrop-blur-2xl focus-within:outline-none">
                 <label className="sr-only" htmlFor="hero-email">
                   {t("email.label")}
                 </label>
@@ -534,11 +556,11 @@ export function HeroSection(): ReactElement {
                   placeholder={t("email.placeholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="relative z-[1] min-h-11 w-full min-w-0 bg-transparent font-sans text-base font-medium leading-normal text-[var(--ob-text)] outline-none transition-colors duration-200 ease-out placeholder:font-normal placeholder:text-[rgba(244,246,251,0.58)] group-focus-within:text-[#0f172a] group-focus-within:placeholder:text-[#0f172a] group-focus-within:placeholder:opacity-100 sm:absolute sm:inset-y-3 sm:left-5 sm:right-[9.25rem] sm:min-h-0 sm:w-auto sm:px-0 md:text-[1.0625rem]"
+                  className="relative z-[1] min-h-0 w-auto min-w-0 bg-transparent px-0 font-sans text-base font-medium leading-normal text-[var(--ob-text)] outline-none transition-colors duration-200 ease-out placeholder:font-normal placeholder:text-[rgba(244,246,251,0.58)] group-focus-within:text-[#0f172a] group-focus-within:placeholder:text-[#0f172a] group-focus-within:placeholder:opacity-100 sm:absolute sm:inset-y-3 sm:left-5 sm:right-[9.25rem] md:text-[1.0625rem]"
                 />
                 <motion.button
                   type="submit"
-                  className="relative z-[2] flex min-h-11 w-full flex-row items-center justify-center gap-1 overflow-hidden rounded-xl border border-white/35 bg-[#d6ecff] px-5 font-sans text-sm font-semibold text-[#062a52] shadow-[0_0_36px_-4px_rgba(130,205,255,0.55),0_10px_28px_-14px_rgba(45,120,210,0.4)] transition-[opacity,transform,background-color,box-shadow,border-color] duration-200 hover:border-white/45 hover:bg-[#e8f4ff] hover:shadow-[0_0_42px_-2px_rgba(145,215,255,0.65),0_12px_32px_-12px_rgba(50,130,220,0.45)] disabled:cursor-not-allowed disabled:border-white/20 disabled:opacity-45 disabled:shadow-[0_0_20px_-6px_rgba(130,205,255,0.22)] disabled:hover:bg-[#d6ecff] sm:absolute sm:right-1.5 sm:top-1.5 sm:bottom-1.5 sm:min-h-0 sm:w-auto"
+                  className="relative z-[2] flex min-h-0 w-auto flex-row items-center justify-center gap-1 overflow-hidden rounded-xl border border-white/35 bg-[#d6ecff] px-5 font-sans text-sm font-semibold text-[#062a52] shadow-[0_0_36px_-4px_rgba(130,205,255,0.55),0_10px_28px_-14px_rgba(45,120,210,0.4)] transition-[opacity,transform,background-color,box-shadow,border-color] duration-200 hover:border-white/45 hover:bg-[#e8f4ff] hover:shadow-[0_0_42px_-2px_rgba(145,215,255,0.65),0_12px_32px_-12px_rgba(50,130,220,0.45)] disabled:cursor-not-allowed disabled:border-white/20 disabled:opacity-45 disabled:shadow-[0_0_20px_-6px_rgba(130,205,255,0.22)] disabled:hover:bg-[#d6ecff] sm:absolute sm:bottom-1.5 sm:right-1.5 sm:top-1.5"
                   disabled={!isValidEmail(email)}
                   initial="initial"
                   whileHover="hover"
@@ -570,21 +592,25 @@ export function HeroSection(): ReactElement {
                 {t("email.hint")}
               </p>
             </form>
+            <p className="mt-3 px-1 text-center font-sans text-[0.75rem] leading-snug text-[var(--ob-text-soft)] sm:hidden">
+              {t("email.hint")}
+            </p>
           </motion.div>
         </div>
       </div>
 
       {/* Cards rail — all visible, shrink to fit, no scroll */}
-      <div className="relative z-20 -mt-8 w-full min-w-0 shrink-0 md:-mt-12 lg:-mt-14">
+      <div className="relative z-20 mt-0 w-full min-w-0 shrink-0 md:-mt-12 lg:-mt-14">
         {/* Mobile: 3 cards, all visible */}
-        <div className="md:hidden">
-          <div
-            className="flex w-full items-stretch gap-2 px-4 pb-4 sm:gap-3 sm:px-6"
-            aria-hidden
-          >
-            <div className="min-w-0 flex-1"><ScheduleCard delay={0} heightTier="tall" /></div>
-            <div className="min-w-0 flex-1"><BookingCard delay={0.08} heightTier="mid" /></div>
-            <div className="min-w-0 flex-1"><ReviewCard delay={0.16} heightTier="tall" /></div>
+        <div className="md:hidden" aria-hidden>
+          <div className="relative overflow-hidden px-3 pb-3 sm:px-5">
+            <div className="relative mx-auto h-[12.25rem] w-full max-w-[24.5rem] sm:h-[15.5rem] sm:max-w-[30.5rem]">
+              <div className="absolute left-1/2 top-0 flex w-[36.25rem] -translate-x-1/2 scale-[0.66] items-stretch gap-3 origin-top sm:w-[37.5rem] sm:scale-[0.82]">
+                <div className="w-[11.75rem] shrink-0"><ScheduleCard delay={0} heightTier="tall" /></div>
+                <div className="w-[11.75rem] shrink-0"><BookingCard delay={0.08} heightTier="mid" /></div>
+                <div className="w-[11.75rem] shrink-0"><ReviewCard delay={0.16} heightTier="tall" /></div>
+              </div>
+            </div>
           </div>
         </div>
 

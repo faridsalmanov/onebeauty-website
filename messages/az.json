@@ -145,7 +145,7 @@
       },
       "form": {
         "salonName": { "label": "Salonun adı", "placeholder": "məs. Luxe Hair Studio" },
-        "ownerName": { "label": "Sahibin adı" },
+        "ownerName": { "label": "Adınız", "placeholder": "John Doe" },
         "phone": { "label": "Telefon", "placeholder": "+994 XX XXX XX XX" },
         "email": { "label": "E-poçt", "placeholder": "you@salon.com" },
         "city": { "label": "Şəhər" },
@@ -235,4 +235,3 @@
     }
   }
 }
-

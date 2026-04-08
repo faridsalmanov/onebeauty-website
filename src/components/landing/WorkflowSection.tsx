@@ -4,7 +4,9 @@ import {
   AnimatePresence,
   LayoutGroup,
   motion,
+  useMotionValueEvent,
   useReducedMotion,
+  useScroll,
 } from "framer-motion";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -28,6 +30,12 @@ const WORKFLOW_ACTIVE_STEP_PANEL_MAX_W =
 
 /** Keep inactive hover state aligned to the active card width. */
 const WORKFLOW_STEP_PANEL_MAX_W = WORKFLOW_ACTIVE_STEP_PANEL_MAX_W;
+
+/**
+ * Mobile scroll container height.
+ * 4 steps × ~50 svh scroll travel each + 1 viewport of sticky room = ~300 svh.
+ */
+const MOBILE_SCROLL_HEIGHT = "300svh";
 
 type WorkflowStep = {
   id: string;
@@ -81,7 +89,7 @@ export function WorkflowSection(): ReactElement {
   const phoneStep =
     steps.find((s): boolean => s.id === phoneStepId) ?? steps[0];
 
-  /** Phone media follows `activeId` after a short delay (premium sequencing). */
+  /* ── Shared: phone follows activeId with a staggered delay ── */
   useEffect((): void | (() => void) => {
     if (reduceMotion) {
       setPhoneStepId(activeId);
@@ -95,8 +103,9 @@ export function WorkflowSection(): ReactElement {
     };
   }, [activeId, reduceMotion]);
 
-  /** Track viewport for mobile scroll-driven behaviour. */
+  /* ── Mobile viewport detection ── */
   useEffect((): (() => void) => {
+    /* Mobile/tablet: ≤1023px — matches Tailwind `max-lg:` / PinnedScrollStory `lg:hidden`. */
     const mql = window.matchMedia("(max-width: 1023px)");
     const handler = (e: MediaQueryListEvent | MediaQueryList): void => {
       setIsMobile(e.matches);
@@ -108,40 +117,23 @@ export function WorkflowSection(): ReactElement {
     };
   }, []);
 
-  /** Mobile: Intersection Observer detects which step zone is in the viewport. */
-  useEffect((): void | (() => void) => {
-    if (!isMobile) return;
-    const container = mobileScrollRef.current;
-    if (!container) return;
+  /* ── Mobile: derive active step from scroll progress ── */
+  const { scrollYProgress } = useScroll({
+    target: mobileScrollRef,
+    offset: ["start start", "end end"],
+  });
 
-    const stepEls =
-      container.querySelectorAll<HTMLElement>("[data-step-id]");
-    if (stepEls.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries): void => {
-        let best: IntersectionObserverEntry | null = null;
-        for (const entry of entries) {
-          if (
-            entry.isIntersecting &&
-            (!best || entry.intersectionRatio > best.intersectionRatio)
-          ) {
-            best = entry;
-          }
-        }
-        const stepId = best?.target.getAttribute("data-step-id");
-        if (stepId) setActiveId(stepId);
-      },
-      { threshold: [0.15, 0.3, 0.5, 0.7], rootMargin: "-38% 0px -22% 0px" },
-    );
-
-    stepEls.forEach((el): void => {
-      observer.observe(el);
-    });
-    return (): void => {
-      observer.disconnect();
-    };
-  }, [isMobile]);
+  useMotionValueEvent(
+    scrollYProgress,
+    "change",
+    (progress: number): void => {
+      if (!isMobile) return;
+      const count = steps.length;
+      const idx = Math.min(count - 1, Math.max(0, Math.floor(progress * count)));
+      const newId = steps[idx].id;
+      setActiveId((prev): string => (prev !== newId ? newId : prev));
+    },
+  );
 
   /* ── Animation config ── */
   const stackEase = [0.16, 1, 0.32, 1] as const;
@@ -160,9 +152,13 @@ export function WorkflowSection(): ReactElement {
     ? { duration: 0.01 }
     : { duration: 0.32, ease: stackEase };
 
-  const mobilePhoneTransition = reduceMotion
+  const mobileFadeIn = reduceMotion
     ? { duration: 0.01 }
-    : { duration: 0.4, ease: [0.25, 0.1, 0.25, 1] };
+    : { duration: 0.28, ease: [0.25, 0.1, 0.25, 1] };
+
+  const mobileFadeOut = reduceMotion
+    ? { duration: 0.01 }
+    : { duration: 0.15, ease: "easeIn" as const };
 
   return (
     <section
@@ -170,26 +166,20 @@ export function WorkflowSection(): ReactElement {
       className="relative scroll-mt-28 overflow-x-clip bg-transparent md:scroll-mt-32"
     >
       <div className="relative z-[1] mx-auto w-full max-w-[min(100%,120rem)] px-4 py-16 sm:px-6 md:px-8 md:py-20 lg:px-10">
-        {/* ── Headline (shared across mobile & desktop) ── */}
-        <div className="max-w-2xl">
-          <h2 className="font-sans text-fluid-section-sm leading-[0.95] font-medium tracking-tight text-[var(--ob-text)]">
-            {t("titleLine1")}
-            <br />
-            {t("titleLine2")}
-          </h2>
-          <p className="mt-4 max-w-sm font-sans text-base leading-relaxed text-[var(--ob-text-soft)] sm:text-[1.05rem]">
-            {t("body")}
-          </p>
-        </div>
+        <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+          <div className="max-w-2xl">
+            <h2 className="font-sans text-fluid-section-sm leading-[0.95] font-medium tracking-tight text-[var(--ob-text)]">
+              {t("titleLine1")}
+              <br />
+              {t("titleLine2")}
+            </h2>
+            <p className="mt-4 max-w-sm font-sans text-base leading-relaxed text-[var(--ob-text-soft)] sm:text-[1.05rem]">
+              {t("body")}
+            </p>
 
-        {/* ────────────────────────────────────────────────
-            Desktop: clickable tabs + sticky phone (lg+)
-            ──────────────────────────────────────────────── */}
-        <div className="mt-6 hidden items-start gap-12 sm:mt-8 md:mt-10 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
-          <div>
             <LayoutGroup id="workflow-steps">
               <div
-                className="flex flex-col gap-2 sm:gap-2.5 md:gap-3"
+                className="mt-6 hidden flex-col gap-2 sm:mt-8 sm:gap-2.5 md:mt-10 md:gap-3 lg:flex"
                 role="tablist"
                 aria-label={t("aria.tablist")}
               >
@@ -278,7 +268,7 @@ export function WorkflowSection(): ReactElement {
           </div>
 
           <div
-            className="flex justify-center lg:sticky lg:top-28 lg:justify-end"
+            className="hidden justify-center lg:sticky lg:top-28 lg:flex lg:justify-end"
             id="workflow-phone-panel"
             role="tabpanel"
             aria-labelledby={`workflow-tab-${activeStep?.id ?? "01"}`}
@@ -321,48 +311,73 @@ export function WorkflowSection(): ReactElement {
         </div>
 
         {/* ────────────────────────────────────────────────
-            Mobile: scroll-driven sticky phone + step zones
+            Mobile: scroll-progress → content swap
+            One tall container, one sticky viewport.
+            Nothing moves — only content fades in/out.
             ──────────────────────────────────────────────── */}
-        <div className="mt-8 lg:hidden" ref={mobileScrollRef}>
-          {/* Sticky phone + dot indicators */}
-          <div className="sticky top-20 z-10 flex flex-col items-center pb-6">
-            <div className="relative w-full max-w-[min(42vw,10.5rem)] select-none">
-              <AnimatePresence initial={false} mode="wait">
+        <div
+          ref={mobileScrollRef}
+          className="relative mt-10 lg:hidden"
+          style={{ height: MOBILE_SCROLL_HEIGHT }}
+        >
+          <div className="sticky top-0 flex h-svh flex-col items-center justify-center px-5">
+            {/* ── Phone (fixed container, content crossfades) ── */}
+            <div
+              className="relative w-full max-w-[min(42vw,10.5rem)] select-none"
+              style={{
+                aspectRatio: `${WORKFLOW_SCREENSHOT_WIDTH} / ${WORKFLOW_SCREENSHOT_HEIGHT}`,
+              }}
+            >
+              <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={phoneStep.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={mobilePhoneTransition}
-                  className="relative w-full"
+                  className="absolute inset-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1, transition: mobileFadeIn }}
+                  exit={{ opacity: 0, transition: mobileFadeOut }}
                 >
-                  <div
-                    className="relative w-full"
-                    style={{
-                      aspectRatio: `${WORKFLOW_SCREENSHOT_WIDTH} / ${WORKFLOW_SCREENSHOT_HEIGHT}`,
-                    }}
-                  >
-                    <Image
-                      src={phoneStep.phoneScreenshotSrc}
-                      alt={t("aria.phoneAlt", {
-                        stepNumber: phoneStep.number,
-                        stepTitle: phoneStep.title,
-                      })}
-                      width={WORKFLOW_SCREENSHOT_WIDTH}
-                      height={WORKFLOW_SCREENSHOT_HEIGHT}
-                      className="pointer-events-none block h-auto w-full object-contain drop-shadow-[0_16px_32px_-12px_rgba(0,0,0,0.45)]"
-                      sizes="42vw"
-                      priority={phoneStep.id === "01"}
-                      loading={phoneStep.id === "01" ? "eager" : "lazy"}
-                      draggable={false}
-                    />
-                  </div>
+                  <Image
+                    src={phoneStep.phoneScreenshotSrc}
+                    alt={t("aria.phoneAlt", {
+                      stepNumber: phoneStep.number,
+                      stepTitle: phoneStep.title,
+                    })}
+                    fill
+                    className="pointer-events-none object-contain drop-shadow-[0_16px_32px_-12px_rgba(0,0,0,0.45)]"
+                    sizes="42vw"
+                    priority={phoneStep.id === "01"}
+                    loading={phoneStep.id === "01" ? "eager" : "lazy"}
+                    draggable={false}
+                  />
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            {/* Dot / pill indicators */}
-            <div className="mt-3 flex items-center justify-center gap-1.5">
+            {/* ── Step text (fixed container, sequential swap) ── */}
+            <div className="relative mt-5 h-[8rem] w-full max-w-[18rem] overflow-hidden">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={activeStep.id}
+                  className="absolute inset-x-0 top-0 flex flex-col items-center text-center"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0, transition: mobileFadeIn }}
+                  exit={{ opacity: 0, y: -6, transition: mobileFadeOut }}
+                >
+                  <span className="text-[0.7rem] font-semibold uppercase tabular-nums tracking-[0.18em] text-sky-300/80">
+                    {activeStep.number}
+                  </span>
+                  <h3 className="mt-1 font-sans text-[1.1rem] font-semibold leading-snug tracking-tight text-[var(--ob-text)]">
+                    {activeStep.title}
+                  </h3>
+                  <p className="mt-1.5 font-sans text-[0.82rem] leading-relaxed text-[var(--ob-text-soft)] [text-wrap:pretty]">
+                    {activeStep.body}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* ── Progress dots ── */}
+            <div className="mt-5 flex items-center justify-center gap-2">
               {steps.map(
                 (s): ReactElement => (
                   <span
@@ -376,50 +391,6 @@ export function WorkflowSection(): ReactElement {
                 ),
               )}
             </div>
-
-            {/* Gradient mask so text scrolling behind fades gracefully */}
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-8"
-              style={{
-                background:
-                  "linear-gradient(to bottom, transparent, var(--ob-hero-deep))",
-              }}
-            />
-          </div>
-
-          {/* Step trigger zones — each zone is a scroll "beat" */}
-          <div className="relative z-0">
-            {steps.map(
-              (step, i): ReactElement => (
-                <div
-                  key={step.id}
-                  data-step-id={step.id}
-                  className={`flex flex-col justify-center px-1 ${
-                    i === 0 ? "min-h-[45vh] pt-2" : ""
-                  }${i > 0 && i < steps.length - 1 ? "min-h-[50vh]" : ""}${
-                    i === steps.length - 1 ? "min-h-[40vh] pb-4" : ""
-                  }`}
-                >
-                  <div
-                    className={`transition-all duration-300 ease-out ${
-                      step.id === activeId
-                        ? "translate-y-0 opacity-100"
-                        : "translate-y-1 opacity-[0.35]"
-                    }`}
-                  >
-                    <span className="text-xs font-semibold uppercase tabular-nums tracking-widest text-sky-300/80">
-                      {step.number}
-                    </span>
-                    <h3 className="mt-1.5 font-sans text-lg font-semibold leading-snug tracking-tight text-[var(--ob-text)]">
-                      {step.title}
-                    </h3>
-                    <p className="mt-2 max-w-xs font-sans text-sm leading-relaxed text-[var(--ob-text-soft)] [text-wrap:pretty]">
-                      {step.body}
-                    </p>
-                  </div>
-                </div>
-              ),
-            )}
           </div>
         </div>
       </div>

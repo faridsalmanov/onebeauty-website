@@ -158,12 +158,9 @@ html.locale-az {
 }
 
 /*
- * AZ display serif — showcase headline, registration title, pinned problem `<h2>`
- * (full line): Cormorant + smoothing + soft lift shadow.
+ * AZ display serif — registration title (Cormorant + smoothing).
  */
-[data-showcase-az-heading],
-html.locale-az [data-register-az-title],
-[data-pinned-problem-az-display] {
+html.locale-az [data-register-az-title] {
   font-family: var(--font-cormorant-garamond-az-latin), ui-serif, Georgia, serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -217,4 +214,21 @@ body {
     transform: none !important;
     transition: none !important;
   }
+
+  .ob-tools-marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* PinnedScrollStory mobile — infinite horizontal tool icons (CSS only). */
+@keyframes ob-tools-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ob-tools-marquee-track {
+  animation: ob-tools-marquee 42s linear infinite;
+  will-change: transform;
 }

@@ -145,7 +145,7 @@
       },
       "form": {
         "salonName": { "label": "Название салона", "placeholder": "например, Luxe Hair Studio" },
-        "ownerName": { "label": "Имя владельца" },
+        "ownerName": { "label": "Ваше имя", "placeholder": "John Doe" },
         "phone": { "label": "Телефон", "placeholder": "+994 XX XXX XX XX" },
         "email": { "label": "Email", "placeholder": "you@salon.com" },
         "city": { "label": "Город" },
@@ -235,4 +235,3 @@
     }
   }
 }
-

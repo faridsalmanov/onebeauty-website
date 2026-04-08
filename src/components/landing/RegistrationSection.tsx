@@ -13,7 +13,6 @@ interface FormData {
   ownerName: string;
   phone: string;
   email: string;
-  city: string;
   employees: string;
   agreeDiscount: boolean;
 }
@@ -23,7 +22,6 @@ const INITIAL_FORM: FormData = {
   ownerName: "",
   phone: "",
   email: "",
-  city: "",
   employees: "",
   agreeDiscount: false,
 };
@@ -51,7 +49,7 @@ function InputField({
     <div>
       <label
         htmlFor={id}
-        className="mb-1.5 block font-sans text-xs font-semibold tracking-[0.12em] text-[var(--ob-text-soft)] uppercase"
+        className="mb-1.5 block break-words font-sans text-[clamp(0.64rem,2.35vw,0.75rem)] font-semibold tracking-[0.11em] text-[var(--ob-text-soft)] uppercase sm:text-xs sm:tracking-[0.12em]"
       >
         {label}
         {required && <span className="ml-0.5 text-[#e8ecff]">*</span>}
@@ -64,7 +62,7 @@ function InputField({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-[var(--ob-glass-border)] bg-[rgba(255,255,255,0.04)] px-4 py-3 font-sans text-sm text-[var(--ob-text)] outline-none transition-all duration-300 placeholder:text-[var(--ob-text-faint)] hover:border-[rgba(255,255,255,0.2)] focus:border-[rgba(186,170,255,0.5)] focus:bg-[rgba(255,255,255,0.06)] focus:shadow-[0_0_0_3px_rgba(186,170,255,0.12)] focus:ring-0"
+        className="min-h-11 w-full rounded-[0.85rem] border border-[var(--ob-glass-border)] bg-[rgba(255,255,255,0.04)] px-3 py-2.5 font-sans text-[clamp(0.9rem,3.6vw,0.95rem)] leading-normal text-[var(--ob-text)] outline-none transition-all duration-300 placeholder:text-[var(--ob-text-faint)] hover:border-[rgba(255,255,255,0.2)] focus:border-[rgba(186,170,255,0.5)] focus:bg-[rgba(255,255,255,0.06)] focus:shadow-[0_0_0_3px_rgba(186,170,255,0.12)] focus:ring-0 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
       />
     </div>
   );
@@ -177,7 +175,7 @@ export function RegistrationSection(): ReactElement {
         <div className="w-[min(92vw,56rem)] aspect-[9/5] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(186,170,255,0.06)_0%,transparent_70%)] blur-3xl" />
       </div>
 
-      <div className="relative z-[1] mx-auto max-w-3xl px-4 sm:px-6 md:px-8">
+      <div className="relative z-[1] mx-auto max-w-3xl px-3 sm:px-6 md:px-8">
         {/* Badge */}
         <motion.div
           className="flex justify-center"
@@ -247,13 +245,13 @@ export function RegistrationSection(): ReactElement {
         <motion.form
           id="register-form"
           onSubmit={handleSubmit}
-          className="mt-12 scroll-mt-28 rounded-2xl border border-[var(--ob-glass-border)] bg-[rgba(255,255,255,0.03)] p-6 shadow-[0_16px_64px_-16px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-xl sm:p-8 md:p-10 md:scroll-mt-32"
+          className="mt-10 scroll-mt-28 rounded-xl border border-[var(--ob-glass-border)] bg-[rgba(255,255,255,0.03)] p-4 shadow-[0_16px_64px_-16px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.04)_inset] backdrop-blur-xl sm:mt-12 sm:rounded-2xl sm:p-8 md:p-10 md:scroll-mt-32"
           initial={reduceMotion ? {} : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.6, delay: 0.25, ease: STAGGER_EASE }}
         >
-          <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
             <InputField
               id="salonName"
               label={t("form.salonName.label")}
@@ -266,6 +264,7 @@ export function RegistrationSection(): ReactElement {
               label={t("form.ownerName.label")}
               value={form.ownerName}
               onChange={handleChange}
+              placeholder={t("form.ownerName.placeholder")}
             />
             <InputField
               id="phone"
@@ -283,16 +282,10 @@ export function RegistrationSection(): ReactElement {
               onChange={handleChange}
               placeholder={t("form.email.placeholder")}
             />
-            <InputField
-              id="city"
-              label={t("form.city.label")}
-              value={form.city}
-              onChange={handleChange}
-            />
             <div>
               <label
                 htmlFor="employees"
-                className="mb-1.5 block font-sans text-xs font-semibold tracking-[0.12em] text-[var(--ob-text-soft)] uppercase"
+                className="mb-1.5 block break-words font-sans text-[clamp(0.64rem,2.35vw,0.75rem)] font-semibold tracking-[0.11em] text-[var(--ob-text-soft)] uppercase sm:text-xs sm:tracking-[0.12em]"
               >
                 {t("form.employees.label")}
                 <span className="ml-0.5 text-[#e8ecff]">*</span>
@@ -303,7 +296,7 @@ export function RegistrationSection(): ReactElement {
                 required
                 value={form.employees}
                 onChange={handleChange}
-                className="w-full appearance-none rounded-xl border border-[var(--ob-glass-border)] bg-[rgba(255,255,255,0.04)] px-4 py-3 font-sans text-sm text-[var(--ob-text)] outline-none transition-all duration-300 hover:border-[rgba(255,255,255,0.2)] focus:border-[rgba(186,170,255,0.5)] focus:bg-[rgba(255,255,255,0.06)] focus:shadow-[0_0_0_3px_rgba(186,170,255,0.12)] focus:ring-0"
+                className="min-h-11 w-full appearance-none rounded-[0.85rem] border border-[var(--ob-glass-border)] bg-[rgba(255,255,255,0.04)] px-3 py-2.5 font-sans text-[clamp(0.9rem,3.6vw,0.95rem)] leading-normal text-[var(--ob-text)] outline-none transition-all duration-300 hover:border-[rgba(255,255,255,0.2)] focus:border-[rgba(186,170,255,0.5)] focus:bg-[rgba(255,255,255,0.06)] focus:shadow-[0_0_0_3px_rgba(186,170,255,0.12)] focus:ring-0 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
               >
                 <option value="" className="bg-[var(--ob-hero-mid)] text-[var(--ob-text-faint)]">
                   {t("form.employees.placeholder")}
@@ -325,7 +318,7 @@ export function RegistrationSection(): ReactElement {
           </div>
 
           {/* Checkbox */}
-          <div className="mt-6 flex items-start gap-3">
+          <div className="mt-5 flex items-start gap-2.5 sm:mt-6 sm:gap-3">
             <input
               id="agreeDiscount"
               name="agreeDiscount"
@@ -333,11 +326,11 @@ export function RegistrationSection(): ReactElement {
               required
               checked={form.agreeDiscount}
               onChange={handleChange}
-              className="mt-0.5 h-4 w-4 rounded border-[var(--ob-glass-border)] bg-transparent accent-[#baaafe]"
+              className="mt-0.5 size-[1.125rem] rounded border-[var(--ob-glass-border)] bg-transparent accent-[#baaafe] sm:size-4"
             />
             <label
               htmlFor="agreeDiscount"
-              className="font-sans text-sm leading-relaxed text-[var(--ob-text-soft)]"
+              className="font-sans text-[clamp(0.82rem,3.45vw,0.9rem)] leading-relaxed text-[var(--ob-text-soft)] sm:text-sm"
             >
               {t("form.agree")}
             </label>
@@ -346,7 +339,7 @@ export function RegistrationSection(): ReactElement {
           {/* Submit button */}
           <motion.button
             type="submit"
-            className="group mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--ob-cta-bg)] py-4 font-sans text-sm font-semibold tracking-tight text-[var(--ob-cta-text)] shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset] transition-all duration-300 hover:shadow-[0_0_32px_rgba(34,42,53,0.1),0_4px_8px_rgba(0,0,0,0.08),0_0_0_1px_rgba(34,42,53,0.06),0_16px_68px_rgba(47,48,55,0.08)]"
+            className="group mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[var(--ob-cta-bg)] py-3.5 font-sans text-[clamp(0.9rem,3.7vw,0.95rem)] font-semibold tracking-tight text-[var(--ob-cta-text)] shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset] transition-all duration-300 hover:shadow-[0_0_32px_rgba(34,42,53,0.1),0_4px_8px_rgba(0,0,0,0.08),0_0_0_1px_rgba(34,42,53,0.06),0_16px_68px_rgba(47,48,55,0.08)] sm:mt-8 sm:min-h-12 sm:rounded-xl sm:py-4 sm:text-sm"
             whileHover={reduceMotion ? {} : { scale: 1.01 }}
             whileTap={reduceMotion ? {} : { scale: 0.98 }}
           >
@@ -355,7 +348,7 @@ export function RegistrationSection(): ReactElement {
           </motion.button>
 
           {/* Fine print */}
-          <p className="mt-4 text-center font-sans text-xs text-[var(--ob-text-faint)]">
+          <p className="mt-3 text-center font-sans text-[0.7rem] leading-relaxed text-[var(--ob-text-faint)] sm:mt-4 sm:text-xs">
             {t("form.finePrint")}
           </p>
         </motion.form>

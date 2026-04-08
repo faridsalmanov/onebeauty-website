@@ -145,7 +145,7 @@
       },
       "form": {
         "salonName": { "label": "Salon Name", "placeholder": "e.g. Luxe Hair Studio" },
-        "ownerName": { "label": "Owner Name" },
+        "ownerName": { "label": "Your Name", "placeholder": "John Doe" },
         "phone": { "label": "Phone", "placeholder": "+994 XX XXX XX XX" },
         "email": { "label": "Email", "placeholder": "you@salon.com" },
         "city": { "label": "City" },
@@ -235,4 +235,3 @@
     }
   }
 }
-

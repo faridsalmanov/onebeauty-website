@@ -32,8 +32,10 @@ const instrumentSerif = Instrument_Serif({
 
 /**
  * AZ: `html.locale-az` remaps `--font-serif` → Cormorant below (hero emphasis,
- * showcase headline via `font-serif` / `[data-showcase-az-heading]`, etc.).
- * Pinned “problem” beat uses Inter for sans via `data-pinned-problem-az-latin`.
+ * registration title via `[data-register-az-title]`, etc.). App showcase frame
+ * headline uses Geist Sans (`font-sans`).
+ * Pinned “problem” block: Inter for wrapper copy via `data-pinned-problem-az-latin`;
+ * problem title uses Geist Sans (`font-sans`).
  */
 const interAzLatin = Inter({
   weight: "variable",

@@ -119,6 +119,45 @@ const ICON_LAYOUT: {
   },
 ];
 
+/** Mobile-only: horizontal strip of tool icons; CSS marquee is the only motion. */
+function ProblemToolsMarquee(): ReactElement {
+  const renderStrip = (stripKey: "a" | "b"): ReactElement => (
+    <div
+      key={stripKey}
+      className="flex shrink-0 items-center gap-3 pr-3"
+    >
+      {ICON_LAYOUT.map(
+        (slot): ReactElement => {
+          const Icon = slot.Icon;
+          return (
+            <div
+              key={`${stripKey}-${slot.id}`}
+              className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl border border-white/18 bg-white/[0.09] shadow-[0_10px_28px_-10px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.06)_inset,0_0_28px_-8px_rgba(186,170,255,0.18)]"
+            >
+              <Icon
+                className="size-[26px] text-[var(--ob-text)]"
+                strokeWidth={1.25}
+              />
+            </div>
+          );
+        },
+      )}
+    </div>
+  );
+
+  return (
+    <div
+      className="relative mt-7 w-full max-w-full overflow-hidden"
+      aria-hidden
+    >
+      <div className="ob-tools-marquee-track flex w-max">
+        {renderStrip("a")}
+        {renderStrip("b")}
+      </div>
+    </div>
+  );
+}
+
 export function PinnedScrollStory(): ReactElement {
   const locale = useLocale();
   const t = useTranslations("home.pinned");
@@ -131,44 +170,60 @@ export function PinnedScrollStory(): ReactElement {
   const problemRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* Align with WorkflowSection: mobile ≤1023px, desktop ≥1024px (Tailwind `lg`). */
+    const desktopMq = window.matchMedia("(min-width: 1024px)");
 
-    gsap.registerPlugin(ScrollTrigger);
+    let gsapCleanup: (() => void) | undefined;
 
-    const panel = panelRef.current;
-    const meet = meetRef.current;
-    const meetEyebrow = meetEyebrowRef.current;
-    const meetBrand = meetBrandRef.current;
-    const meetBody = meetBodyRef.current;
-    const problem = problemRef.current;
-    if (
-      !panel ||
-      !meet ||
-      !meetEyebrow ||
-      !meetBrand ||
-      !meetBody ||
-      !problem
-    ) {
-      return;
-    }
+    const bindDesktopPinnedStory = (): void => {
+      gsapCleanup?.();
+      gsapCleanup = undefined;
 
-    const outerEls: HTMLDivElement[] = [];
-    const innerEls: HTMLDivElement[] = [];
-    for (let i = 0; i < ICON_LAYOUT.length; i++) {
-      const outer = panel.querySelector(`[data-pinned-tool="${String(i)}"]`);
-      const inner = panel.querySelector(
-        `[data-pinned-tool-inner="${String(i)}"]`,
-      );
-      if (!(outer instanceof HTMLDivElement) || !(inner instanceof HTMLDivElement)) {
+      if (!desktopMq.matches) {
         return;
       }
-      outerEls.push(outer);
-      innerEls.push(inner);
-    }
 
-    const ctx = gsap.context(() => {
+      const reduceMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      const panel = panelRef.current;
+      const meet = meetRef.current;
+      const meetEyebrow = meetEyebrowRef.current;
+      const meetBrand = meetBrandRef.current;
+      const meetBody = meetBodyRef.current;
+      const problem = problemRef.current;
+      if (
+        !panel ||
+        !meet ||
+        !meetEyebrow ||
+        !meetBrand ||
+        !meetBody ||
+        !problem
+      ) {
+        return;
+      }
+
+      const outerEls: HTMLDivElement[] = [];
+      const innerEls: HTMLDivElement[] = [];
+      for (let i = 0; i < ICON_LAYOUT.length; i++) {
+        const outer = panel.querySelector(`[data-pinned-tool="${String(i)}"]`);
+        const inner = panel.querySelector(
+          `[data-pinned-tool-inner="${String(i)}"]`,
+        );
+        if (
+          !(outer instanceof HTMLDivElement) ||
+          !(inner instanceof HTMLDivElement)
+        ) {
+          return;
+        }
+        outerEls.push(outer);
+        innerEls.push(inner);
+      }
+
+      const ctx = gsap.context(() => {
       if (reduceMotion) {
         gsap.set(problem, { autoAlpha: 0 });
         gsap.set([meetEyebrow, meetBrand, meetBody], {
@@ -367,115 +422,178 @@ export function PinnedScrollStory(): ReactElement {
       );
     });
 
-    const onResize = (): void => {
-      ScrollTrigger.refresh();
-    };
-    if (!reduceMotion) {
-      window.addEventListener("resize", onResize);
-      requestAnimationFrame(() => {
+      const onResize = (): void => {
         ScrollTrigger.refresh();
-      });
-    }
+      };
+      if (!reduceMotion) {
+        window.addEventListener("resize", onResize);
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+        });
+      }
 
-    return () => {
-      window.removeEventListener("resize", onResize);
-      ctx.revert();
+      gsapCleanup = (): void => {
+        window.removeEventListener("resize", onResize);
+        ctx.revert();
+      };
+    };
+
+    bindDesktopPinnedStory();
+    desktopMq.addEventListener("change", bindDesktopPinnedStory);
+
+    return (): void => {
+      desktopMq.removeEventListener("change", bindDesktopPinnedStory);
+      gsapCleanup?.();
     };
   }, []);
 
   return (
-    <div
-      ref={rootRef}
-      data-landing-pinned-root
-      className="relative z-0 w-full"
-      aria-label={t("ariaLabel")}
-    >
-      <div
-        ref={panelRef}
-        className="relative z-0 flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-transparent px-4 sm:px-6 md:px-8"
+    <>
+      {/* Viewports ≤1023px: static problem + CSS marquee + meet (no scroll-pinned GSAP). */}
+      <section
+        className="relative z-0 w-full lg:hidden"
+        aria-label={t("ariaLabel")}
       >
-        {/* Top wash removed for test — restore cream + data-landing-pinned-seam-blue block to re-enable */}
-        <div className="relative mx-auto h-full min-h-[100dvh] w-full max-w-6xl">
+        <div className="mx-auto w-full max-w-6xl px-4 pt-14 pb-6 sm:px-6">
           <div
-            ref={meetRef}
-            className="absolute inset-0 z-[21] flex flex-col items-center justify-center text-center"
-          >
-            <p
-              ref={meetEyebrowRef}
-              className="font-sans text-sm font-medium tracking-[0.25em] text-[var(--ob-text-faint)] uppercase"
-            >
-              {t("meetEyebrow")}
-            </p>
-            <div
-              ref={meetBrandRef}
-              className="mt-5 flex flex-wrap items-center justify-center gap-4 md:gap-6"
-            >
-              <span
-                className="grid grid-cols-2 gap-1 rounded-xl border border-white/30 bg-white/[0.08] p-3 shadow-[0_0_60px_rgba(186,170,255,0.22)]"
-                aria-hidden
-              >
-                <span className="size-3 rounded-md bg-white/95 md:size-3.5" />
-                <span className="size-3 rounded-md bg-white/45 md:size-3.5" />
-                <span className="size-3 rounded-md bg-white/45 md:size-3.5" />
-                <span className="size-3 rounded-md bg-white/95 md:size-3.5" />
-              </span>
-              <span className="font-sans text-[clamp(2.5rem,8vw,4.5rem)] font-semibold tracking-tight text-[var(--ob-text)] lowercase">
-                onebeauty
-              </span>
-            </div>
-            <p
-              ref={meetBodyRef}
-              className="mt-8 max-w-md font-sans text-base leading-relaxed text-[var(--ob-text-soft)] md:text-lg"
-            >
-              {t("meetBody")}
-            </p>
-          </div>
-
-          <div
-            ref={problemRef}
             {...(locale === "az" ? { "data-pinned-problem-az-latin": "" } : {})}
-            className="absolute inset-0 z-20 flex flex-col items-center justify-center px-2 text-center md:px-8"
+            className="flex flex-col items-center text-center"
           >
-            <p className="font-sans text-xs font-medium tracking-[0.3em] text-[var(--ob-text-faint)]">
+            <p className="font-sans text-[0.65rem] font-medium uppercase tracking-[0.28em] text-[var(--ob-text-faint)]">
               {t("problemEyebrow")}
             </p>
             <h2
-              {...(locale === "az" ? { "data-pinned-problem-az-display": "" } : {})}
-              className={`mt-4 max-w-[20ch] text-[clamp(1.75rem,4.2vw,3rem)] font-semibold text-[var(--ob-text)] md:max-w-3xl ${
-                locale === "az"
-                  ? "leading-tight tracking-tighter"
-                  : "font-serif leading-[1.12] tracking-tight"
+              className={`mt-4 max-w-[22ch] text-[clamp(1.65rem,5.5vw,2.25rem)] font-semibold font-sans leading-tight text-[var(--ob-text)] ${
+                locale === "az" ? "tracking-tighter" : "tracking-tight"
               }`}
             >
               {t("problemTitle")}
             </h2>
-            <p className="mt-5 max-w-xl font-sans text-sm leading-relaxed text-[var(--ob-text-soft)] md:text-base">
+            <ProblemToolsMarquee />
+            <p className="mt-6 max-w-md font-sans text-sm leading-relaxed text-[var(--ob-text-soft)]">
               {t("problemBody")}
             </p>
           </div>
+        </div>
 
-          {ICON_LAYOUT.map((slot, i) => {
-            const Icon = slot.Icon;
-            return (
-              <div
-                key={slot.id}
-                data-pinned-tool={String(i)}
-                className={`pointer-events-none absolute z-[22] flex size-[72px] items-center justify-center md:size-[84px] ${slot.className}`}
+        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-4 sm:px-6">
+          <div className="flex flex-col items-center text-center">
+            <p className="font-sans text-sm font-medium uppercase tracking-[0.25em] text-[var(--ob-text-faint)]">
+              {t("meetEyebrow")}
+            </p>
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+              <span
+                className="grid grid-cols-2 gap-1 rounded-xl border border-white/30 bg-white/[0.08] p-2.5 shadow-[0_0_48px_rgba(186,170,255,0.2)] sm:p-3"
+                aria-hidden
               >
-                <div
-                  data-pinned-tool-inner={String(i)}
-                  className="flex size-[72px] items-center justify-center rounded-2xl border border-white/18 bg-white/[0.09] shadow-[0_16px_48px_-14px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.06),0_0_40px_-8px_rgba(186,170,255,0.2)] backdrop-blur-md md:size-[84px] md:rounded-3xl"
+                <span className="size-2.5 rounded-md bg-white/95 sm:size-3" />
+                <span className="size-2.5 rounded-md bg-white/45 sm:size-3" />
+                <span className="size-2.5 rounded-md bg-white/45 sm:size-3" />
+                <span className="size-2.5 rounded-md bg-white/95 sm:size-3" />
+              </span>
+              <span className="font-sans text-[clamp(2rem,9vw,3rem)] font-semibold tracking-tight text-[var(--ob-text)] lowercase">
+                onebeauty
+              </span>
+            </div>
+            <p className="mt-7 max-w-md font-sans text-sm leading-relaxed text-[var(--ob-text-soft)] sm:text-base">
+              {t("meetBody")}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div
+        ref={rootRef}
+        data-landing-pinned-root
+        className="relative z-0 hidden w-full lg:block"
+        aria-label={t("ariaLabel")}
+      >
+        <div
+          ref={panelRef}
+          className="relative z-0 flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-transparent px-4 sm:px-6 md:px-8"
+        >
+          {/* Top wash removed for test — restore cream + data-landing-pinned-seam-blue block to re-enable */}
+          <div className="relative mx-auto h-full min-h-[100dvh] w-full max-w-6xl">
+            <div
+              ref={meetRef}
+              className="absolute inset-0 z-[21] flex flex-col items-center justify-center text-center"
+            >
+              <p
+                ref={meetEyebrowRef}
+                className="font-sans text-sm font-medium tracking-[0.25em] text-[var(--ob-text-faint)] uppercase"
+              >
+                {t("meetEyebrow")}
+              </p>
+              <div
+                ref={meetBrandRef}
+                className="mt-5 flex flex-wrap items-center justify-center gap-4 md:gap-6"
+              >
+                <span
+                  className="grid grid-cols-2 gap-1 rounded-xl border border-white/30 bg-white/[0.08] p-3 shadow-[0_0_60px_rgba(186,170,255,0.22)]"
+                  aria-hidden
                 >
-                  <Icon
-                    className="size-[34px] text-[var(--ob-text)] md:size-[40px]"
-                    strokeWidth={1.25}
-                  />
-                </div>
+                  <span className="size-3 rounded-md bg-white/95 md:size-3.5" />
+                  <span className="size-3 rounded-md bg-white/45 md:size-3.5" />
+                  <span className="size-3 rounded-md bg-white/45 md:size-3.5" />
+                  <span className="size-3 rounded-md bg-white/95 md:size-3.5" />
+                </span>
+                <span className="font-sans text-[clamp(2.5rem,8vw,4.5rem)] font-semibold tracking-tight text-[var(--ob-text)] lowercase">
+                  onebeauty
+                </span>
               </div>
-            );
-          })}
+              <p
+                ref={meetBodyRef}
+                className="mt-8 max-w-md font-sans text-base leading-relaxed text-[var(--ob-text-soft)] md:text-lg"
+              >
+                {t("meetBody")}
+              </p>
+            </div>
+
+            <div
+              ref={problemRef}
+              {...(locale === "az" ? { "data-pinned-problem-az-latin": "" } : {})}
+              className="absolute inset-0 z-20 flex flex-col items-center justify-center px-2 text-center md:px-8"
+            >
+              <p className="font-sans text-xs font-medium tracking-[0.3em] text-[var(--ob-text-faint)]">
+                {t("problemEyebrow")}
+              </p>
+              <h2
+                className={`mt-4 max-w-[20ch] text-[clamp(1.75rem,4.2vw,3rem)] font-semibold text-[var(--ob-text)] md:max-w-3xl ${
+                  locale === "az"
+                    ? "font-sans leading-tight tracking-tighter"
+                    : "font-serif leading-[1.12] tracking-tight"
+                }`}
+              >
+                {t("problemTitle")}
+              </h2>
+              <p className="mt-5 max-w-xl font-sans text-sm leading-relaxed text-[var(--ob-text-soft)] md:text-base">
+                {t("problemBody")}
+              </p>
+            </div>
+
+            {ICON_LAYOUT.map((slot, i) => {
+              const Icon = slot.Icon;
+              return (
+                <div
+                  key={slot.id}
+                  data-pinned-tool={String(i)}
+                  className={`pointer-events-none absolute z-[22] flex size-[72px] items-center justify-center md:size-[84px] ${slot.className}`}
+                >
+                  <div
+                    data-pinned-tool-inner={String(i)}
+                    className="flex size-[72px] items-center justify-center rounded-2xl border border-white/18 bg-white/[0.09] shadow-[0_16px_48px_-14px_rgba(0,0,0,0.55),0_0_0_1px_rgba(255,255,255,0.06),0_0_40px_-8px_rgba(186,170,255,0.2)] backdrop-blur-md md:size-[84px] md:rounded-3xl"
+                  >
+                    <Icon
+                      className="size-[34px] text-[var(--ob-text)] md:size-[40px]"
+                      strokeWidth={1.25}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

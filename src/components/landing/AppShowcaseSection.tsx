@@ -843,8 +843,9 @@ export function AppShowcaseSection(): ReactElement {
                 </p>
                 <h2
                   id="app-showcase-heading"
-                  {...(locale === "az" ? { "data-showcase-az-heading": "" } : {})}
-                  className="mt-3 font-serif text-fluid-serif-lg font-semibold leading-tight tracking-tighter text-[var(--ob-primary)]"
+                  className={`mt-3 text-fluid-serif-lg font-semibold leading-tight tracking-tighter text-[var(--ob-primary)] ${
+                    locale === "az" ? "font-sans" : "font-serif"
+                  }`}
                 >
                   {t("title")}
                 </h2>
