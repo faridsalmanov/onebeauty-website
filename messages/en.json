@@ -28,9 +28,9 @@
       "headline": {
         "line1": {
           "the": "Run",
-          "allInOne": "your",
-          "app": "salon",
-          "for": "from one app"
+          "allInOne": "your salon",
+          "app": "from",
+          "for": "one app"
         },
         "line2": ""
       },
@@ -52,7 +52,7 @@
         "topStylistLabel": "Top stylist",
         "reviewsMeta": "· 127 reviews",
         "todayScheduleLabel": "Today’s schedule",
-        "reviewQuote": "“Finally one place for bookings, team, and clients. Our front desk runs calmer and nothing slips through the cracks.”",
+        "reviewQuote": "“Booking used to be a tangle of texts and missed calls. Clients book themselves now, and we still run the day with confidence.”",
         "reviewName": "Kamila S.",
         "reviewRole": "Salon owner",
         "tags": {

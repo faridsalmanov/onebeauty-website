@@ -368,11 +368,25 @@ function ReviewCard({
 const HEADLINE_TEXT =
   "font-medium tracking-tighter text-[var(--ob-text)] text-[clamp(0.95rem,5.9vw,2.35rem)] sm:text-fluid-hero";
 
+/**
+ * RU: slightly under default `text-fluid-hero` max (5.75rem) so the five-word nowrap
+ * line still fits on typical laptop widths; larger than the first RU pass.
+ */
+const HEADLINE_TEXT_RU =
+  "font-medium tracking-tighter text-[var(--ob-text)] text-[clamp(0.93rem,5.5vw,2.32rem)] sm:text-[clamp(1.6rem,calc(1.08rem+3.65vw),4.4rem)] xl:text-[clamp(1.7rem,calc(1rem+3.25vw),4.95rem)]";
+
 const HEADLINE_ROW_CLASS = `flex flex-wrap items-baseline justify-center gap-x-[0.14em] gap-y-[0.08em] sm:flex-nowrap sm:gap-x-[0.25em] sm:gap-y-0 ${HEADLINE_TEXT}`;
 
-/** Same multi-layer glow + scale as AZ hero emphasis (EN/RU use `font-serif`; AZ uses Cormorant via data attribute). */
-const HEADLINE_EMPHASIS_GLOW_CLASS =
-  "inline-block shrink-0 text-[1.04em] sm:text-[1.05em] font-semibold italic text-[#eceef8] [text-shadow:0_0_8px_rgba(255,255,255,0.55),0_0_28px_rgba(255,255,255,0.35),0_0_52px_rgba(255,255,255,0.12),0_0_22px_rgba(186,170,255,0.09),0_0_44px_rgba(186,170,255,0.045)]";
+const HEADLINE_ROW_CLASS_RU = `flex flex-wrap items-baseline justify-center gap-x-[0.13em] gap-y-[0.08em] sm:flex-nowrap sm:gap-x-[0.22em] sm:gap-y-0 ${HEADLINE_TEXT_RU}`;
+
+/** Glow + italic serif; relative `em` scales sit on the headline row’s `font-size`. */
+const HEADLINE_EMPHASIS_GLOW_CORE =
+  "inline-block shrink-0 font-semibold italic text-[#eceef8] [text-shadow:0_0_8px_rgba(255,255,255,0.55),0_0_28px_rgba(255,255,255,0.35),0_0_52px_rgba(255,255,255,0.12),0_0_22px_rgba(186,170,255,0.09),0_0_44px_rgba(186,170,255,0.045)]";
+
+const HEADLINE_EMPHASIS_SCALE_DEFAULT = "text-[1.04em] sm:text-[1.05em]";
+
+/** RU `приложения`: Instrument Serif reads smaller than Geist on Cyrillic — nudge up to match siblings. */
+const HEADLINE_EMPHASIS_SCALE_RU_LINE2 = "text-[1.12em] sm:text-[1.14em]";
 
 function buildHeadlineSegments(
   line2Trimmed: string,
@@ -449,17 +463,27 @@ export function HeroSection(): ReactElement {
           className="mb-5 w-full max-w-[min(100%,88rem)] text-center md:mb-6"
         >
           <div className="flex min-w-0 justify-center">
-            <div className={HEADLINE_ROW_CLASS}>
+            <div
+              className={
+                locale === "ru" ? HEADLINE_ROW_CLASS_RU : HEADLINE_ROW_CLASS
+              }
+            >
               {buildHeadlineSegments(headlineLine2Trimmed, locale).map(
                 (seg, index) => {
                   const emphasized =
                     seg.type === "line2" ||
                     (heroSingleLineHeadline &&
-                      locale === "az" &&
                       seg.type === "line1" &&
-                      seg.key === "allInOne");
+                      ((locale === "az" && seg.key === "allInOne") ||
+                        (locale === "en" && seg.key === "for")));
                   const motionKey =
                     seg.type === "line1" ? seg.key : `line2-${seg.text}`;
+                  const emphasisScaleClass =
+                    emphasized &&
+                    locale === "ru" &&
+                    seg.type === "line2"
+                      ? HEADLINE_EMPHASIS_SCALE_RU_LINE2
+                      : HEADLINE_EMPHASIS_SCALE_DEFAULT;
                   return (
                     <motion.span
                       key={motionKey}
@@ -468,7 +492,7 @@ export function HeroSection(): ReactElement {
                         : {})}
                       className={
                         emphasized
-                          ? `${HEADLINE_EMPHASIS_GLOW_CLASS}${locale === "az" ? "" : " font-serif"}`
+                          ? `${HEADLINE_EMPHASIS_GLOW_CORE} ${emphasisScaleClass}${locale === "az" ? "" : " font-serif"}`
                           : "inline-block shrink-0"
                       }
                       initial={

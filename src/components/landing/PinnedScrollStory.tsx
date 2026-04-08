@@ -9,9 +9,9 @@ import {
   CreditCard,
   FileSpreadsheet,
   MessageSquare,
-  Sparkles,
   Store,
   Tag,
+  Users,
 } from "lucide-react";
 import type { ReactElement } from "react";
 import { useLocale, useTranslations } from "next-intl";
@@ -88,8 +88,8 @@ const ICON_LAYOUT: {
     yNudge: 4,
   },
   {
-    Icon: Sparkles,
-    id: "pf-spark",
+    Icon: Users,
+    id: "pf-users",
     className:
       "left-[min(calc(50%+min(23.25rem,48vw)),calc(100%-5.5rem))] top-[29%] md:top-[30%] lg:left-[calc(50%+24.75rem)]",
     side: "right",
