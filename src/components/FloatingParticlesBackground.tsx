@@ -6,6 +6,9 @@ import { loadSlim } from "@tsparticles/slim";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactElement } from "react";
 
+const pushParticleHoldSeconds = { min: 4, max: 6.5 } as const;
+const pushParticleFadeSpeed = { min: 0.38, max: 0.62 } as const;
+
 function buildParticleOptions(reducedMotion: boolean): ISourceOptions {
   return {
     fullScreen: { enable: false },
@@ -17,8 +20,32 @@ function buildParticleOptions(reducedMotion: boolean): ISourceOptions {
     interactivity: {
       events: {
         onHover: { enable: false },
-        onClick: { enable: false },
+        onClick: {
+          enable: !reducedMotion,
+          mode: "push",
+        },
         resize: { enable: true },
+      },
+      modes: {
+        push: {
+          quantity: { min: 8, max: 18 },
+          particles: {
+            opacity: {
+              value: { min: 0, max: 0.58 },
+              animation: {
+                enable: true,
+                mode: "decrease",
+                startValue: "max",
+                destroy: "min",
+                delay: pushParticleHoldSeconds,
+                speed: pushParticleFadeSpeed,
+                decay: 0,
+                count: 0,
+                sync: false,
+              },
+            },
+          },
+        },
       },
     },
     particles: {

@@ -105,6 +105,12 @@
   );
   --ob-showcase-ink: #1a1a1a;
   --ob-showcase-muted: rgba(26, 26, 26, 0.62);
+  /*
+   * Drag-to-select / copy highlight (browser ::selection — not focus rings or links).
+   * Warm cream-beige fill; navy text reads on the wash over dark hero and on cream sections.
+   */
+  --ob-selection-bg: color-mix(in srgb, var(--ob-showcase-surface) 88%, var(--ob-seam-fold) 12%);
+  --ob-selection-color: var(--ob-primary);
   /* Expanding frame + feature cards — greige/beige borders (warm, matches --ob-seam-fold) */
   --ob-showcase-frame-border: rgb(202 190 172 / 0.4);
   --ob-showcase-card-border: rgb(198 184 164 / 0.65);
@@ -173,6 +179,16 @@ body {
   background: var(--ob-hero-deep);
   color: var(--ob-text);
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+*::selection {
+  background-color: var(--ob-selection-bg);
+  color: var(--ob-selection-color);
+}
+
+*::-moz-selection {
+  background-color: var(--ob-selection-bg);
+  color: var(--ob-selection-color);
 }
 
 /*

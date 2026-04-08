@@ -52,8 +52,7 @@
         "topStylistLabel": "Лучший мастер",
         "reviewsMeta": "· 127 отзывов",
         "todayScheduleLabel": "Расписание на сегодня",
-        "scheduleMeta": "3 из 8",
-        "reviewQuote": "«Наконец-то приложение, которое собирает всё вместе. Мы перешли с трёх разных инструментов.»",
+        "reviewQuote": "«Наконец записи, команда и клиенты в одном месте. Ресепшн спокойнее, ничего не теряется.»",
         "reviewName": "Kamila S.",
         "reviewRole": "Владелица салона",
         "tags": {
@@ -62,9 +61,9 @@
           "keratin": "Кератин"
         },
         "slots": {
-          "slot1": { "time": "10:00", "client": "Leyla K.", "service": "Укладка" },
-          "slot2": { "time": "11:30", "client": "Gunel R.", "service": "Мелирование" },
-          "slot3": { "time": "13:00", "client": "Sabina T.", "service": "Маникюр" }
+          "slot1": { "time": "10:00", "client": "Leyla K.", "service": "Маникюр" },
+          "slot2": { "time": "11:30", "client": "Gunel R.", "service": "Стрижка" },
+          "slot3": { "time": "13:00", "client": "Sabina T.", "service": "Уход за кожей" }
         }
       }
     },

@@ -28,13 +28,13 @@
       "headline": {
         "line1": {
           "the": "Run",
-          "allInOne": "your salon",
-          "app": "does it",
-          "for": "all"
+          "allInOne": "your",
+          "app": "salon",
+          "for": "from one app"
         },
-        "line2": "one app"
+        "line2": ""
       },
-      "subline": "Bookings, staff, and revenue — all organized, no spreadsheets, no missed appointments.",
+      "subline": "Bookings, staff, and revenue — all in one place, clear and fully under your control.",
       "email": {
         "label": "Enter your email",
         "placeholder": "Enter your email",
@@ -52,8 +52,7 @@
         "topStylistLabel": "Top stylist",
         "reviewsMeta": "· 127 reviews",
         "todayScheduleLabel": "Today’s schedule",
-        "scheduleMeta": "3 of 8",
-        "reviewQuote": "“Finally an app that handles everything. My team switched from 3 different tools.”",
+        "reviewQuote": "“Finally one place for bookings, team, and clients. Our front desk runs calmer and nothing slips through the cracks.”",
         "reviewName": "Kamila S.",
         "reviewRole": "Salon owner",
         "tags": {
@@ -62,9 +61,9 @@
           "keratin": "Keratin"
         },
         "slots": {
-          "slot1": { "time": "10:00", "client": "Leyla K.", "service": "Blowout" },
-          "slot2": { "time": "11:30", "client": "Gunel R.", "service": "Highlights" },
-          "slot3": { "time": "13:00", "client": "Sabina T.", "service": "Manicure" }
+          "slot1": { "time": "10:00", "client": "Leyla K.", "service": "Manicure" },
+          "slot2": { "time": "11:30", "client": "Gunel R.", "service": "Haircut" },
+          "slot3": { "time": "13:00", "client": "Sabina T.", "service": "Skin care" }
         }
       }
     },

@@ -288,12 +288,9 @@ function ScheduleCard({
       delay={delay}
       heightTier={heightTier}
     >
-      <div className="mb-3 flex items-center justify-between gap-2">
+      <div className="mb-3 flex items-center gap-2">
         <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
           {t("todayScheduleLabel")}
-        </span>
-        <span className="rounded-md border border-cyan-400/20 bg-cyan-500/[0.08] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-cyan-100/85">
-          {t("scheduleMeta")}
         </span>
       </div>
       <div className="flex flex-col gap-2">
@@ -404,6 +401,9 @@ function buildHeadlineSegments(
 export function HeroSection(): ReactElement {
   const locale = useLocale();
   const t = useTranslations("home.hero");
+  const headlineLine2Trimmed = t("headline.line2").trim();
+  /** Empty line2: one headline row; emphasize `allInOne` (same pattern as AZ). */
+  const heroSingleLineHeadline = headlineLine2Trimmed === "";
   const [email, setEmail] = useState("");
   const reduceMotionPref = useReducedMotion();
   const reduceMotion = reduceMotionPref === true;
@@ -450,11 +450,12 @@ export function HeroSection(): ReactElement {
         >
           <div className="flex min-w-0 justify-center">
             <div className={HEADLINE_ROW_CLASS}>
-              {buildHeadlineSegments(t("headline.line2").trim(), locale).map(
+              {buildHeadlineSegments(headlineLine2Trimmed, locale).map(
                 (seg, index) => {
                   const emphasized =
                     seg.type === "line2" ||
-                    (locale === "az" &&
+                    (heroSingleLineHeadline &&
+                      locale === "az" &&
                       seg.type === "line1" &&
                       seg.key === "allInOne");
                   const motionKey =
@@ -529,7 +530,7 @@ export function HeroSection(): ReactElement {
             <button
               type="button"
               onClick={handleQuickAccessClick}
-              className="group relative z-[2] flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-xl border border-white/35 bg-[#d6ecff] px-5 font-sans text-[clamp(0.92rem,3.8vw,1rem)] font-semibold text-[#062a52] shadow-[0_0_36px_-4px_rgba(130,205,255,0.55),0_10px_28px_-14px_rgba(45,120,210,0.4)] transition-[transform,background-color,box-shadow,border-color] duration-200 hover:border-white/45 hover:bg-[#e8f4ff] hover:shadow-[0_0_42px_-2px_rgba(145,215,255,0.65),0_12px_32px_-12px_rgba(50,130,220,0.45)] sm:hidden"
+              className="group relative z-[2] flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[var(--ob-cta-bg)] px-5 font-sans text-[clamp(0.92rem,3.8vw,1rem)] font-semibold text-[var(--ob-cta-text)] shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset] transition-all duration-200 hover:bg-[var(--ob-cta-bg)]/90 hover:shadow-[0_0_32px_rgba(34,42,53,0.1),0_4px_8px_rgba(0,0,0,0.08),0_0_0_1px_rgba(34,42,53,0.06),0_16px_68px_rgba(47,48,55,0.08)] active:bg-[var(--ob-cta-bg)]/85 sm:hidden"
               aria-controls="register-form"
             >
               <span>{t("cta")}</span>
@@ -544,7 +545,7 @@ export function HeroSection(): ReactElement {
               className="relative hidden w-full scroll-mt-28 sm:block"
               onSubmit={handleWaitlistSubmit}
             >
-              <div className="group relative flex min-h-[4.25rem] flex-row gap-0 rounded-xl border border-white/[0.14] bg-white/[0.11] p-0 py-3 pl-5 pr-[9.25rem] shadow-[0_24px_80px_-24px_rgba(0,0,0,0.55)] backdrop-blur-md transition-[background-color,box-shadow,backdrop-filter,border-color] duration-200 focus-within:border-white/[0.22] focus-within:bg-white/[0.34] focus-within:shadow-[0_20px_56px_-16px_rgba(0,0,0,0.4)] focus-within:backdrop-blur-2xl focus-within:outline-none">
+              <div className="group relative flex min-h-[4.25rem] flex-row gap-0 rounded-xl border border-white/[0.16] bg-white/[0.13] p-0 py-3 pl-5 pr-[9.25rem] shadow-[0_24px_80px_-24px_rgba(0,0,0,0.55)] backdrop-blur-md transition-[background-color,box-shadow,backdrop-filter,border-color] duration-200 focus-within:border-white/[0.48] focus-within:bg-white/[0.58] focus-within:shadow-[0_22px_64px_-18px_rgba(0,0,0,0.42),0_0_0_1px_rgba(255,255,255,0.35)_inset] focus-within:backdrop-blur-2xl focus-within:outline-none">
                 <label className="sr-only" htmlFor="hero-email">
                   {t("email.label")}
                 </label>
@@ -556,11 +557,11 @@ export function HeroSection(): ReactElement {
                   placeholder={t("email.placeholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="relative z-[1] min-h-0 w-auto min-w-0 bg-transparent px-0 font-sans text-base font-medium leading-normal text-[var(--ob-text)] outline-none transition-colors duration-200 ease-out placeholder:font-normal placeholder:text-[rgba(244,246,251,0.58)] group-focus-within:text-[#0f172a] group-focus-within:placeholder:text-[#0f172a] group-focus-within:placeholder:opacity-100 sm:absolute sm:inset-y-3 sm:left-5 sm:right-[9.25rem] md:text-[1.0625rem]"
+                  className="relative z-[1] min-h-0 w-auto min-w-0 bg-transparent px-0 font-sans text-base font-medium leading-normal text-[var(--ob-text)] outline-none transition-colors duration-200 ease-out placeholder:font-normal placeholder:text-[rgba(244,246,251,0.62)] caret-[#020617] group-focus-within:text-[#020617] group-focus-within:placeholder:text-[#334155] group-focus-within:placeholder:opacity-100 sm:absolute sm:inset-y-3 sm:left-5 sm:right-[9.25rem] md:text-[1.0625rem]"
                 />
                 <motion.button
                   type="submit"
-                  className="relative z-[2] flex min-h-0 w-auto flex-row items-center justify-center gap-1 overflow-hidden rounded-xl border border-white/35 bg-[#d6ecff] px-5 font-sans text-sm font-semibold text-[#062a52] shadow-[0_0_36px_-4px_rgba(130,205,255,0.55),0_10px_28px_-14px_rgba(45,120,210,0.4)] transition-[opacity,transform,background-color,box-shadow,border-color] duration-200 hover:border-white/45 hover:bg-[#e8f4ff] hover:shadow-[0_0_42px_-2px_rgba(145,215,255,0.65),0_12px_32px_-12px_rgba(50,130,220,0.45)] disabled:cursor-not-allowed disabled:border-white/20 disabled:opacity-45 disabled:shadow-[0_0_20px_-6px_rgba(130,205,255,0.22)] disabled:hover:bg-[#d6ecff] sm:absolute sm:bottom-1.5 sm:right-1.5 sm:top-1.5"
+                  className="relative z-[2] flex min-h-0 w-auto flex-row items-center justify-center gap-1 overflow-hidden rounded-xl bg-[var(--ob-cta-bg)] px-5 font-sans text-sm font-semibold text-[var(--ob-cta-text)] shadow-[0_0_24px_rgba(34,42,53,0.06),0_1px_1px_rgba(0,0,0,0.05),0_0_0_1px_rgba(34,42,53,0.04),0_0_4px_rgba(34,42,53,0.08),0_16px_68px_rgba(47,48,55,0.05),0_1px_0_rgba(255,255,255,0.1)_inset] transition-[opacity,transform,background-color,box-shadow] duration-200 hover:bg-[var(--ob-cta-bg)]/90 hover:shadow-[0_0_32px_rgba(34,42,53,0.1),0_4px_8px_rgba(0,0,0,0.08),0_0_0_1px_rgba(34,42,53,0.06),0_16px_68px_rgba(47,48,55,0.08)] active:bg-[var(--ob-cta-bg)]/85 disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-[0_0_24px_rgba(34,42,53,0.04),0_1px_1px_rgba(0,0,0,0.04),0_0_0_1px_rgba(34,42,53,0.03),0_16px_68px_rgba(47,48,55,0.04)] disabled:hover:bg-[var(--ob-cta-bg)] disabled:active:bg-[var(--ob-cta-bg)] disabled:active:text-[var(--ob-cta-text)] sm:absolute sm:bottom-1.5 sm:right-1.5 sm:top-1.5"
                   disabled={!isValidEmail(email)}
                   initial="initial"
                   whileHover="hover"

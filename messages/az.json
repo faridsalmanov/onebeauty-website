@@ -52,8 +52,7 @@
         "topStylistLabel": "Ən yaxşı ustad",
         "reviewsMeta": "· 127 rəy",
         "todayScheduleLabel": "Bugünkü cədvəl",
-        "scheduleMeta": "8-dən 3-ü",
-        "reviewQuote": "“Nəhayət hər şeyi idarə edən bir tətbiq. Komandamız 3 fərqli alətdən keçid etdi.”",
+        "reviewQuote": "“Nəhayət rezervasiyalar, komanda və müştərilər bir yerdə. Qəbul sakitləşdi və heç nə arada itmir.”",
         "reviewName": "Kamila S.",
         "reviewRole": "Salon sahibi",
         "tags": {
@@ -62,9 +61,9 @@
           "keratin": "Keratin"
         },
         "slots": {
-          "slot1": { "time": "10:00", "client": "Leyla K.", "service": "Fen və stil" },
-          "slot2": { "time": "11:30", "client": "Günel R.", "service": "Melir" },
-          "slot3": { "time": "13:00", "client": "Səbinə T.", "service": "Manikür" }
+          "slot1": { "time": "10:00", "client": "Leyla K.", "service": "Manikür" },
+          "slot2": { "time": "11:30", "client": "Günel R.", "service": "Saç kəsimi" },
+          "slot3": { "time": "13:00", "client": "Səbinə T.", "service": "Üz baxımı" }
         }
       }
     },

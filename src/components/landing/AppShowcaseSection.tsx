@@ -873,7 +873,7 @@ export function AppShowcaseSection(): ReactElement {
       className="relative z-10 scroll-mt-24"
       aria-labelledby="app-showcase-heading"
     >
-      <div className="mx-auto flex w-full max-w-[min(100%,120rem)] flex-col items-stretch px-3 sm:px-4 md:pl-0 md:pr-4 lg:pr-5">
+      <div className="mx-auto flex w-full max-w-[min(100%,120rem)] flex-col items-stretch px-3 sm:px-4 md:pl-0 md:pr-2 lg:pr-3">
         <ShowcaseTopOrnament />
         <div className="relative w-full overflow-visible rounded-[clamp(1.15rem,2.8vw,2rem)] shadow-[0_-28px_80px_-36px_rgba(0,0,0,0.5)]">
           <div
