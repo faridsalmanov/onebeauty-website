@@ -6,10 +6,28 @@ import { loadSlim } from "@tsparticles/slim";
 import { useEffect, useMemo, useState } from "react";
 import type { ReactElement } from "react";
 
+/** Aligns with Tailwind `md` — no tap-to-push sparkle below this width. */
+const CLICK_SPARKLE_MAX_WIDTH_PX = 767;
+
 const pushParticleHoldSeconds = { min: 4, max: 6.5 } as const;
 const pushParticleFadeSpeed = { min: 0.38, max: 0.62 } as const;
 
-function buildParticleOptions(reducedMotion: boolean): ISourceOptions {
+function subscribeMatchMedia(
+  mq: MediaQueryList,
+  onChange: () => void,
+): () => void {
+  if (typeof mq.addEventListener === "function") {
+    mq.addEventListener("change", onChange);
+    return (): void => mq.removeEventListener("change", onChange);
+  }
+  mq.addListener(onChange);
+  return (): void => mq.removeListener(onChange);
+}
+
+function buildParticleOptions(
+  reducedMotion: boolean,
+  clickPushEnabled: boolean,
+): ISourceOptions {
   return {
     fullScreen: { enable: false },
     background: { color: { value: "transparent" } },
@@ -21,7 +39,7 @@ function buildParticleOptions(reducedMotion: boolean): ISourceOptions {
       events: {
         onHover: { enable: false },
         onClick: {
-          enable: !reducedMotion,
+          enable: clickPushEnabled,
           mode: "push",
         },
         resize: { enable: true },
@@ -83,6 +101,8 @@ function buildParticleOptions(reducedMotion: boolean): ISourceOptions {
 export function FloatingParticlesBackground(): ReactElement | null {
   const [engineReady, setEngineReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  /** Until first client sync, assume narrow/touch so we do not enable push briefly on phones. */
+  const [clickSparkleSuppressed, setClickSparkleSuppressed] = useState(true);
 
   useEffect((): (() => void) | void => {
     void initParticlesEngine(async (engine): Promise<void> => {
@@ -91,28 +111,42 @@ export function FloatingParticlesBackground(): ReactElement | null {
       setEngineReady(true);
     });
 
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const syncReducedMotion = (): void => {
-      setReducedMotion(mq.matches);
+    const mqReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mqNarrow = window.matchMedia(
+      `(max-width: ${CLICK_SPARKLE_MAX_WIDTH_PX}px)`,
+    );
+    const mqCoarsePointer = window.matchMedia("(pointer: coarse)");
+
+    const syncInteractionFlags = (): void => {
+      setReducedMotion(mqReducedMotion.matches);
+      setClickSparkleSuppressed(mqNarrow.matches || mqCoarsePointer.matches);
     };
-    syncReducedMotion();
-    if (typeof mq.addEventListener === "function") {
-      mq.addEventListener("change", syncReducedMotion);
-      return (): void => mq.removeEventListener("change", syncReducedMotion);
-    }
-    mq.addListener(syncReducedMotion);
-    return (): void => mq.removeListener(syncReducedMotion);
+    syncInteractionFlags();
+
+    const unsubReduced = subscribeMatchMedia(mqReducedMotion, syncInteractionFlags);
+    const unsubNarrow = subscribeMatchMedia(mqNarrow, syncInteractionFlags);
+    const unsubCoarse = subscribeMatchMedia(mqCoarsePointer, syncInteractionFlags);
+
+    return (): void => {
+      unsubReduced();
+      unsubNarrow();
+      unsubCoarse();
+    };
   }, []);
 
+  const clickPushEnabled = !reducedMotion && !clickSparkleSuppressed;
+
   const options = useMemo(
-    (): ISourceOptions => buildParticleOptions(reducedMotion),
-    [reducedMotion],
+    (): ISourceOptions => buildParticleOptions(reducedMotion, clickPushEnabled),
+    [reducedMotion, clickPushEnabled],
   );
 
   if (!engineReady) {
     return null;
   }
 
+  // Wrapper `pointer-events-none`: not a hit target. Canvas uses default `auto`,
+  // so clicks on empty backdrop (nothing above z-[1]) still trigger push mode.
   return (
     <Particles
       className="pointer-events-none fixed inset-0 z-[1] size-full"

@@ -10,7 +10,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import type { FormEvent, ReactElement, ReactNode } from "react";
+import type { CSSProperties, FormEvent, ReactElement, ReactNode } from "react";
 import { useState } from "react";
 import { REGISTER_EMAIL_PREFILL_EVENT } from "./registerPrefillEvent";
 import { scrollToRegisterForm } from "./scrollToRegisterForm";
@@ -361,6 +361,71 @@ function ReviewCard({
   );
 }
 
+type HeroCardComponent = ({
+  delay,
+  heightTier,
+}: {
+  delay?: number;
+  heightTier: WorkflowCardHeightTier;
+}) => ReactElement;
+
+type HeroCardDefinition = {
+  key: string;
+  Card: HeroCardComponent;
+  delay: number;
+  heightTier: WorkflowCardHeightTier;
+  mobileZIndex: number;
+};
+
+const HERO_CARDS: readonly HeroCardDefinition[] = [
+  {
+    key: "schedule",
+    Card: ScheduleCard,
+    delay: 0,
+    heightTier: "tall",
+    mobileZIndex: 1,
+  },
+  {
+    key: "booking",
+    Card: BookingCard,
+    delay: 0.08,
+    heightTier: "mid",
+    mobileZIndex: 3,
+  },
+  {
+    key: "revenue",
+    Card: RevenueCard,
+    delay: 0.16,
+    heightTier: "short",
+    mobileZIndex: 5,
+  },
+  {
+    key: "stylist",
+    Card: StylistCard,
+    delay: 0.24,
+    heightTier: "mid",
+    mobileZIndex: 4,
+  },
+  {
+    key: "review",
+    Card: ReviewCard,
+    delay: 0.32,
+    heightTier: "tall",
+    mobileZIndex: 2,
+  },
+];
+
+const HERO_MOBILE_CARD_WIDTH_REM = 9.5;
+const HERO_MOBILE_CARD_OVERLAP_REM = 2;
+const HERO_MOBILE_CARD_RAIL_WIDTH_REM =
+  HERO_MOBILE_CARD_WIDTH_REM * HERO_CARDS.length -
+  HERO_MOBILE_CARD_OVERLAP_REM * (HERO_CARDS.length - 1);
+const HERO_MOBILE_CARD_RAIL_STYLE = {
+  "--ob-hero-card-width": `${HERO_MOBILE_CARD_WIDTH_REM}rem`,
+  "--ob-hero-cards-rail-width": `${HERO_MOBILE_CARD_RAIL_WIDTH_REM}rem`,
+  "--ob-hero-cards-scale": `min(1, calc((100vw - 1.75rem) / ${HERO_MOBILE_CARD_RAIL_WIDTH_REM}rem))`,
+} as CSSProperties;
+
 /* ------------------------------------------------------------------ */
 /*  Hero section                                                       */
 /* ------------------------------------------------------------------ */
@@ -386,7 +451,8 @@ const HEADLINE_EMPHASIS_GLOW_CORE =
 const HEADLINE_EMPHASIS_SCALE_DEFAULT = "text-[1.04em] sm:text-[1.05em]";
 
 /** RU `приложения`: Instrument Serif reads smaller than Geist on Cyrillic — nudge up to match siblings. */
-const HEADLINE_EMPHASIS_SCALE_RU_LINE2 = "text-[1.12em] sm:text-[1.14em]";
+const HEADLINE_EMPHASIS_SCALE_RU_LINE2 =
+  "text-[1.17em] sm:text-[1.2em] overflow-visible pr-[min(0.5em,14px)] sm:pr-[min(0.55em,16px)]";
 
 function buildHeadlineSegments(
   line2Trimmed: string,
@@ -460,9 +526,11 @@ export function HeroSection(): ReactElement {
       >
         <div
           {...(locale === "az" ? { "data-hero-az-headline": "" } : {})}
-          className="mb-5 w-full max-w-[min(100%,88rem)] text-center md:mb-6"
+          className={`mb-5 w-full max-w-[min(100%,88rem)] text-center md:mb-6${locale === "ru" ? " overflow-x-visible" : ""}`}
         >
-          <div className="flex min-w-0 justify-center">
+          <div
+            className={`flex min-w-0 justify-center${locale === "ru" ? " overflow-x-visible" : ""}`}
+          >
             <div
               className={
                 locale === "ru" ? HEADLINE_ROW_CLASS_RU : HEADLINE_ROW_CLASS
@@ -624,38 +692,44 @@ export function HeroSection(): ReactElement {
         </div>
       </div>
 
-      {/* Cards rail — all visible, shrink to fit, no scroll */}
+      {/* Cards rail — one shared stack; mobile scales the whole group instead of squeezing card widths */}
       <div className="relative z-30 mt-0 w-full min-w-0 shrink-0 md:z-20 md:-mt-12 lg:-mt-14">
-        {/* Mobile: 3 cards, all visible */}
-        <div className="md:hidden" aria-hidden>
-          <div className="relative overflow-hidden px-3 pb-3 sm:px-5">
-            <div className="relative mx-auto h-[12.25rem] w-full max-w-[24.5rem] sm:h-[15.5rem] sm:max-w-[30.5rem]">
-              <div className="absolute left-1/2 top-0 flex w-[36.25rem] -translate-x-1/2 scale-[0.66] origin-top items-stretch gap-3 sm:w-[37.5rem] sm:scale-[0.82]">
-                <div className="w-[11.75rem] shrink-0"><ScheduleCard delay={0} heightTier="tall" /></div>
-                <div className="w-[11.75rem] shrink-0"><BookingCard delay={0.08} heightTier="mid" /></div>
-                <div className="w-[11.75rem] shrink-0"><ReviewCard delay={0.16} heightTier="tall" /></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* md+: 5 cards, all visible, no scroll */}
-        <div className="hidden md:block" aria-hidden>
+        <div
+          className="relative overflow-visible px-3 pb-4 sm:px-5 md:px-8 lg:px-10 xl:px-12"
+          aria-hidden
+        >
           <div
-            className="flex w-full items-end gap-3 px-6 pb-4 md:gap-4 md:px-8 lg:px-10 xl:px-12"
+            className="relative mx-auto h-[calc(18.5rem*var(--ob-hero-cards-scale))] w-full md:h-auto"
+            style={HERO_MOBILE_CARD_RAIL_STYLE}
           >
-            <div className="min-w-0 flex-1"><ScheduleCard delay={0} heightTier="tall" /></div>
-            <div className="min-w-0 flex-1"><BookingCard delay={0.08} heightTier="mid" /></div>
-            <div className="min-w-0 flex-1"><RevenueCard delay={0.16} heightTier="short" /></div>
-            <div className="min-w-0 flex-1"><StylistCard delay={0.24} heightTier="mid" /></div>
-            <div className="min-w-0 flex-1"><ReviewCard delay={0.32} heightTier="tall" /></div>
+            <div
+              className="absolute left-1/2 top-0 flex w-[var(--ob-hero-cards-rail-width)] -translate-x-1/2 scale-[var(--ob-hero-cards-scale)] origin-top items-end md:static md:w-full md:translate-x-0 md:scale-100 md:gap-4"
+            >
+              {HERO_CARDS.map(({ key, Card, delay, heightTier, mobileZIndex }, index) => (
+                <div
+                  key={key}
+                  className={`w-[var(--ob-hero-card-width)] shrink-0 ${index === 0 ? "" : "-ml-8"} md:ml-0 md:min-w-0 md:flex-1 md:w-auto`}
+                  style={{ zIndex: mobileZIndex }}
+                >
+                  <Card delay={delay} heightTier={heightTier} />
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile gets the same dusty wash over the cards instead of only below them. */}
+            <div
+              className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-[min(70%,7.75rem)] md:hidden"
+              aria-hidden
+            >
+              <div className="absolute inset-0 [background-image:var(--ob-seam-hero-to-showcase)]" />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Cream seam + navy scrub (below cards on mobile) */}
+      {/* Desktop seam scrub — mobile wash now lives inside the shared cards rail. */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-[min(36%,12rem)] md:z-[25] md:h-[min(52%,24rem)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] hidden h-[min(52%,24rem)] md:block"
         aria-hidden
       >
         <div className="absolute inset-0 [background-image:var(--ob-seam-hero-to-showcase)]" />

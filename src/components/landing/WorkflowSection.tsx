@@ -8,9 +8,11 @@ import {
 } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { ReactElement } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import type { AppLocale } from "@/i18n/routing";
 
 /** Delay phone screenshot swap so step highlight leads the transition (ms). */
 const WORKFLOW_PHONE_AFTER_STEP_MS = 150;
@@ -38,6 +40,16 @@ const WORKFLOW_ACTIVE_STEP_PANEL_MAX_W =
 /** Keep inactive hover state aligned to the active card width. */
 const WORKFLOW_STEP_PANEL_MAX_W = WORKFLOW_ACTIVE_STEP_PANEL_MAX_W;
 
+/** Files use `_eng` for English screenshots while the app locale is `en`. */
+function workflowStepScreenshotPath(
+  step: 1 | 2 | 3 | 4,
+  locale: AppLocale,
+): string {
+  const suffix =
+    locale === "en" ? "eng" : locale === "ru" ? "ru" : "az";
+  return `/images/steps/step${step}_${suffix}.png`;
+}
+
 type WorkflowStep = {
   id: string;
   number: string;
@@ -48,40 +60,43 @@ type WorkflowStep = {
 
 export function WorkflowSection(): ReactElement {
   const t = useTranslations("home.workflow");
+  const locale = useLocale() as AppLocale;
   const [activeId, setActiveId] = useState<string>("01");
   const [phoneStepId, setPhoneStepId] = useState<string>("01");
   const reduceMotion = useReducedMotion();
 
-  const steps: readonly WorkflowStep[] = [
-    {
-      id: "01",
-      number: "01",
-      title: t("steps.01.title"),
-      body: t("steps.01.body"),
-      phoneScreenshotSrc: "/images/steps/step1.png",
-    },
-    {
-      id: "02",
-      number: "02",
-      title: t("steps.02.title"),
-      body: t("steps.02.body"),
-      phoneScreenshotSrc: "/images/steps/step2.png",
-    },
-    {
-      id: "03",
-      number: "03",
-      title: t("steps.03.title"),
-      body: t("steps.03.body"),
-      phoneScreenshotSrc: "/images/steps/step3.png",
-    },
-    {
-      id: "04",
-      number: "04",
-      title: t("steps.04.title"),
-      body: t("steps.04.body"),
-      phoneScreenshotSrc: "/images/steps/step4.png",
-    },
-  ];
+  const steps: readonly WorkflowStep[] = useMemo((): WorkflowStep[] => {
+    return [
+      {
+        id: "01",
+        number: "01",
+        title: t("steps.01.title"),
+        body: t("steps.01.body"),
+        phoneScreenshotSrc: workflowStepScreenshotPath(1, locale),
+      },
+      {
+        id: "02",
+        number: "02",
+        title: t("steps.02.title"),
+        body: t("steps.02.body"),
+        phoneScreenshotSrc: workflowStepScreenshotPath(2, locale),
+      },
+      {
+        id: "03",
+        number: "03",
+        title: t("steps.03.title"),
+        body: t("steps.03.body"),
+        phoneScreenshotSrc: workflowStepScreenshotPath(3, locale),
+      },
+      {
+        id: "04",
+        number: "04",
+        title: t("steps.04.title"),
+        body: t("steps.04.body"),
+        phoneScreenshotSrc: workflowStepScreenshotPath(4, locale),
+      },
+    ];
+  }, [locale, t]);
 
   const activeIndex = steps.findIndex((s): boolean => s.id === activeId);
   const safeIndex = activeIndex < 0 ? 0 : activeIndex;
@@ -264,7 +279,7 @@ export function WorkflowSection(): ReactElement {
             <div className="relative mx-auto w-full max-w-[min(92vw,17.75rem)] select-none sm:max-w-[17.75rem] lg:max-w-[18.25rem]">
               <AnimatePresence initial={false} mode="wait">
                 <motion.div
-                  key={phoneStep.id}
+                  key={`${phoneStep.id}-${locale}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -326,7 +341,7 @@ export function WorkflowSection(): ReactElement {
               >
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div
-                    key={phoneStep.id}
+                    key={`${phoneStep.id}-${locale}`}
                     className="absolute inset-0"
                     initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
                     animate={{ opacity: 1, transition: mobileFadeIn }}
