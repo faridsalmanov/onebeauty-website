@@ -34,15 +34,27 @@ type ShowcaseCard = {
   customMedia?: () => ReactElement;
 };
 
-/** Minimal line + dot ornament above the cream block (not part of the scroll mask). */
+/** Vertical stem above the cream panel — static gradient (top + bottom fade), thin, soft glow. */
 function ShowcaseTopOrnament(): ReactElement {
+  /* Bottom stops short of full transparency so the tip still reads against the frame border. */
+  const stemGradient =
+    "linear-gradient(180deg, transparent 0%, rgb(247 241 230 / 0.45) 32%, rgb(247 241 230 / 0.98) 50%, rgb(247 241 230 / 0.5) 74%, rgb(247 241 230 / 0.18) 100%)";
+
   return (
     <div
-      className="pointer-events-none -mb-px flex justify-center"
+      className="pointer-events-none relative z-[2] -mb-px flex justify-center"
       aria-hidden
     >
-      <div className="relative h-[52px] w-[22px]">
-        <span className="absolute left-1/2 top-0 h-[44px] w-[3px] -translate-x-1/2 rounded-full bg-gradient-to-b from-transparent via-[var(--ob-showcase-surface)]/90 to-[var(--ob-showcase-surface)]/12 blur-[0.2px] shadow-[0_0_16px_rgb(247_241_230_/_0.28)]" />
+      <div className="relative h-[60px] w-5">
+        {/* Wider soft bloom — still, no keyframes; full height meets the panel frame (z-2 so overlap isn’t hidden). */}
+        <span
+          className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 rounded-full opacity-45 blur-[1px]"
+          style={{ background: stemGradient }}
+        />
+        <span
+          className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2 rounded-full shadow-[0_0_12px_3px_rgb(247_241_230_/_0.28),0_0_26px_7px_rgb(255_255_255_/_0.1)]"
+          style={{ background: stemGradient }}
+        />
       </div>
     </div>
   );
@@ -870,16 +882,16 @@ export function AppShowcaseSection(): ReactElement {
     <section
       ref={sectionRef}
       id="app-preview"
-      className="relative z-10 scroll-mt-24"
+      className="relative z-10 scroll-mt-24 max-md:bg-[var(--ob-showcase-surface)]"
       aria-labelledby="app-showcase-heading"
     >
-      <div className="mx-auto flex w-full max-w-[min(100%,120rem)] flex-col items-stretch px-3 sm:px-4 md:pl-0 md:pr-2 lg:pr-3">
+      <div className="mx-auto flex w-full max-w-[min(100%,120rem)] flex-col items-stretch max-md:px-0 md:pl-0 md:pr-2 lg:pr-3">
         <ShowcaseTopOrnament />
-        <div className="relative w-full overflow-visible rounded-[clamp(1.15rem,2.8vw,2rem)] shadow-[0_-28px_80px_-36px_rgba(0,0,0,0.5)]">
+        <div className="relative w-full overflow-visible rounded-[clamp(1.15rem,2.8vw,2rem)] shadow-[0_-28px_80px_-36px_rgba(0,0,0,0.5)] max-md:rounded-none max-md:shadow-none">
           <div
             ref={panelRef}
             data-app-showcase-panel
-            className="w-full origin-top overflow-hidden rounded-[clamp(1.15rem,2.8vw,2rem)] border border-[color:var(--ob-showcase-frame-border)] bg-[var(--ob-showcase-surface)] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] md:will-change-transform"
+            className="w-full origin-top overflow-hidden rounded-[clamp(1.15rem,2.8vw,2rem)] border border-[color:var(--ob-showcase-frame-border)] bg-[var(--ob-showcase-surface)] shadow-[inset_0_1px_0_rgba(255,255,255,0.55)] max-md:rounded-none max-md:border-x-0 md:will-change-transform"
           >
             <div
               ref={contentRef}
@@ -966,13 +978,13 @@ export function AppShowcaseSection(): ReactElement {
 
                   const bottomImageFadeClass =
                     card.id === "smart-booking"
-                      ? "pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[18%] min-h-[1.9rem] max-h-[3.85rem] [background:linear-gradient(to_top,rgba(255,255,255,0.88)_0%,rgba(255,255,255,0.42)_48%,rgba(255,255,255,0.06)_82%,transparent_100%)]"
-                      : "pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[32%] min-h-[3.65rem] max-h-[7.7rem] [background:linear-gradient(to_top,#fff_0%,#fff_6%,rgba(255,255,255,0.95)_18%,rgba(255,255,255,0.62)_42%,rgba(255,255,255,0.22)_68%,transparent_100%)]";
+                      ? "pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[18%] min-h-[1.9rem] max-h-[3.85rem] [background:linear-gradient(to_top,rgba(255,255,255,0.88)_0%,rgba(255,255,255,0.42)_48%,rgba(255,255,255,0.06)_82%,transparent_100%)]"
+                      : "pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[32%] min-h-[3.65rem] max-h-[7.7rem] [background:linear-gradient(to_top,#fff_0%,#fff_6%,rgba(255,255,255,0.95)_18%,rgba(255,255,255,0.62)_42%,rgba(255,255,255,0.22)_68%,transparent_100%)]";
 
                   const mediaBlock = (
                     <div
                       data-showcase-card-media
-                      className={`relative cursor-default select-none overflow-hidden bg-white ${
+                      className={`relative isolate cursor-default select-none overflow-hidden bg-white ${
                         card.mediaOnSide
                           ? "order-1 h-[11.9rem] shrink-0 sm:h-[12.6rem] md:order-2 md:h-full md:min-h-[12.6rem] md:w-[min(36%,12.25rem)] md:self-stretch"
                           : "h-[11.9rem] shrink-0 sm:h-[12.6rem] md:h-[13.65rem]"
@@ -981,7 +993,7 @@ export function AppShowcaseSection(): ReactElement {
                       {card.customMedia != null && <card.customMedia />}
                       {card.mediaOnSide ? (
                         <div
-                          className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-[32%] min-w-[2.75rem] max-w-[6rem] [background:linear-gradient(to_right,#fff_0%,rgba(255,255,255,0.96)_10%,rgba(255,255,255,0.72)_32%,rgba(255,255,255,0.28)_62%,transparent_100%)]"
+                          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[32%] min-w-[2.75rem] max-w-[6rem] [background:linear-gradient(to_right,#fff_0%,rgba(255,255,255,0.96)_10%,rgba(255,255,255,0.72)_32%,rgba(255,255,255,0.28)_62%,transparent_100%)]"
                           aria-hidden
                         />
                       ) : (

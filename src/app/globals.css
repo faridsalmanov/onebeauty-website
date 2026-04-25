@@ -60,30 +60,73 @@
    * Seam ramps: perceptual ease — small opacity steps, long low-alpha tails, mid stops
    * nudged a hair warmer so it reads "cream" not "grey beige".
    */
-  /* Card zone + long dusty tail: extra late stops break a straight horizontal "line" read */
-  --ob-seam-hero-to-showcase: linear-gradient(
+  /*
+   * Card zone + long dusty tail. Wide ellipses at the top break a ruler-straight
+   * edge where the wash meets the glass waitlist bar (especially while cards animate).
+   */
+  --ob-seam-hero-to-showcase:
+    radial-gradient(
+      ellipse 150% 68% at 50% -42%,
+      rgb(248 241 230 / 0.165) 0%,
+      rgb(246 238 227 / 0.082) 34%,
+      rgb(244 236 224 / 0.02) 58%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 84% 46% at 12% -10%,
+      rgb(243 234 220 / 0.11) 0%,
+      rgb(241 231 216 / 0.036) 46%,
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse 86% 44% at 88% -8%,
+      rgb(243 233 218 / 0.102) 0%,
+      rgb(241 231 216 / 0.034) 44%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 46% 18% at 28% 4%,
+      rgb(247 239 228 / 0.095) 0%,
+      transparent 66%
+    ),
+    radial-gradient(
+      ellipse 44% 17% at 72% 3%,
+      rgb(246 238 226 / 0.09) 0%,
+      transparent 64%
+    ),
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgb(245 238 227 / 0.014) 8%,
+      rgb(246 239 228 / 0.03) 14%,
+      rgb(246 240 228 / 0.058) 20%,
+      rgb(247 240 229 / 0.094) 26%,
+      rgb(247 241 229 / 0.148) 33%,
+      rgb(248 241 230 / 0.24) 41%,
+      rgb(248 241 230 / 0.36) 49%,
+      rgb(247 240 229 / 0.5) 57%,
+      rgb(247 240 229 / 0.59) 62%,
+      rgb(244 234 218 / 0.66) 67%,
+      rgb(238 226 208 / 0.72) 72%,
+      rgb(232 218 198 / 0.77) 76%,
+      rgb(228 214 194 / 0.81) 80%,
+      rgb(222 208 186 / 0.85) 84%,
+      rgb(218 204 182 / 0.88) 87%,
+      rgb(214 200 178 / 0.91) 90%,
+      rgb(210 196 174 / 0.93) 93%,
+      rgb(206 192 172 / 0.955) 96%,
+      var(--ob-seam-fold) 100%
+    );
+  /* Masks the rectangular top of the seam layer so alpha eases in (pairs with layered fills). */
+  --ob-hero-seam-top-mask: linear-gradient(
     to bottom,
     transparent 0%,
-    rgb(245 238 227 / 0.02) 6%,
-    rgb(246 239 228 / 0.046) 12%,
-    rgb(246 240 228 / 0.078) 18%,
-    rgb(247 240 229 / 0.115) 24%,
-    rgb(247 241 229 / 0.17) 31%,
-    rgb(248 241 230 / 0.26) 39%,
-    rgb(248 241 230 / 0.38) 47%,
-    rgb(247 240 229 / 0.52) 55%,
-    rgb(247 240 229 / 0.6) 60%,
-    rgb(244 234 218 / 0.66) 65%,
-    rgb(238 226 208 / 0.72) 70%,
-    rgb(232 218 198 / 0.77) 74%,
-    rgb(228 214 194 / 0.81) 78%,
-    rgb(222 208 186 / 0.85) 82%,
-    rgb(218 204 182 / 0.88) 85%,
-    rgb(214 200 178 / 0.91) 88%,
-    rgb(210 196 174 / 0.93) 91%,
-    rgb(206 192 172 / 0.955) 94%,
-    rgb(204 190 172 / 0.975) 97%,
-    var(--ob-seam-fold) 100%
+    rgba(0, 0, 0, 0.08) 10%,
+    rgba(0, 0, 0, 0.22) 18%,
+    rgba(0, 0, 0, 0.48) 28%,
+    rgba(0, 0, 0, 0.78) 40%,
+    #000 54%,
+    #000 100%
   );
   /* Pinned top: matched fold + softer, longer falloff into dark */
   --ob-seam-showcase-from-hero: linear-gradient(
@@ -179,6 +222,12 @@ body {
   background: var(--ob-hero-deep);
   color: var(--ob-text);
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Hero seam wash — feather top so the blend into the waitlist row is dusty, not a hard line */
+.ob-hero-seam-wash {
+  -webkit-mask-image: var(--ob-hero-seam-top-mask);
+  mask-image: var(--ob-hero-seam-top-mask);
 }
 
 *::selection {

@@ -157,17 +157,13 @@ export function SiteHeader(): ReactElement {
       <header className="static z-[100] w-full max-w-full tracking-[-0.04em] lg:sticky lg:inset-x-0 lg:top-[max(1rem,env(safe-area-inset-top,0px))]">
         <div className={`${shellClass} ${scrolled ? shellScrolled : shellTop} relative`}>
           {/* Desktop — logo | centered nav | Join waitlist */}
-          <div className="relative z-[60] mx-auto hidden min-w-0 grid-cols-[auto_1fr_auto] items-center lg:grid">
+          <div className="relative z-[60] mx-auto hidden min-w-0 grid-cols-[auto_1fr_auto] items-center overflow-visible lg:grid">
             <Link
               href="/"
-              className={`flex shrink-0 items-center gap-2 px-2 py-1 text-[var(--ob-text)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none hover:opacity-90 ${scrolled ? "scale-[0.96]" : "scale-100"}`}
+              aria-label={t("logoAria")}
+              className={`flex shrink-0 items-center gap-2 overflow-visible px-2 py-1 text-[var(--ob-text)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none hover:opacity-90 ${scrolled ? "scale-[0.96]" : "scale-100"}`}
             >
-              <LogoMark compact={scrolled} />
-              <span
-                className={`font-medium lowercase text-[var(--ob-text)] transition-[font-size,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${scrolled ? "text-base" : "text-lg"}`}
-              >
-                onebeauty
-              </span>
+              <LogoMark compact={scrolled} priority alt="" />
             </Link>
 
             <nav
@@ -202,17 +198,13 @@ export function SiteHeader(): ReactElement {
 
           {/* Mobile */}
           <div className="relative z-50 mx-auto flex w-full min-w-0 flex-col items-stretch justify-between lg:hidden">
-            <div className="flex w-full min-w-0 flex-row items-center justify-between gap-2">
+            <div className="flex w-full min-w-0 flex-row items-center justify-between gap-2 overflow-visible">
               <Link
                 href="/"
-                className={`flex min-w-0 items-center gap-2 text-[var(--ob-text)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none hover:opacity-90 ${scrolled ? "scale-[0.96]" : "scale-100"}`}
+                aria-label={t("logoAria")}
+                className={`flex min-w-0 items-center gap-2 overflow-visible text-[var(--ob-text)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none hover:opacity-90 ${scrolled ? "scale-[0.96]" : "scale-100"}`}
               >
-                <LogoMark compact={scrolled} />
-                <span
-                  className={`truncate font-medium lowercase text-[var(--ob-text)] transition-[font-size,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${scrolled ? "text-base" : "text-lg"}`}
-                >
-                  onebeauty
-                </span>
+                <LogoMark compact={scrolled} priority alt="" />
               </Link>
               <button
                 type="button"

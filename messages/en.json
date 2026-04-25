@@ -9,6 +9,7 @@
       }
     },
     "header": {
+      "logoAria": "onebeauty — Home",
       "nav": {
         "faqs": "FAQs",
         "forSalons": "For salons",
@@ -52,9 +53,13 @@
         "topStylistLabel": "Top stylist",
         "reviewsMeta": "· 127 reviews",
         "todayScheduleLabel": "Today’s schedule",
-        "reviewQuote": "“Booking used to be a tangle of texts and missed calls. Clients book themselves now, and we still run the day with confidence.”",
-        "reviewName": "Kamila S.",
-        "reviewRole": "Salon owner",
+        "retentionLabel": "Client retention",
+        "retentionRate": "68%",
+        "retentionHeadline": "rebooked",
+        "retentionWindow": "within 30 days",
+        "retentionDelta": "+14% vs last month",
+        "retentionFooterCount": "24 returning clients",
+        "retentionFooterPeriod": "booked again this month",
         "tags": {
           "color": "Color",
           "bridal": "Bridal",

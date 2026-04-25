@@ -49,9 +49,8 @@ export function SiteFooter(): ReactElement {
       <div className="mx-auto w-full max-w-7xl">
         <div className="flex flex-col gap-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-10 xl:gap-14">
           <div className="flex flex-col gap-5 tracking-[-0.04em] lg:col-span-5">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 overflow-visible">
               <LogoMark />
-              <span className="text-lg font-medium lowercase">onebeauty</span>
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-[var(--ob-text-soft)]">
               {t("tagline")}

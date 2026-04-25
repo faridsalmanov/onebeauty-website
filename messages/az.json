@@ -9,6 +9,7 @@
       }
     },
     "header": {
+      "logoAria": "onebeauty — Ana səhifə",
       "nav": {
         "faqs": "FAQ",
         "forSalons": "Salonlar üçün",
@@ -52,9 +53,13 @@
         "topStylistLabel": "Ən yaxşı ustad",
         "reviewsMeta": "· 127 rəy",
         "todayScheduleLabel": "Bugünkü cədvəl",
-        "reviewQuote": "“Əvvəl hər şey mesajlar və qaçırılmış zənglər qarışığı idi. İndi müştərilər özü bron edir, biz isə günü yenə əlimizdə saxlayırıq.”",
-        "reviewName": "Kamila S.",
-        "reviewRole": "Salon sahibi",
+        "retentionLabel": "Müştəri geri dönüşü",
+        "retentionRate": "68%",
+        "retentionHeadline": "yenidən bron edib",
+        "retentionWindow": "30 gün ərzində",
+        "retentionDelta": "ötən ayla müqayisədə +14%",
+        "retentionFooterCount": "24 geri qayıdan müştəri",
+        "retentionFooterPeriod": "bu ay yenidən bron edib",
         "tags": {
           "color": "Rəng",
           "bridal": "Gəlin",

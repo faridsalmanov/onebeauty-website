@@ -1,25 +1,40 @@
+import Image from "next/image";
 import type { ReactElement } from "react";
 
 type LogoMarkProps = {
   compact?: boolean;
+  /** Set on above-the-fold header logos for faster LCP. */
+  priority?: boolean;
+  /** Use `""` when a parent link already has `aria-label`. */
+  alt?: string;
 };
 
-export function LogoMark({ compact = false }: LogoMarkProps): ReactElement {
-  const box = compact ? "size-[26px] p-0.5" : "size-[30px] p-1";
-  const cell = compact ? "size-[6px]" : "size-[7px]";
+const LOGO_SRC = "/images/mylogo.png";
+
+/** Layout footprint (flow box) — keeps header / footer row height stable. */
+const LAYOUT_SLOT_CLASS = "relative inline-block h-8 shrink-0 overflow-visible";
+
+const SLOT_WIDTH_CLASS = "w-[6.25rem] sm:w-28";
+
+export function LogoMark({
+  compact = false,
+  priority = false,
+  alt = "onebeauty",
+}: LogoMarkProps): ReactElement {
+  const innerHeightClass = compact ? "h-14" : "h-24";
 
   return (
-    <div
-      className={`flex shrink-0 items-center justify-center rounded-lg shadow-[0_1px_2px_rgba(3,39,97,0.08)] transition-[width,height,padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${box}`}
-      style={{ background: "var(--ob-logo-tile-bg)" }}
-      aria-hidden
+    <span
+      className={`${LAYOUT_SLOT_CLASS} ${SLOT_WIDTH_CLASS} z-[1] motion-reduce:transition-none`}
     >
-      <span className="grid grid-cols-2 gap-px rounded-sm p-0.5">
-        <span className={`rounded-[2px] bg-[var(--ob-primary)] ${cell}`} />
-        <span className={`rounded-[2px] bg-[var(--ob-primary)]/55 ${cell}`} />
-        <span className={`rounded-[2px] bg-[var(--ob-primary)]/55 ${cell}`} />
-        <span className={`rounded-[2px] bg-[var(--ob-primary)] ${cell}`} />
-      </span>
-    </div>
+      <Image
+        src={LOGO_SRC}
+        alt={alt}
+        width={1024}
+        height={1024}
+        priority={priority}
+        className={`absolute left-0 top-1/2 w-auto -translate-y-1/2 object-contain object-left transition-[height,width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${innerHeightClass}`}
+      />
+    </span>
   );
 }

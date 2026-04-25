@@ -454,7 +454,7 @@ export function PinnedScrollStory(): ReactElement {
         className="relative z-0 w-full lg:hidden"
         aria-label={t("ariaLabel")}
       >
-        <div className="mx-auto w-full max-w-6xl px-4 pt-14 pb-6 sm:px-6">
+        <div className="mx-auto w-full max-w-6xl px-4 pt-5 pb-4 sm:px-6 sm:pt-8">
           <div
             {...(locale === "az" ? { "data-pinned-problem-az-latin": "" } : {})}
             className="flex flex-col items-center text-center"
@@ -476,7 +476,7 @@ export function PinnedScrollStory(): ReactElement {
           </div>
         </div>
 
-        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-4 sm:px-6">
+        <div className="mx-auto w-full max-w-6xl px-4 pb-14 pt-2 sm:px-6 sm:pt-3">
           <div className="flex flex-col items-center text-center">
             <p className="font-sans text-sm font-medium uppercase tracking-[0.25em] text-[var(--ob-text-faint)]">
               {t("meetEyebrow")}

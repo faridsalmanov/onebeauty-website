@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "next typegen && rm -f .next/dev/types/validator.ts && tsc --noEmit",
     "convex:dev": "convex dev",
     "convex:deploy": "convex deploy"
   },

@@ -10,7 +10,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import type { ReactElement } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 
 import type { AppLocale } from "@/i18n/routing";
 
@@ -58,11 +58,34 @@ type WorkflowStep = {
   phoneScreenshotSrc: string;
 };
 
+type WorkflowPhoneTransitionKey = {
+  stepId: string;
+  locale: AppLocale;
+};
+
+/** -1 = previous step, 0 = locale-only / same index, 1 = next step (for slide axis). */
+function workflowPhoneSlideDirection(
+  prev: WorkflowPhoneTransitionKey,
+  next: WorkflowPhoneTransitionKey,
+  steps: readonly WorkflowStep[],
+): number {
+  if (prev.stepId !== next.stepId) {
+    const prevIdx = steps.findIndex((s): boolean => s.id === prev.stepId);
+    const nextIdx = steps.findIndex((s): boolean => s.id === next.stepId);
+    if (prevIdx < 0 || nextIdx < 0) return 0;
+    return nextIdx > prevIdx ? 1 : -1;
+  }
+  if (prev.locale !== next.locale) return 0;
+  return 0;
+}
+
 export function WorkflowSection(): ReactElement {
   const t = useTranslations("home.workflow");
   const locale = useLocale() as AppLocale;
   const [activeId, setActiveId] = useState<string>("01");
   const [phoneStepId, setPhoneStepId] = useState<string>("01");
+  const [phoneMotionCustom, setPhoneMotionCustom] = useState<number>(0);
+  const [committedLocale, setCommittedLocale] = useState<AppLocale>(locale);
   const reduceMotion = useReducedMotion();
 
   const steps: readonly WorkflowStep[] = useMemo((): WorkflowStep[] => {
@@ -118,23 +141,43 @@ export function WorkflowSection(): ReactElement {
   const phoneStep =
     steps.find((s): boolean => s.id === phoneStepId) ?? steps[0];
 
+  const localeChangedForMotion = committedLocale !== locale;
+  const phoneMotionCustomForFramer = localeChangedForMotion
+    ? 0
+    : phoneMotionCustom;
+
+  useLayoutEffect((): void => {
+    /* Derived snapshot so `custom` is 0 on locale-only screenshot swaps (Framer variants). */
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional sync before paint
+    setCommittedLocale(locale);
+  }, [locale]);
+
   /* ── Shared: phone follows activeId with a staggered delay ── */
   useEffect((): void | (() => void) => {
+    if (activeId === phoneStepId) return;
+    const applyPhoneFollow = (): void => {
+      const dir = workflowPhoneSlideDirection(
+        { stepId: phoneStepId, locale },
+        { stepId: activeId, locale },
+        steps,
+      );
+      setPhoneMotionCustom(dir);
+      setPhoneStepId(activeId);
+    };
     if (reduceMotion) {
-      const raf = requestAnimationFrame((): void => {
-        setPhoneStepId(activeId);
-      });
+      const raf = requestAnimationFrame(applyPhoneFollow);
       return (): void => {
         cancelAnimationFrame(raf);
       };
     }
-    const id = window.setTimeout((): void => {
-      setPhoneStepId(activeId);
-    }, WORKFLOW_PHONE_AFTER_STEP_MS);
+    const id = window.setTimeout(
+      applyPhoneFollow,
+      WORKFLOW_PHONE_AFTER_STEP_MS,
+    );
     return (): void => {
       window.clearTimeout(id);
     };
-  }, [activeId, reduceMotion]);
+  }, [activeId, locale, phoneStepId, reduceMotion, steps]);
 
   /* ── Animation config ── */
   const stackEase = [0.16, 1, 0.32, 1] as const;
@@ -149,9 +192,56 @@ export function WorkflowSection(): ReactElement {
         },
       };
 
-  const fadePhone = reduceMotion
-    ? { duration: 0.01 }
-    : { duration: 0.32, ease: stackEase };
+  /** Screenshot crossfade: overlap enter/exit; ease-out enter, slightly snappier exit. */
+  const workflowPhoneVariants = useMemo(() => {
+    const phoneEaseOut = [0.22, 1, 0.36, 1] as const;
+    const phoneEaseIn = [0.4, 0, 0.2, 1] as const;
+    const phoneTransitionEnter = reduceMotion
+      ? { duration: 0.01 }
+      : { duration: 0.48, ease: phoneEaseOut };
+    const phoneTransitionExit = reduceMotion
+      ? { duration: 0.01 }
+      : { duration: 0.34, ease: phoneEaseIn };
+    return {
+      initial: (direction: number) => {
+        if (reduceMotion) return { opacity: 0 };
+        if (direction === 0) {
+          return { opacity: 0, scale: 0.988, y: 10 };
+        }
+        const x = direction * 22;
+        return { opacity: 0, x, scale: 0.99 };
+      },
+      animate: reduceMotion
+        ? { opacity: 1, transition: phoneTransitionEnter }
+        : {
+            opacity: 1,
+            x: 0,
+            y: 0,
+            scale: 1,
+            transition: phoneTransitionEnter,
+          },
+      exit: (direction: number) => {
+        if (reduceMotion) {
+          return { opacity: 0, transition: phoneTransitionExit };
+        }
+        if (direction === 0) {
+          return {
+            opacity: 0,
+            scale: 0.988,
+            y: -8,
+            transition: phoneTransitionExit,
+          };
+        }
+        const x = direction * -18;
+        return {
+          opacity: 0,
+          x,
+          scale: 0.99,
+          transition: phoneTransitionExit,
+        };
+      },
+    };
+  }, [reduceMotion]);
 
   const mobileFadeEase = [0.25, 0.1, 0.25, 1] as const;
 
@@ -277,20 +367,21 @@ export function WorkflowSection(): ReactElement {
             aria-labelledby={`workflow-tab-${activeStep?.id ?? "01"}`}
           >
             <div className="relative mx-auto w-full max-w-[min(92vw,17.75rem)] select-none sm:max-w-[17.75rem] lg:max-w-[18.25rem]">
-              <AnimatePresence initial={false} mode="wait">
-                <motion.div
-                  key={`${phoneStep.id}-${locale}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={fadePhone}
-                  className="relative w-full"
-                >
-                  <div
-                    className="relative w-full"
-                    style={{
-                      aspectRatio: `${WORKFLOW_SCREENSHOT_WIDTH} / ${WORKFLOW_SCREENSHOT_HEIGHT}`,
-                    }}
+              <div
+                className="relative w-full"
+                style={{
+                  aspectRatio: `${WORKFLOW_SCREENSHOT_WIDTH} / ${WORKFLOW_SCREENSHOT_HEIGHT}`,
+                }}
+              >
+                <AnimatePresence initial={false} mode="sync">
+                  <motion.div
+                    key={`${phoneStep.id}-${locale}`}
+                    className="absolute inset-0 flex items-center justify-center"
+                    custom={phoneMotionCustomForFramer}
+                    variants={workflowPhoneVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
                   >
                     <Image
                       src={phoneStep.phoneScreenshotSrc}
@@ -298,17 +389,16 @@ export function WorkflowSection(): ReactElement {
                         stepNumber: phoneStep.number,
                         stepTitle: phoneStep.title,
                       })}
-                      width={WORKFLOW_SCREENSHOT_WIDTH}
-                      height={WORKFLOW_SCREENSHOT_HEIGHT}
-                      className="pointer-events-none block h-auto w-full object-contain drop-shadow-[0_22px_48px_-18px_rgba(0,0,0,0.48)]"
+                      fill
+                      className="pointer-events-none object-contain drop-shadow-[0_22px_48px_-18px_rgba(0,0,0,0.48)]"
                       sizes={WORKFLOW_PHONE_SIZES_DESKTOP}
                       priority={phoneStep.id === "01"}
                       loading={phoneStep.id === "01" ? "eager" : "lazy"}
                       draggable={false}
                     />
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>
@@ -339,13 +429,15 @@ export function WorkflowSection(): ReactElement {
                   aspectRatio: `${WORKFLOW_SCREENSHOT_WIDTH} / ${WORKFLOW_SCREENSHOT_HEIGHT}`,
                 }}
               >
-                <AnimatePresence mode="wait" initial={false}>
+                <AnimatePresence mode="sync" initial={false}>
                   <motion.div
                     key={`${phoneStep.id}-${locale}`}
-                    className="absolute inset-0"
-                    initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}
-                    animate={{ opacity: 1, transition: mobileFadeIn }}
-                    exit={{ opacity: 0, transition: mobileFadeOut }}
+                    className="absolute inset-0 flex items-center justify-center"
+                    custom={phoneMotionCustomForFramer}
+                    variants={workflowPhoneVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
                   >
                     <Image
                       src={phoneStep.phoneScreenshotSrc}

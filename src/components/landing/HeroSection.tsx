@@ -130,8 +130,9 @@ function WorkflowCardPanel({
         className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${WORKFLOW_PREMIUM_SHEEN}`}
         aria-hidden
       />
+      {/* Soft top veil — avoids a ruler-straight 1px line against the hero waitlist glass */}
       <div
-        className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 h-11 rounded-t-2xl bg-gradient-to-b from-white/[0.055] via-white/[0.018] to-transparent"
         aria-hidden
       />
       <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-start">
@@ -325,7 +326,7 @@ function ScheduleCard({
   );
 }
 
-function ReviewCard({
+function RetentionCard({
   heightTier,
   delay = 0,
 }: {
@@ -335,26 +336,44 @@ function ReviewCard({
   const t = useTranslations("home.hero.cards");
   return (
     <WorkflowCardPanel
-      className="w-full"
+      className="h-[17.75rem] w-full sm:h-[18.5rem]"
       delay={delay}
       heightTier={heightTier}
     >
-      <div className="mb-2.5 flex gap-0.5">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Star
-            key={i}
-            className="size-3.5 fill-amber-400/75 text-amber-400/75"
-          />
-        ))}
+      <div className="mb-2.5 flex items-center">
+        <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          {t("retentionLabel")}
+        </span>
       </div>
-      <p className="rounded-lg border border-white/[0.07] bg-white/[0.04] px-3 py-2.5 font-sans text-xs font-medium leading-relaxed text-slate-300">
-        {t("reviewQuote")}
-      </p>
-      <div className="mt-auto flex items-center gap-2.5 pt-4">
-        <div className="size-8 rounded-full bg-gradient-to-br from-rose-500/85 to-pink-900/90 ring-1 ring-rose-300/20" />
-        <div>
-          <p className="text-xs font-semibold text-slate-200">{t("reviewName")}</p>
-          <p className="text-[10px] font-medium text-slate-500">{t("reviewRole")}</p>
+      <div className="flex justify-center">
+        <div className="relative grid size-[5rem] place-items-center rounded-full bg-[conic-gradient(from_220deg,rgba(16,185,129,0.96)_0_68%,rgba(148,163,184,0.14)_68%_100%)] shadow-[0_10px_28px_-14px_rgba(16,185,129,0.5)]">
+          <div className="grid size-[3.875rem] place-items-center rounded-full border border-white/[0.08] bg-[#0b1120] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+            <span className="font-sans text-[1.05rem] font-semibold tracking-tight text-slate-50">
+              {t("retentionRate")}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="mt-2.5 text-center">
+        <p className="text-sm font-semibold tracking-tight text-slate-100">
+          {t("retentionHeadline")}
+        </p>
+        <p className="mt-0.5 text-[11px] font-medium leading-snug text-slate-400">
+          {t("retentionWindow")}
+        </p>
+      </div>
+      <div className="mt-2.5 rounded-xl border border-emerald-500/18 bg-emerald-500/[0.08] px-3 py-1.5 text-center text-xs font-medium text-emerald-200/90">
+        {t("retentionDelta")}
+      </div>
+      <div className="mt-auto flex items-center gap-2 rounded-xl border border-white/[0.07] bg-white/[0.04] px-3 py-2">
+        <div className="flex -space-x-2">
+          <span className="size-6 rounded-full border border-[#0b1120] bg-gradient-to-br from-cyan-400 via-teal-400 to-emerald-700" />
+          <span className="size-6 rounded-full border border-[#0b1120] bg-gradient-to-br from-violet-400 via-fuchsia-500 to-indigo-800" />
+          <span className="size-6 rounded-full border border-[#0b1120] bg-gradient-to-br from-amber-300 via-orange-400 to-rose-700" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-xs font-semibold text-slate-200">{t("retentionFooterCount")}</p>
+          <p className="text-[10px] font-medium text-slate-500">{t("retentionFooterPeriod")}</p>
         </div>
       </div>
     </WorkflowCardPanel>
@@ -407,8 +426,8 @@ const HERO_CARDS: readonly HeroCardDefinition[] = [
     mobileZIndex: 4,
   },
   {
-    key: "review",
-    Card: ReviewCard,
+    key: "retention",
+    Card: RetentionCard,
     delay: 0.32,
     heightTier: "tall",
     mobileZIndex: 2,
@@ -420,10 +439,18 @@ const HERO_MOBILE_CARD_OVERLAP_REM = 2;
 const HERO_MOBILE_CARD_RAIL_WIDTH_REM =
   HERO_MOBILE_CARD_WIDTH_REM * HERO_CARDS.length -
   HERO_MOBILE_CARD_OVERLAP_REM * (HERO_CARDS.length - 1);
+const HERO_TABLET_CARD_WIDTH_REM = 11.25;
+const HERO_TABLET_CARD_GAP_REM = 1;
+const HERO_TABLET_CARD_RAIL_WIDTH_REM =
+  HERO_TABLET_CARD_WIDTH_REM * HERO_CARDS.length +
+  HERO_TABLET_CARD_GAP_REM * (HERO_CARDS.length - 1);
 const HERO_MOBILE_CARD_RAIL_STYLE = {
   "--ob-hero-card-width": `${HERO_MOBILE_CARD_WIDTH_REM}rem`,
   "--ob-hero-cards-rail-width": `${HERO_MOBILE_CARD_RAIL_WIDTH_REM}rem`,
   "--ob-hero-cards-scale": `min(1, calc((100vw - 1.75rem) / ${HERO_MOBILE_CARD_RAIL_WIDTH_REM}rem))`,
+  "--ob-hero-card-tablet-width": `${HERO_TABLET_CARD_WIDTH_REM}rem`,
+  "--ob-hero-cards-tablet-rail-width": `${HERO_TABLET_CARD_RAIL_WIDTH_REM}rem`,
+  "--ob-hero-cards-tablet-scale": `min(1, calc((100vw - 4rem) / ${HERO_TABLET_CARD_RAIL_WIDTH_REM}rem))`,
 } as CSSProperties;
 
 /* ------------------------------------------------------------------ */
@@ -695,33 +722,27 @@ export function HeroSection(): ReactElement {
       {/* Cards rail — one shared stack; mobile scales the whole group instead of squeezing card widths */}
       <div className="relative z-30 mt-0 w-full min-w-0 shrink-0 md:z-20 md:-mt-12 lg:-mt-14">
         <div
-          className="relative overflow-visible px-3 pb-4 sm:px-5 md:px-8 lg:px-10 xl:px-12"
+          className="relative overflow-visible px-3 pb-1 sm:px-5 sm:pb-4 md:px-8 md:pb-4 lg:px-10 xl:px-12"
           aria-hidden
         >
           <div
-            className="relative mx-auto h-[calc(18.5rem*var(--ob-hero-cards-scale))] w-full md:h-auto"
+            className="relative isolate mx-auto h-[calc(18.5rem*var(--ob-hero-cards-scale))] w-full md:h-[calc(18.5rem*var(--ob-hero-cards-tablet-scale))] lg:h-auto"
             style={HERO_MOBILE_CARD_RAIL_STYLE}
           >
             <div
-              className="absolute left-1/2 top-0 flex w-[var(--ob-hero-cards-rail-width)] -translate-x-1/2 scale-[var(--ob-hero-cards-scale)] origin-top items-end md:static md:w-full md:translate-x-0 md:scale-100 md:gap-4"
+              className="relative z-10 flex h-full items-end justify-center"
             >
-              {HERO_CARDS.map(({ key, Card, delay, heightTier, mobileZIndex }, index) => (
-                <div
-                  key={key}
-                  className={`w-[var(--ob-hero-card-width)] shrink-0 ${index === 0 ? "" : "-ml-8"} md:ml-0 md:min-w-0 md:flex-1 md:w-auto`}
-                  style={{ zIndex: mobileZIndex }}
-                >
-                  <Card delay={delay} heightTier={heightTier} />
-                </div>
-              ))}
-            </div>
-
-            {/* Mobile gets the same dusty wash over the cards instead of only below them. */}
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-[min(70%,7.75rem)] md:hidden"
-              aria-hidden
-            >
-              <div className="absolute inset-0 [background-image:var(--ob-seam-hero-to-showcase)]" />
+              <div className="flex w-[var(--ob-hero-cards-rail-width)] scale-[var(--ob-hero-cards-scale)] origin-bottom items-end md:w-[var(--ob-hero-cards-tablet-rail-width)] md:scale-[var(--ob-hero-cards-tablet-scale)] md:gap-4 lg:w-full lg:scale-100">
+                {HERO_CARDS.map(({ key, Card, delay, heightTier, mobileZIndex }, index) => (
+                  <div
+                    key={key}
+                    className={`relative w-[var(--ob-hero-card-width)] shrink-0 ${index === 0 ? "" : "-ml-8"} md:ml-0 md:w-[var(--ob-hero-card-tablet-width)] lg:min-w-0 lg:flex-1 lg:w-auto`}
+                    style={{ zIndex: mobileZIndex }}
+                  >
+                    <Card delay={delay} heightTier={heightTier} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -729,10 +750,10 @@ export function HeroSection(): ReactElement {
 
       {/* Desktop seam scrub — mobile wash now lives inside the shared cards rail. */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] hidden h-[min(52%,24rem)] md:block"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] hidden h-[min(42%,19rem)] md:block"
         aria-hidden
       >
-        <div className="absolute inset-0 [background-image:var(--ob-seam-hero-to-showcase)]" />
+        <div className="ob-hero-seam-wash absolute inset-0 [background-image:var(--ob-seam-hero-to-showcase)]" />
         {/* Same stack as SiteAtmosphere + fixed attachment = pixels align with next section backdrop */}
         <div
           data-landing-hero-seam-atmosphere

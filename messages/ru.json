@@ -9,6 +9,7 @@
       }
     },
     "header": {
+      "logoAria": "onebeauty — Главная",
       "nav": {
         "faqs": "FAQ",
         "forSalons": "Для салонов",
@@ -52,9 +53,13 @@
         "topStylistLabel": "Лучший мастер",
         "reviewsMeta": "· 127 отзывов",
         "todayScheduleLabel": "Расписание на сегодня",
-        "reviewQuote": "«Раньше запись была кашей из переписок и пропущенных звонков. Теперь клиенты бронируют сами, а мы по-прежнему держим день под контролем.»",
-        "reviewName": "Kamila S.",
-        "reviewRole": "Владелица салона",
+        "retentionLabel": "Повторные записи",
+        "retentionRate": "68%",
+        "retentionHeadline": "записались снова",
+        "retentionWindow": "в течение 30 дней",
+        "retentionDelta": "+14% к прошлому месяцу",
+        "retentionFooterCount": "24 вернувшихся клиента",
+        "retentionFooterPeriod": "снова записались в этом месяце",
         "tags": {
           "color": "Окрашивание",
           "bridal": "Свадебные",
